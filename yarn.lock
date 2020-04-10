@@ -13,7 +13,7 @@
   version "7.8.4"
   resolved "https://registry.yarnpkg.com/@babel/compat-data/-/compat-data-7.8.4.tgz#bbe65d05a291667a8394fe8a0e0e277ef22b0d2a"
   integrity sha512-lHLhlsvFjJAqNU71b7k6Vv9ewjmTXKvqaMv7n0G1etdCabWLw3nEYE8mmgoVOxMIFE07xOvo7H7XBASirX6Rrg==
-  dependencies:
+  dependencies: 
     browserslist "^4.8.5"
     invariant "^2.2.4"
     semver "^5.5.0"
