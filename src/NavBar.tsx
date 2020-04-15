@@ -1,7 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
-import { NavItem } from "./ourtypes";
 
 const NavBarLayout = styled.nav`
   display: flex;
@@ -24,17 +22,11 @@ const LinkWrapper = styled.div`
   }
 `;
 
-interface NavBarProps {
-  navItems: NavItem[];
-}
-
-const NavBar: React.FC<NavBarProps> = ({ navItems }) => {
+const NavBar: React.FC = ({ children }) => {
   return (
     <NavBarLayout>
-      {navItems.map((item: NavItem) => (
-        <LinkWrapper>
-          <Link to={item.link}>{item.name}</Link>
-        </LinkWrapper>
+      {React.Children.map(children, (child) => (
+        <LinkWrapper>{child}</LinkWrapper>
       ))}
     </NavBarLayout>
   );

@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import styled from "styled-components";
 
 import LibraryPage from "./LibraryPage";
@@ -30,14 +30,12 @@ const App = () => {
       <Switch>
         <Route exact path="/" component={LandingPage}></Route>
         <PageLayout>
-          <NavBar
-            navItems={[
-              { name: "My Library", link: "/library" },
-              { name: "Friends", link: "/friends" },
-              { name: "Loans", link: "/loans" },
-              { name: "Settings", link: "/settings" },
-            ]}
-          />
+          <NavBar>
+            <Link to={"/library"}>My Library</Link>
+            <Link to={"/friends"}>Friends</Link>
+            <Link to={"/loans"}>Loans</Link>
+            <Link to={"/settings"}>Settings</Link>
+          </NavBar>
           <MainContent>
             <Route path="/library/:id" component={LibraryPage}></Route>
             <Route path="/friends" component={FriendsPage}></Route>
