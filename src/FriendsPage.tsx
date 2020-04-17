@@ -1,19 +1,11 @@
-import React, { useState, useEffect } from "react";
-
-interface Friend {
-  username: string;
-  status: FriendStatus;
-}
-
-enum FriendStatus {
-  accepted,
-  requested,
-}
+import React, { useState, useEffect, useMemo } from "react";
+import { Friend, FriendStatus } from "./ourtypes";
+import PageLayout from "./PageLayout";
 
 const FriendsPage: React.FC = () => {
   const [error, setError] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
-  const [friends, setFriends] = useState<Friend[] | undefined>();
+  const [friends, setFriends] = useState<Friend[]>([]);
 
   useEffect(() => {
     fetch("https://paralibrary.digital/friends")
@@ -27,9 +19,20 @@ const FriendsPage: React.FC = () => {
           setError(error);
         }
       );
+    console.log("Attempt fetch all friends");
   }, []);
 
-  return <div>Friends page!</div>;
+  const existingFriends: Friend[] = useMemo(
+    () =>
+      friends.filter(
+        (friend: Friend) => friend.status === FriendStatus.accepted
+      ),
+    [friends]
+  );
+
+  return (
+    <PageLayout header={<div>Friends page!</div>}>{existingFriends}</PageLayout>
+  );
 };
 
 export default FriendsPage;

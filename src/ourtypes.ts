@@ -1,4 +1,11 @@
-export interface NavItem {
+export interface Friend {
+  id: number;
+  display_name: string;
   name: string;
-  link: string;
+  status: FriendStatus;
+}
+
+export enum FriendStatus {
+  accepted,
+  requested,
 }
