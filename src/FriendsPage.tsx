@@ -3,7 +3,7 @@ import { Friend, FriendStatus } from "./ourtypes";
 import PageLayout from "./PageLayout";
 
 const FriendsPage: React.FC = () => {
-  const [error, setError] = useState("");
+  const [error, setError] = useState<any>();
   const [isLoaded, setIsLoaded] = useState(false);
   const [friends, setFriends] = useState<Friend[]>([]);
 
@@ -31,7 +31,9 @@ const FriendsPage: React.FC = () => {
   );
 
   return (
-    <PageLayout header={<div>Friends page!</div>}>{existingFriends}</PageLayout>
+    <PageLayout header={<div>Friends page!</div>}>
+      {isLoaded ? error ? <div>Error</div> : existingFriends : "Loading..."}
+    </PageLayout>
   );
 };
 

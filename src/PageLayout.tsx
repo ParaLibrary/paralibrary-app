@@ -7,7 +7,8 @@ interface PageLayoutProps {
 }
 
 const Layout = styled.div`
-  display: flow;
+  display: flex;
+  flex-flow: column nowrap;
   padding: 16px;
   @media screen and (min-width: 480px) {
     display: grid;
@@ -30,13 +31,15 @@ const Main = styled.div`
   }
 `;
 
-const Header = styled.div`
+const Header = styled.header`
   grid-area: header;
 `;
 
 const Sidebar = styled.div`
   grid-area: sidebar;
 `;
+// Note: in small viewport the sidebar will
+// appear after main content
 
 const PageLayout: React.FC<PageLayoutProps> = ({
   header,
