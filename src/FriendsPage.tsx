@@ -14,9 +14,10 @@ const FriendsPage: React.FC = () => {
       status: FriendStatus.accepted,
     },
   ]);
+  const [nearbyPeople, setNearbyPeople] = useState<Friend[]>([]);
 
   useEffect(() => {
-    fetch("https://paralibrary.digital.api/friends")
+    fetch("https://paralibrary.digital/api/friends")
       .then((res) => res.json())
       .then(
         (result) => {
@@ -31,7 +32,6 @@ const FriendsPage: React.FC = () => {
         setIsLoaded(true);
         console.log(error);
       });
-    console.log("Attempt fetch all friends");
   }, []);
 
   const friendRequests: Friend[] = useMemo(
@@ -51,14 +51,36 @@ const FriendsPage: React.FC = () => {
   );
 
   return (
-    <PageLayout header={<div>Friends page!</div>}>
-      <AutoTable data={friendRequests} hideOnEmpty>
+    <PageLayout
+      header={<h1>My Friends</h1>}
+      sidebar={
+        <AutoTable
+          data={nearbyPeople}
+          title={<h3>Nearby People</h3>}
+          placeholder={"Huh, seems like no one's around..."}
+        >
+          <TableHeader col={"name"}>Name</TableHeader>
+          <button>Invite!</button>
+        </AutoTable>
+      }
+    >
+      <AutoTable
+        data={friendRequests}
+        title={<h3>Friend Requests</h3>}
+        hideOnEmpty
+      >
         <TableHeader col={"id"}>ID</TableHeader>
         <TableHeader col={"name"}>Name</TableHeader>
         <TableHeader col={"display_name"}>Username</TableHeader>
         <TableHeader col={"status"}>Status</TableHeader>
+        <button>Accept</button>
+        <button>Reject</button>
       </AutoTable>
-      <AutoTable data={currentFriends} hideOnEmpty>
+      <AutoTable
+        data={currentFriends}
+        title={<h3>Current Friends</h3>}
+        hideOnEmpty
+      >
         <TableHeader col={"id"}>ID</TableHeader>
         <TableHeader col={"name"}>Name</TableHeader>
         <TableHeader col={"display_name"}>Username</TableHeader>

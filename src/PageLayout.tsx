@@ -12,8 +12,8 @@ const Layout = styled.div`
   padding: 16px;
   @media screen and (min-width: 480px) {
     display: grid;
-    grid-template-columns: auto 50px;
-    column-gap: 16px;
+    grid-template-columns: auto 30%;
+    column-gap: 32px;
     row-gap: 16px;
     grid-template-rows: auto;
     grid-template-areas:

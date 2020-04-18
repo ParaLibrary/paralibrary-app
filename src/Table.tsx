@@ -2,10 +2,11 @@ import React, { cloneElement, useMemo, ReactElement } from "react";
 import { Table } from "react-bootstrap";
 
 interface TableProps<T> {
-  title?: string;
+  title?: React.ReactNode;
   data: T[];
   children: React.ReactElement | React.ReactElement[];
   hideOnEmpty?: boolean;
+  placeholder?: React.ReactNode;
 }
 
 interface TableHeaderProps {
@@ -46,30 +47,39 @@ const TableRow = <T,>(props: RowProps<T>) => {
 };
 
 const AutoTable = <T extends { id: number }>(props: TableProps<T>) => {
-  const { title, data, children, hideOnEmpty } = props;
+  const { title, data, children, hideOnEmpty, placeholder } = props;
   const filteredHeaders = useMemo(
     () =>
       React.Children.map(children, (child) => {
         if (((child as ReactElement).props as TableHeaderProps).col) {
           return child;
         }
-        return <th></th>;
+        return data.length > 0 ? <th></th> : null;
       }),
     [children]
   );
   return data.length === 0 && hideOnEmpty ? null : (
     <>
-      {title && <h2>{title}</h2>}
-      <Table>
-        <thead>
-          <tr>{filteredHeaders}</tr>
-        </thead>
-        <tbody>
-          {data.map((row: T) => (
-            <TableRow index={row.id} data={row} template={children}></TableRow>
-          ))}
-        </tbody>
-      </Table>
+      {title}
+      {data.length === 0 ? (
+        placeholder
+      ) : (
+        <Table bordered size={"sm"}>
+          <thead>
+            <tr>{filteredHeaders}</tr>
+          </thead>
+
+          <tbody>
+            {data.map((row: T) => (
+              <TableRow
+                index={row.id}
+                data={row}
+                template={children}
+              ></TableRow>
+            ))}
+          </tbody>
+        </Table>
+      )}
     </>
   );
 };
