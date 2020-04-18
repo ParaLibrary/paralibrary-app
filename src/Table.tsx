@@ -1,4 +1,4 @@
-import React, { cloneElement } from "react";
+import React, { cloneElement, useMemo, ReactElement } from "react";
 import { Table } from "react-bootstrap";
 
 interface TableProps<T> {
@@ -8,13 +8,12 @@ interface TableProps<T> {
   hideOnEmpty?: boolean;
 }
 
-interface ColDefProps {
-  label: string;
+interface TableHeaderProps {
   col: string;
 }
 
-export const TableHeader: React.FC<ColDefProps> = ({ label }) => {
-  return <th>{label}</th>;
+export const TableHeader: React.FC<TableHeaderProps> = ({ children }) => {
+  return <th>{children}</th>;
 };
 
 interface CellProps<T> {
@@ -36,12 +35,11 @@ const TableRow = <T,>(props: RowProps<T>) => {
   return (
     <tr>
       {React.Children.map(template, (child: React.ReactElement) => {
-        const colChild = child.props as ColDefProps;
-        const col = colChild && (colChild.col as keyof T);
+        const col = (child.props as TableHeaderProps).col as keyof T;
         if (col) {
           return <TableCell point={data[col]}></TableCell>;
         }
-        return cloneElement(child, child.props);
+        return <td>{cloneElement(child, child.props)}</td>;
       })}
     </tr>
   );
@@ -49,21 +47,31 @@ const TableRow = <T,>(props: RowProps<T>) => {
 
 const AutoTable = <T extends { id: number }>(props: TableProps<T>) => {
   const { title, data, children, hideOnEmpty } = props;
-  return data.length > 0 && !!hideOnEmpty ? (
+  const filteredHeaders = useMemo(
+    () =>
+      React.Children.map(children, (child) => {
+        if (((child as ReactElement).props as TableHeaderProps).col) {
+          return child;
+        }
+        return <th></th>;
+      }),
+    [children]
+  );
+  return data.length === 0 && hideOnEmpty ? null : (
     <>
       {title && <h2>{title}</h2>}
       <Table>
         <thead>
-          <tr>{children}</tr>
+          <tr>{filteredHeaders}</tr>
         </thead>
         <tbody>
-          {data.map((row: T, index: number) => (
-            <TableRow index={index} data={row} template={children}></TableRow>
+          {data.map((row: T) => (
+            <TableRow index={row.id} data={row} template={children}></TableRow>
           ))}
         </tbody>
       </Table>
     </>
-  ) : null;
+  );
 };
 
 export default AutoTable;
