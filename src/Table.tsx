@@ -32,16 +32,19 @@ interface RowProps<T> {
 }
 
 const TableRow = <T,>(props: RowProps<T>) => {
-  const { index, template, data } = props;
+  const { template, data } = props;
   return (
     <tr>
-      {React.Children.map(template, (child: React.ReactElement) => {
-        const col = (child.props as TableHeaderProps).col as keyof T;
-        if (col) {
-          return <TableCell point={data[col]}></TableCell>;
+      {React.Children.map(
+        template,
+        (child: React.ReactElement, index2: number) => {
+          const col = (child.props as TableHeaderProps).col as keyof T;
+          if (col) {
+            return <TableCell point={data[col]}></TableCell>;
+          }
+          return <td>{cloneElement(child, child.props)}</td>;
         }
-        return <td>{cloneElement(child, child.props)}</td>;
-      })}
+      )}
     </tr>
   );
 };
@@ -56,7 +59,7 @@ const AutoTable = <T extends { id: number }>(props: TableProps<T>) => {
         }
         return data.length > 0 ? <th></th> : null;
       }),
-    [children]
+    [children, data]
   );
   return data.length === 0 && hideOnEmpty ? null : (
     <>
@@ -72,6 +75,7 @@ const AutoTable = <T extends { id: number }>(props: TableProps<T>) => {
           <tbody>
             {data.map((row: T) => (
               <TableRow
+                key={row.id}
                 index={row.id}
                 data={row}
                 template={children}

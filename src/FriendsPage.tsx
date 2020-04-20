@@ -6,31 +6,26 @@ import AutoTable, { TableHeader } from "./Table";
 const FriendsPage: React.FC = () => {
   const [error, setError] = useState<any>();
   const [isLoaded, setIsLoaded] = useState(false);
-  const [friends, setFriends] = useState<Friend[]>([
-    {
-      id: 1,
-      name: "Tait",
-      display_name: "Lemniscate",
-      status: FriendStatus.accepted,
-    },
-  ]);
-  const [nearbyPeople, setNearbyPeople] = useState<Friend[]>([]);
+  const [friends, setFriends] = useState<Friend[]>([]);
+  const [nearbyPeople] = useState<Friend[]>([]);
 
   useEffect(() => {
-    fetch("https://paralibrary.digital/api/friends")
-      .then((res) => res.json())
+    fetch("http://paralibrary.digital/api/friends")
+      .then((res) => {
+        setIsLoaded(true);
+        return res.json();
+      })
       .then(
         (result) => {
-          //setFriends(result);
+          setFriends(result);
         },
         (error) => {
-          setIsLoaded(true);
           setError(error);
         }
       )
       .catch((error) => {
         setIsLoaded(true);
-        console.log(error);
+        setError(error);
       });
   }, []);
 
@@ -64,29 +59,30 @@ const FriendsPage: React.FC = () => {
         </AutoTable>
       }
     >
-      <AutoTable
-        data={friendRequests}
-        title={<h3>Friend Requests</h3>}
-        hideOnEmpty
-      >
-        <TableHeader col={"id"}>ID</TableHeader>
-        <TableHeader col={"name"}>Name</TableHeader>
-        <TableHeader col={"display_name"}>Username</TableHeader>
-        <TableHeader col={"status"}>Status</TableHeader>
-        <button>Accept</button>
-        <button>Reject</button>
-      </AutoTable>
-      <AutoTable
-        data={currentFriends}
-        title={<h3>Current Friends</h3>}
-        hideOnEmpty
-      >
-        <TableHeader col={"id"}>ID</TableHeader>
-        <TableHeader col={"name"}>Name</TableHeader>
-        <TableHeader col={"display_name"}>Username</TableHeader>
-        <TableHeader col={"status"}>Status</TableHeader>
-        <button>Test</button>
-      </AutoTable>
+      {isLoaded ? (
+        "Loading..."
+      ) : error ? (
+        "An error occured."
+      ) : (
+        <>
+          <AutoTable
+            data={friendRequests}
+            title={<h3>Friend Requests</h3>}
+            hideOnEmpty
+          >
+            <TableHeader col={"display_name"}>Username</TableHeader>
+            <button>Accept</button>
+            <button>Reject</button>
+          </AutoTable>
+          <AutoTable
+            data={currentFriends}
+            title={<h3>Current Friends</h3>}
+            hideOnEmpty
+          >
+            <TableHeader col={"display_name"}>Username</TableHeader>
+          </AutoTable>
+        </>
+      )}
     </PageLayout>
   );
 };
