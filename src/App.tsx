@@ -39,7 +39,7 @@ const App = () => {
               <Link to={"/settings"}>Settings</Link>
             </NavBar>
             <MainContent>
-              <Route path="/library/:id" component={LibraryPage}></Route>
+              <Route path="/library/" component={LibraryPage}></Route>
               <Route path="/friends" component={FriendsPage}></Route>
               <Route path="/loans" component={LoansPage}></Route>
               <Route path="/settings" component={SettingsPage}></Route>
