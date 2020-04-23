@@ -26,13 +26,13 @@ const TableCell = <T,>(props: CellProps<T>) => {
 };
 
 interface RowProps<T> {
-  index: number;
+  id: number;
   template: React.ReactElement | React.ReactElement[];
   data: T;
 }
 
 const TableRow = <T,>(props: RowProps<T>) => {
-  const { template, data } = props;
+  const { id, template, data } = props;
   return (
     <tr>
       {React.Children.map(
@@ -42,7 +42,7 @@ const TableRow = <T,>(props: RowProps<T>) => {
           if (col) {
             return <TableCell point={data[col]}></TableCell>;
           }
-          return <td>{cloneElement(child, child.props)}</td>;
+          return <td>{cloneElement(child, {id})}</td>;
         }
       )}
     </tr>
@@ -76,7 +76,7 @@ const AutoTable = <T extends { id: number }>(props: TableProps<T>) => {
             {data.map((row: T) => (
               <TableRow
                 key={row.id}
-                index={row.id}
+                id={row.id}
                 data={row}
                 template={children}
               ></TableRow>

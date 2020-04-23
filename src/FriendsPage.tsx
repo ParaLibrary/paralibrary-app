@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Friend, FriendStatus } from "./ourtypes";
+import { Friend } from "./ourtypes";
 import PageLayout from "./PageLayout";
 import AutoTable, { TableHeader } from "./Table";
+import { Button } from "react-bootstrap";
 
 const FriendsPage: React.FC = () => {
   const [error, setError] = useState<any>();
@@ -9,10 +10,74 @@ const FriendsPage: React.FC = () => {
   const [friends, setFriends] = useState<Friend[]>([]);
   const [nearbyPeople] = useState<Friend[]>([]);
 
+  interface ButtonGroupProps {
+    id: number
+  }
+  
+  const RequestResponseButtonGroup: React.FC<ButtonGroupProps> = ({ id }) => {
+    return (
+      <div>
+        <Button
+          type="button"
+          variant="primary"
+          size="sm"
+          onClick = {() => { AcceptFriendship(id) }}
+        >Accept</Button>{' '}
+        <Button
+          type="button"
+          variant="outline-danger"
+          size="sm"
+          onClick = {() => { RejectFriendship(id) }}
+        >Reject</Button>
+      </div>
+    );
+  }
+
+  function AcceptFriendship(id: number) {
+    setIsLoaded(false);
+    const options = {
+      method: 'POST'
+    }
+    return fetch(`http://paralibrary.digital/api/friends/${id}/accept`, options)
+    .then(response => response.status === 200)
+    .then(success => {
+      if(success) {
+        let friend = friends.find(friend => friend.id === id);
+        if(friend) {
+          friend.status = "friends";
+          /**
+           * HELP. The following line is awful, but I don't know enough to force the state to update.
+           * The data arrays are only updated when setFriends() is called, so... 
+           */
+          setFriends([...friends]);
+        }
+      }
+    })
+    .finally(() => {
+      setIsLoaded(true);
+    })
+  }
+
+  function RejectFriendship(id: number) {
+    setIsLoaded(false);
+    const options = {
+      method: 'POST'
+    }
+    return fetch(`http://paralibrary.digital/api/friends/${id}/reject`, options)
+    .then(response => response.status === 200)
+    .then(success => {
+      if(success) {
+        setFriends(friends.filter(friend => friend.id !== id));
+      }
+    })
+    .finally(() => {
+      setIsLoaded(true);
+    })
+  }
+
   useEffect(() => {
     fetch("http://paralibrary.digital/api/friends")
       .then((res) => {
-        setIsLoaded(true);
         return res.json();
       })
       .then(
@@ -24,24 +89,20 @@ const FriendsPage: React.FC = () => {
         }
       )
       .catch((error) => {
-        setIsLoaded(true);
         setError(error);
+      })
+      .finally(() => {
+        setIsLoaded(true);
       });
   }, []);
 
   const friendRequests: Friend[] = useMemo(
-    () =>
-      friends.filter(
-        (friend: Friend) => friend.status === FriendStatus.requested
-      ),
+    () => friends.filter((friend: Friend) => friend.status === "requested"),
     [friends]
   );
 
   const currentFriends: Friend[] = useMemo(
-    () =>
-      friends.filter(
-        (friend: Friend) => friend.status === FriendStatus.accepted
-      ),
+    () => friends.filter((friend: Friend) => friend.status === "friends"),
     [friends]
   );
 
@@ -59,11 +120,9 @@ const FriendsPage: React.FC = () => {
         </AutoTable>
       }
     >
-      {isLoaded ? (
-        "Loading..."
-      ) : error ? (
-        "An error occured."
-      ) : (
+      {!isLoaded ? ("Loading...")
+      : error ? ("An error occured.")
+      : (
         <>
           <AutoTable
             data={friendRequests}
@@ -71,8 +130,7 @@ const FriendsPage: React.FC = () => {
             hideOnEmpty
           >
             <TableHeader col={"display_name"}>Username</TableHeader>
-            <button>Accept</button>
-            <button>Reject</button>
+            <RequestResponseButtonGroup id={0}></RequestResponseButtonGroup>
           </AutoTable>
           <AutoTable
             data={currentFriends}
