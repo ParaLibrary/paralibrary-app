@@ -21,6 +21,6 @@ export interface Book {
 }
 
 export enum BookVisibility {
-  private,
   public,
+  private,
 }
