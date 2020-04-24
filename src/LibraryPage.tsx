@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Modal, Button } from "react-bootstrap";
 
 import PageLayout from "./PageLayout";
+import BookForm from "./BookForm";
 
 const LibraryPage: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -13,15 +14,9 @@ const LibraryPage: React.FC = () => {
         <Modal.Header closeButton>
           <Modal.Title>Edit Book</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Testing</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setModalOpen(false)}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={() => setModalOpen(false)}>
-            Save changes
-          </Button>
-        </Modal.Footer>
+        <Modal.Body>
+          <BookForm />
+        </Modal.Body>
       </Modal>
     </PageLayout>
   );

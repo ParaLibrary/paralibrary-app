@@ -9,3 +9,18 @@ export enum FriendStatus {
   accepted,
   requested,
 }
+
+export interface Book {
+  id: number;
+  user_id: number;
+  title: string;
+  author: string;
+  isbn: string;
+  summary: string;
+  visibility: BookVisibility;
+}
+
+export enum BookVisibility {
+  private,
+  public,
+}
