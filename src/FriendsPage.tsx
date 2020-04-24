@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { Friend } from "./ourtypes";
 import PageLayout from "./PageLayout";
 import AutoTable, { TableHeader } from "./Table";
-import { Button } from "react-bootstrap";
+import FriendRequestButtons from "./FriendRequestButtons";
 
 const FriendsPage: React.FC = () => {
   const [error, setError] = useState<any>();
@@ -10,31 +10,7 @@ const FriendsPage: React.FC = () => {
   const [friends, setFriends] = useState<Friend[]>([]);
   const [nearbyPeople] = useState<Friend[]>([]);
 
-  interface ButtonGroupProps {
-    id: number
-  }
-  
-  const RequestResponseButtonGroup: React.FC<ButtonGroupProps> = ({ id }) => {
-    return (
-      <div>
-        <Button
-          type="button"
-          variant="primary"
-          size="sm"
-          onClick = {() => { AcceptFriendship(id) }}
-        >Accept</Button>{' '}
-        <Button
-          type="button"
-          variant="outline-danger"
-          size="sm"
-          onClick = {() => { RejectFriendship(id) }}
-        >Reject</Button>
-      </div>
-    );
-  }
-
   function AcceptFriendship(id: number) {
-    setIsLoaded(false);
     const options = {
       method: 'POST'
     }
@@ -45,21 +21,13 @@ const FriendsPage: React.FC = () => {
         let friend = friends.find(friend => friend.id === id);
         if(friend) {
           friend.status = "friends";
-          /**
-           * HELP. The following line is awful, but I don't know enough to force the state to update.
-           * The data arrays are only updated when setFriends() is called, so... 
-           */
           setFriends([...friends]);
         }
       }
     })
-    .finally(() => {
-      setIsLoaded(true);
-    })
   }
-
+  
   function RejectFriendship(id: number) {
-    setIsLoaded(false);
     const options = {
       method: 'POST'
     }
@@ -70,11 +38,7 @@ const FriendsPage: React.FC = () => {
         setFriends(friends.filter(friend => friend.id !== id));
       }
     })
-    .finally(() => {
-      setIsLoaded(true);
-    })
   }
-
   useEffect(() => {
     fetch("http://paralibrary.digital/api/friends")
       .then((res) => {
@@ -130,7 +94,7 @@ const FriendsPage: React.FC = () => {
             hideOnEmpty
           >
             <TableHeader col={"display_name"}>Username</TableHeader>
-            <RequestResponseButtonGroup id={0}></RequestResponseButtonGroup>
+            <FriendRequestButtons id={0} onAccept={AcceptFriendship} onReject={RejectFriendship}/>
           </AutoTable>
           <AutoTable
             data={currentFriends}
