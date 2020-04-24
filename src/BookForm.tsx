@@ -1,7 +1,7 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
-import { Button, Modal } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import { Formik, FormikProps, FormikErrors } from "formik";
 
 import { Book } from "./ourtypes";
