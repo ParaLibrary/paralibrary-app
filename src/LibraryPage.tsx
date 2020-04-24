@@ -1,20 +1,18 @@
 import React, { Component } from 'react';
-import { render } from 'react-dom';
 import './style.css';
 import { Card } from "react-bootstrap"
 import {Button} from "react-bootstrap"
 
-class App extends Component {
+class App extends React.Component {
   constructor() {
     super();
-    this.state = {
       name: 'React'
     };
   }
-
+class App extends Component {
   render() {
-    return (
-      <div>
+     return(
+    <div>
  <Card style={{ width: '18rem' }}>
   <Card.Body>
     <Card.Title>Bible</Card.Title>
@@ -39,43 +37,7 @@ class App extends Component {
     <Button variant="primary">Open Book</Button>
   </Card.Body>
 </Card>
-       <Card body>
-        <Card.Title>Special Title Treatment</Card.Title>
-        <Card.Text>With supporting text below as a natural lead-in to additional content.</Card.Text>
-        <Button>Go somewhere</Button>
-      </Card>
-      <Card body className="text-center">
-        <Card.Title>Special Title Treatment</Card.Title>
-        <Card.Text>With supporting text below as a natural lead-in to additional content.</Card.Text>
-        <Button>Go somewhere</Button>
-      </Card>
-      <Card body className="text-right">
-        <Card.Title>Special Title Treatment</Card.Title>
-        <Card.Text>With supporting text below as a natural lead-in to additional content.</Card.Text>
-        <Button>Go somewhere</Button>
-      </Card>
-        <Card>
-        <Card.Header>Header</Card.Header>
-        <Card.Body>
-          <Card.Title>Special Title Treatment</Card.Title>
-          <Card.Text>With supporting text below as a natural lead-in to additional content.</Card.Text>
-          <Button>Go somewhere</Button>
-        </Card.Body>
-        <Card.Footer>Footer</Card.Footer>
-      </Card>
-      <bk /> <bk />
-      <Card>
-        <Card.Header tag="h3">Featured</Card.Header>
-        <Card.Body>
-          <Card.Title>Special Title Treatment</Card.Title>
-          <Card.Text>With supporting text below as a natural lead-in to additional content.</Card.Text>
-          <Button>Go somewhere</Button>
-        </Card.Body>
-        <Card.Footer className="text-muted">Footer</Card.Footer>
-      </Card>
-      </div>
+       </div>
     );
   }
 }
-
-render(<App />, document.getElementById('root'));
