@@ -1,8 +1,8 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
-import { Button } from "react-bootstrap";
-import { Formik, FormikProps } from "formik";
+import { Button, Modal } from "react-bootstrap";
+import { Formik, FormikProps, FormikErrors } from "formik";
 
 import { Book } from "./ourtypes";
 
@@ -14,7 +14,7 @@ const BookForm: React.FC<FormikProps<Book>> = ({
   errors,
 }) => {
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form noValidate onSubmit={handleSubmit}>
       <Form.Group as={Form.Row} controlId="bookTitle">
         <Form.Label column sm={2}>
           Title:
@@ -25,12 +25,12 @@ const BookForm: React.FC<FormikProps<Book>> = ({
             name="title"
             value={values.title}
             onChange={handleChange}
-            isValid={touched.title && !errors.title}
+            isInvalid={touched.title && !!errors.title}
           />
+          <Form.Control.Feedback type="invalid">
+            {errors.title}
+          </Form.Control.Feedback>
         </Col>
-        <Form.Control.Feedback type="invalid">
-          {errors.title}
-        </Form.Control.Feedback>
       </Form.Group>
       <Form.Group as={Form.Row} controlId="bookAuthor">
         <Form.Label column sm={2}>
@@ -42,12 +42,12 @@ const BookForm: React.FC<FormikProps<Book>> = ({
             name="author"
             value={values.author}
             onChange={handleChange}
-            isValid={touched.author && !errors.author}
+            isInvalid={touched.author && !!errors.author}
           />
+          <Form.Control.Feedback type="invalid">
+            {errors.author}
+          </Form.Control.Feedback>
         </Col>
-        <Form.Control.Feedback type="invalid">
-          {errors.author}
-        </Form.Control.Feedback>
       </Form.Group>
       <Form.Group as={Form.Row} controlId="bookISBN">
         <Form.Label column sm={2}>
@@ -59,15 +59,15 @@ const BookForm: React.FC<FormikProps<Book>> = ({
             name="isbn"
             value={values.isbn}
             onChange={handleChange}
-            isValid={touched.isbn && !errors.isbn}
+            isInvalid={!!errors.isbn}
           />
+          <Form.Control.Feedback type="invalid">
+            {errors.isbn}
+          </Form.Control.Feedback>
         </Col>
         <Col sm={4}>
           <Button disabled>Import Data</Button>
         </Col>
-        <Form.Control.Feedback type="invalid">
-          {errors.title}
-        </Form.Control.Feedback>
       </Form.Group>
       <Form.Group as={Form.Row} controlId="bookSummary">
         <Form.Label column sm={2}>
@@ -85,30 +85,55 @@ const BookForm: React.FC<FormikProps<Book>> = ({
         </Col>
       </Form.Group>
       <Form.Group as={Form.Row} controlId="bookVis">
+        <Col sm={2}></Col>
         <Form.Check
           type="switch"
           label="Private"
-          name="visibility"
-          value={values.visibility}
+          name="private"
+          value={values.private.toString()}
           onChange={handleChange}
         />
       </Form.Group>
-      <Button type="submit">Save</Button>
+      <Form.Row>
+        <Col sm={2}>
+          <Button type="submit">Save</Button>
+        </Col>
+      </Form.Row>
     </Form>
   );
 };
 
 interface BookFormProps {
   book: Book;
-  updateBookList?: (book: Book) => void;
-  updateDatabase?: (book: Book) => void;
+  updateBookList: (book: Book) => void;
+  updateDatabase: (book: Book) => void;
+  closeModal: () => void;
 }
 
-const BookFormik: React.FC<BookFormProps> = ({ book }) => {
+const BookFormik: React.FC<BookFormProps> = ({
+  book,
+  updateBookList,
+  updateDatabase,
+  closeModal,
+}) => {
   return (
     <Formik
+      validate={(values: Book) => {
+        let errors: FormikErrors<Book> = {};
+        if (!values.title) {
+          errors.title = "The book must have a title.";
+        }
+        if (!values.author) {
+          errors.author = "The book must have an author.";
+        }
+        return errors;
+      }}
       initialValues={book}
-      onSubmit={console.log}
+      onSubmit={(values: Book) => {
+        updateDatabase(values);
+        updateBookList(values);
+        closeModal();
+      }}
       component={BookForm}
     ></Formik>
   );

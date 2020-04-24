@@ -17,10 +17,5 @@ export interface Book {
   author: string;
   isbn: string;
   summary: string;
-  visibility: BookVisibility;
-}
-
-export enum BookVisibility {
-  public,
-  private,
+  private: boolean;
 }

@@ -3,7 +3,7 @@ import { Modal, Button } from "react-bootstrap";
 
 import PageLayout from "./PageLayout";
 import BookFormik from "./BookForm";
-import { Book, BookVisibility } from "./ourtypes";
+import { Book } from "./ourtypes";
 
 const LibraryPage: React.FC = () => {
   const emptyBook: Book = {
@@ -13,7 +13,7 @@ const LibraryPage: React.FC = () => {
     author: "",
     isbn: "",
     summary: "",
-    visibility: BookVisibility.public,
+    private: false,
   };
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -29,7 +29,12 @@ const LibraryPage: React.FC = () => {
           <Modal.Title>{isNewBook ? "Add Book" : "Edit Book"}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <BookFormik book={selectedBook} />
+          <BookFormik
+            book={selectedBook}
+            updateBookList={() => null}
+            updateDatabase={() => null}
+            closeModal={() => setModalOpen(false)}
+          />
         </Modal.Body>
       </Modal>
     </PageLayout>
