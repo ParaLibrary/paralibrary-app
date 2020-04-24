@@ -61,7 +61,7 @@ const AutoTable = <T extends { id: number }>(props: TableProps<T>) => {
       }),
     [children, data]
   );
-  return data.length === 0 && hideOnEmpty ? null : (
+  return data.length === 0 && hideOnEmpty && !placeholder ? null : (
     <>
       {title}
       {data.length === 0 ? (
