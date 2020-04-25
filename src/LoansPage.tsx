@@ -7,14 +7,15 @@ import AutoTable, { TableHeader } from "./Table";
 import { Button } from "react-bootstrap";
 
 const LoansPage: React.FC = () => {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [reqIsLoaded, setReqIsLoaded] = useState(false);
+  const [ownIsLoaded, setOwnIsLoaded] = useState(false);
   const [loanedToMe, setLoanedToMe] = useState<Loan[]>([]);
   const [loanedByMe, setLoanedByMe] = useState<Loan[]>([]);
 
   useEffect(() => {
     fetch("http://paralibrary.digital/api/loans/requester")
       .then((res) => {
-        setIsLoaded(true);
+        setReqIsLoaded(true);
         return res.json();
       })
       .then(
@@ -26,7 +27,7 @@ const LoansPage: React.FC = () => {
         }
       )
       .catch((error) => {
-        setIsLoaded(true);
+        setReqIsLoaded(true);
         console.log(error);
       });
   }, []);
@@ -34,7 +35,7 @@ const LoansPage: React.FC = () => {
   useEffect(() => {
     fetch("http://paralibrary.digital/api/loans/owner")
       .then((res) => {
-        setIsLoaded(true);
+        setOwnIsLoaded(true);
         return res.json();
       })
       .then(
@@ -46,7 +47,7 @@ const LoansPage: React.FC = () => {
         }
       )
       .catch((error) => {
-        setIsLoaded(true);
+        setOwnIsLoaded(true);
         console.log(error);
       });
   }, []);
@@ -79,7 +80,7 @@ const LoansPage: React.FC = () => {
 
   return (
     <PageLayout header={<h1>Loans Management</h1>}>
-      {!isLoaded ? (
+      {!reqIsLoaded || !ownIsLoaded ? (
         "Loading..."
       ) : (
         <>
