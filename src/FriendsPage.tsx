@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Friend, FriendStatus } from "./ourtypes";
+import { Friend } from "./ourtypes";
 import PageLayout from "./PageLayout";
 import AutoTable, { TableHeader } from "./Table";
+import FriendRequestButtons from "./FriendRequestButtons";
 
 const FriendsPage: React.FC = () => {
   const [error, setError] = useState<any>();
@@ -9,10 +10,38 @@ const FriendsPage: React.FC = () => {
   const [friends, setFriends] = useState<Friend[]>([]);
   const [nearbyPeople] = useState<Friend[]>([]);
 
+  function AcceptFriendship(id: number) {
+    const options = {
+      method: 'POST'
+    }
+    return fetch(`http://paralibrary.digital/api/friends/${id}/accept`, options)
+    .then(response => response.status === 200)
+    .then(success => {
+      if(success) {
+        let friend = friends.find(friend => friend.id === id);
+        if(friend) {
+          friend.status = "friends";
+          setFriends([...friends]);
+        }
+      }
+    })
+  }
+  
+  function RejectFriendship(id: number) {
+    const options = {
+      method: 'POST'
+    }
+    return fetch(`http://paralibrary.digital/api/friends/${id}/reject`, options)
+    .then(response => response.status === 200)
+    .then(success => {
+      if(success) {
+        setFriends(friends.filter(friend => friend.id !== id));
+      }
+    })
+  }
   useEffect(() => {
     fetch("http://paralibrary.digital/api/friends")
       .then((res) => {
-        setIsLoaded(true);
         return res.json();
       })
       .then(
@@ -24,24 +53,20 @@ const FriendsPage: React.FC = () => {
         }
       )
       .catch((error) => {
-        setIsLoaded(true);
         setError(error);
+      })
+      .finally(() => {
+        setIsLoaded(true);
       });
   }, []);
 
   const friendRequests: Friend[] = useMemo(
-    () =>
-      friends.filter(
-        (friend: Friend) => friend.status === FriendStatus.requested
-      ),
+    () => friends.filter((friend: Friend) => friend.status === "requested"),
     [friends]
   );
 
   const currentFriends: Friend[] = useMemo(
-    () =>
-      friends.filter(
-        (friend: Friend) => friend.status === FriendStatus.accepted
-      ),
+    () => friends.filter((friend: Friend) => friend.status === "friends"),
     [friends]
   );
 
@@ -59,11 +84,9 @@ const FriendsPage: React.FC = () => {
         </AutoTable>
       }
     >
-      {isLoaded ? (
-        "Loading..."
-      ) : error ? (
-        "An error occured."
-      ) : (
+      {!isLoaded ? ("Loading...")
+      : error ? ("An error occured.")
+      : (
         <>
           <AutoTable
             data={friendRequests}
@@ -71,8 +94,7 @@ const FriendsPage: React.FC = () => {
             hideOnEmpty
           >
             <TableHeader col={"display_name"}>Username</TableHeader>
-            <button>Accept</button>
-            <button>Reject</button>
+            <FriendRequestButtons id={0} onAccept={AcceptFriendship} onReject={RejectFriendship}/>
           </AutoTable>
           <AutoTable
             data={currentFriends}
