@@ -16,3 +16,13 @@ export interface Loan {
   loan_end_date: Date;
   status: "pending" | "accepted" | "loaned" | "returned" | "late";
 }
+
+export interface Book {
+  id: number;
+  user_id: number;
+  title: string;
+  author: string;
+  isbn: string;
+  summary: string;
+  private: boolean;
+}
