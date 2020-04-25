@@ -73,6 +73,7 @@ const LoansPage: React.FC = () => {
           (loan: Loan) => loan.status === "accepted" || loan.status === "loaned"
         )
         .sort((a: Loan, b: Loan) => Number(a.status > b.status)),
+    // May need to revise this once we loan management flow
     [loanedByMe]
   );
 
@@ -86,10 +87,10 @@ const LoansPage: React.FC = () => {
             data={requestedFromMe}
             title={<h3>Requested Books</h3>}
             placeholder={
-              <div>
+              <>
                 <span>No requests? </span>
                 <Link to={"/library"}>Add more books to your library!</Link>
-              </div>
+              </>
             }
           >
             <TableHeader col={"requester_id"}>Requester ID</TableHeader>
@@ -106,10 +107,12 @@ const LoansPage: React.FC = () => {
           </AutoTable>
 
           <AutoTable data={loanedOut} title={<h3>Loaned Books</h3>} hideOnEmpty>
-            <span>You've borrowed</span>
+            <span>You've lent</span>
             <TableHeader col={"book_id"}>Book ID</TableHeader>
-            <span>from</span>
+            <span>to</span>
             <TableHeader col={"owner_id"}>Owner ID</TableHeader>
+            <span>due</span>
+            <TableHeader col={"loan_end_date"}>Due Date</TableHeader>
           </AutoTable>
 
           <AutoTable
@@ -117,11 +120,11 @@ const LoansPage: React.FC = () => {
             title={<h3>Borrowed Books</h3>}
             placeholder={
               myRequests.length === 0 ? (
-                <div>
+                <>
                   <span>Doesn't look like you've borrowed any books.</span>
-                  <br></br>
+                  <br />
                   <Link to={"/friends"}>Check out a friend's library!</Link>
-                </div>
+                </>
               ) : (
                 <span>No books currently borrowed.</span>
               )

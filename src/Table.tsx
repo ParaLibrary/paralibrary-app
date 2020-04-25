@@ -1,12 +1,13 @@
 import React, { cloneElement, useMemo, ReactElement } from "react";
 import { Table } from "react-bootstrap";
+import styled from "styled-components";
 
 interface TableProps<T> {
   title?: React.ReactNode;
   data: T[];
   children: React.ReactElement | React.ReactElement[];
   hideOnEmpty?: boolean;
-  placeholder?: React.ReactNode;
+  placeholder?: React.ReactNode | React.ReactNode[];
 }
 
 interface TableHeaderProps {
@@ -20,6 +21,10 @@ export const TableHeader: React.FC<TableHeaderProps> = ({ children }) => {
 interface CellProps<T> {
   point: T;
 }
+
+const Padding = styled.div`
+  padding-bottom: 16px;
+`;
 
 const TableCell = <T,>(props: CellProps<T>) => {
   return <td>{props.point}</td>;
@@ -42,7 +47,7 @@ const TableRow = <T,>(props: RowProps<T>) => {
           if (col) {
             return <TableCell point={data[col]}></TableCell>;
           }
-          return <td>{cloneElement(child, {id})}</td>;
+          return <td>{cloneElement(child, { id })}</td>;
         }
       )}
     </tr>
@@ -65,7 +70,7 @@ const AutoTable = <T extends { id: number }>(props: TableProps<T>) => {
     <>
       {title}
       {data.length === 0 ? (
-        placeholder
+        <Padding>{placeholder}</Padding>
       ) : (
         <Table bordered size={"sm"}>
           <thead>
