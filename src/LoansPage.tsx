@@ -15,7 +15,6 @@ const LoansPage: React.FC = () => {
   useEffect(() => {
     fetch("http://paralibrary.digital/api/loans/requester")
       .then((res) => {
-        setReqIsLoaded(true);
         return res.json();
       })
       .then(
@@ -27,15 +26,16 @@ const LoansPage: React.FC = () => {
         }
       )
       .catch((error) => {
-        setReqIsLoaded(true);
         console.log(error);
+      })
+      .finally(() => {
+        setReqIsLoaded(true);
       });
   }, []);
 
   useEffect(() => {
     fetch("http://paralibrary.digital/api/loans/owner")
       .then((res) => {
-        setOwnIsLoaded(true);
         return res.json();
       })
       .then(
@@ -47,8 +47,10 @@ const LoansPage: React.FC = () => {
         }
       )
       .catch((error) => {
-        setOwnIsLoaded(true);
         console.log(error);
+      })
+      .finally(() => {
+        setOwnIsLoaded(true);
       });
   }, []);
 
