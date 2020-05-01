@@ -26,3 +26,9 @@ export interface Book {
   summary: string;
   private: boolean;
 }
+
+export interface User {
+  id: number;
+  display_name: string;
+  name: string;
+}
