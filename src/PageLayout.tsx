@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import { AuthContextConsumer } from "./AuthDataProvider";
+import { Redirect } from "react-router-dom";
 
 interface PageLayoutProps {
   header?: React.ReactNode;
@@ -47,11 +49,20 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   children,
 }) => {
   return (
-    <Layout>
-      {header && <Header>{header}</Header>}
-      <Main>{children}</Main>
-      {sidebar && <Sidebar>{sidebar}</Sidebar>}
-    </Layout>
+    <AuthContextConsumer>
+      {(AuthContext) =>
+        AuthContext &&
+        (AuthContext.authenticated ? (
+          <Layout>
+            {header && <Header>{header}</Header>}
+            <Main>{children}</Main>
+            {sidebar && <Sidebar>{sidebar}</Sidebar>}
+          </Layout>
+        ) : (
+          <Redirect to="/" />
+        ))
+      }
+    </AuthContextConsumer>
   );
 };
 

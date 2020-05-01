@@ -1,6 +1,13 @@
 import React from "react";
 import styled from "styled-components";
-import { GoogleLogin, GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login';
+import { Redirect } from "react-router-dom";
+import {
+  GoogleLogin,
+  GoogleLoginResponse,
+  GoogleLoginResponseOffline,
+} from "react-google-login";
+import { AuthContextConsumer } from "./AuthDataProvider";
+import { isAbsolute } from "path";
 
 const LandingLayout = styled.div`
   display: grid;
@@ -46,7 +53,7 @@ const TitleText = styled.img`
   width: 100%;
   display: block;
   object-fit: contain;
-  
+
   @media screen and (min-width: 480px) {
     grid-area: title;
     align-self: center;
@@ -61,36 +68,51 @@ const SignIn = styled.div`
 `;
 
 const LandingPage: React.FC = () => {
-  function loginSuccesHandler (response: GoogleLoginResponse | GoogleLoginResponseOffline) {
+  function loginSuccesHandler(
+    response: GoogleLoginResponse | GoogleLoginResponseOffline,
+    setAuthenticated: (isAuthenticated: boolean) => void
+  ) {
     console.log(response);
     let onlineResponse = response as GoogleLoginResponse;
-    if(!onlineResponse) {
+    if (!onlineResponse) {
       // Not supported yet
       return;
     }
-    // TODO: Send onlineResponse.tokenId to the backend to validate the token, get the user object, and store that in localStorage
-    localStorage.setItem("token", onlineResponse.tokenId);
-    localStorage.setItem("user", onlineResponse.profileObj.name);
+
+    // TODO: Send onlineResponse.tokenId to the backend to validate the token
+    // Then, if the backend response is valid, store the user information and session ID
+    // in localStorage
+    setAuthenticated(true);
   }
 
   const loginFailureHandler = (error: GoogleLoginResponse) => {
     console.log(error);
-  }
+  };
+
   return (
-    <LandingLayout>
-      <Logo src="/images/logo-icon-black.png" alt=""/>
-      <TitleText src="/images/logo-text-black.png"/>
-      <SignIn>
-        <GoogleLogin
-          clientId="631703414652-navvamq2108qu88d9i7bo77gn2kqsi40.apps.googleusercontent.com"
-          disabled={false}
-          buttonText="Sign in with Google"
-          onSuccess={loginSuccesHandler}
-          onFailure={loginFailureHandler}
-          cookiePolicy={'single_host_origin'}
-        />
-      </SignIn>
-    </LandingLayout>
+    <AuthContextConsumer>
+      {({ authenticated, setAuthenticated }) =>
+        authenticated ? (
+          <Redirect to="/library" />
+        ) : (
+          <LandingLayout>
+            <Logo src="/images/logo-icon-black.png" alt="" />
+            <TitleText src="/images/logo-text-black.png" />
+            <SignIn>
+              <GoogleLogin
+                clientId="631703414652-navvamq2108qu88d9i7bo77gn2kqsi40.apps.googleusercontent.com"
+                buttonText="Sign in with Google"
+                onSuccess={(response) => {
+                  loginSuccesHandler(response, setAuthenticated);
+                }}
+                onFailure={loginFailureHandler}
+                cookiePolicy={"single_host_origin"}
+              />
+            </SignIn>
+          </LandingLayout>
+        )
+      }
+    </AuthContextConsumer>
   );
 };
 
