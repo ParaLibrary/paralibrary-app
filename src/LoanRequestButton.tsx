@@ -8,8 +8,8 @@ interface LRBProps {
   id: number;
   userID: number;
   loans: Loan[];
-  requestLoan?: () => Promise<boolean>;
-  cancelLoan?: () => Promise<boolean>;
+  requestLoan?: (bookID: number) => Promise<boolean>;
+  cancelLoan?: (loan: Loan) => Promise<boolean>;
 }
 
 const LoanRequestButton: React.FC<LRBProps> = ({
@@ -27,7 +27,7 @@ const LoanRequestButton: React.FC<LRBProps> = ({
 
   const handleRequest = useCallback(async () => {
     setIsDisabled(true);
-    const success = !!requestLoan && (await requestLoan());
+    const success = !!requestLoan && (await requestLoan(bookID));
     if (!success) {
       setIsDisabled(false);
     }
@@ -35,7 +35,8 @@ const LoanRequestButton: React.FC<LRBProps> = ({
 
   const handleCancel = useCallback(async () => {
     setIsDisabled(true);
-    const success = !!cancelLoan && (await cancelLoan());
+    const success =
+      !!cancelLoan && !!existingLoan && (await cancelLoan(existingLoan));
     if (!success) {
       setIsDisabled(false);
     }
@@ -47,7 +48,11 @@ const LoanRequestButton: React.FC<LRBProps> = ({
     history.push("/loans");
   };
 
-  if (!existingLoan || existingLoan.status === "returned") {
+  if (
+    !existingLoan ||
+    existingLoan.status === "returned" ||
+    (existingLoan.status === "pending" && existingLoan.requester_id !== userID)
+  ) {
     return (
       <Button disabled={isDisabled} onClick={handleRequest}>
         Request Book
@@ -55,7 +60,7 @@ const LoanRequestButton: React.FC<LRBProps> = ({
     );
   } else if (
     existingLoan.status === "pending" ||
-    existingLoan.status === "accepted"
+    (existingLoan.status === "accepted" && existingLoan.requester_id === userID)
   ) {
     return (
       <Button
