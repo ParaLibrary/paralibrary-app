@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
-import { AuthContextConsumer } from "./AuthDataProvider";
+import { AuthContext } from "./AuthDataProvider";
 import { Redirect } from "react-router-dom";
 
 interface PageLayoutProps {
@@ -48,21 +48,17 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   sidebar,
   children,
 }) => {
+  const auth = useContext(AuthContext);
+
+  if (!auth.credential.authenticated) {
+    return <Redirect to="/" />;
+  }
   return (
-    <AuthContextConsumer>
-      {(AuthContext) =>
-        AuthContext &&
-        (AuthContext.authenticated ? (
-          <Layout>
-            {header && <Header>{header}</Header>}
-            <Main>{children}</Main>
-            {sidebar && <Sidebar>{sidebar}</Sidebar>}
-          </Layout>
-        ) : (
-          <Redirect to="/" />
-        ))
-      }
-    </AuthContextConsumer>
+    <Layout>
+      {header && <Header>{header}</Header>}
+      <Main>{children}</Main>
+      {sidebar && <Sidebar>{sidebar}</Sidebar>}
+    </Layout>
   );
 };
 

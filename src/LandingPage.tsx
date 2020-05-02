@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import { Redirect } from "react-router-dom";
 import {
@@ -6,8 +6,7 @@ import {
   GoogleLoginResponse,
   GoogleLoginResponseOffline,
 } from "react-google-login";
-import { AuthContextConsumer } from "./AuthDataProvider";
-import { isAbsolute } from "path";
+import { AuthContext } from "./AuthDataProvider";
 
 const LandingLayout = styled.div`
   display: grid;
@@ -68,9 +67,10 @@ const SignIn = styled.div`
 `;
 
 const LandingPage: React.FC = () => {
+  const auth = useContext(AuthContext);
+
   function loginSuccesHandler(
-    response: GoogleLoginResponse | GoogleLoginResponseOffline,
-    setAuthenticated: (isAuthenticated: boolean) => void
+    response: GoogleLoginResponse | GoogleLoginResponseOffline
   ) {
     console.log(response);
     let onlineResponse = response as GoogleLoginResponse;
@@ -79,40 +79,39 @@ const LandingPage: React.FC = () => {
       return;
     }
 
-    // TODO: Send onlineResponse.tokenId to the backend to validate the token
-    // Then, if the backend response is valid, store the user information and session ID
-    // in sessionStorage
-    setAuthenticated(true);
+    // const options = {
+    //   method: "POST",
+    // };
+    // return fetch(`http://paralibrary.digital/api/login`, options).then(
+    //   (response) => {
+    //     if (response.status === 200) {
+    auth.login({ authenticated: true });
+    //     }
+    //   }
+    // );
   }
 
   const loginFailureHandler = (error: GoogleLoginResponse) => {
     console.log(error);
   };
 
+  if (auth.credential.authenticated) {
+    return <Redirect to="/library" />;
+  }
   return (
-    <AuthContextConsumer>
-      {({ authenticated, setAuthenticated }) =>
-        authenticated ? (
-          <Redirect to="/library" />
-        ) : (
-          <LandingLayout>
-            <Logo src="/images/logo-icon-black.png" alt="" />
-            <TitleText src="/images/logo-text-black.png" />
-            <SignIn>
-              <GoogleLogin
-                clientId="631703414652-navvamq2108qu88d9i7bo77gn2kqsi40.apps.googleusercontent.com"
-                buttonText="Sign in with Google"
-                onSuccess={(response) => {
-                  loginSuccesHandler(response, setAuthenticated);
-                }}
-                onFailure={loginFailureHandler}
-                cookiePolicy={"single_host_origin"}
-              />
-            </SignIn>
-          </LandingLayout>
-        )
-      }
-    </AuthContextConsumer>
+    <LandingLayout>
+      <Logo src="/images/logo-icon-black.png" alt="" />
+      <TitleText src="/images/logo-text-black.png" />
+      <SignIn>
+        <GoogleLogin
+          clientId="631703414652-navvamq2108qu88d9i7bo77gn2kqsi40.apps.googleusercontent.com"
+          buttonText="Sign in with Google"
+          onSuccess={loginSuccesHandler}
+          onFailure={loginFailureHandler}
+          cookiePolicy={"single_host_origin"}
+        />
+      </SignIn>
+    </LandingLayout>
   );
 };
 

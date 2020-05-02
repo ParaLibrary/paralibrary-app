@@ -1,37 +1,55 @@
-import React, { createContext } from "react";
+import React, { createContext, useState, useEffect, useMemo } from "react";
+
+export interface Credential {
+  authenticated: boolean;
+  userId?: number;
+  sessionId?: number;
+}
+
+const initialCredentials: Credential = {
+  authenticated: false,
+  userId: undefined,
+  sessionId: undefined,
+};
 
 export interface AuthInterface {
-  authenticated: boolean;
-  setAuthenticated(newAuthState: boolean): void;
+  credential: Credential;
+  login(newAuthState: Credential): void;
+  logout(): void;
 }
 
-const AuthContext = createContext<AuthInterface>({
-  authenticated: false,
-  setAuthenticated: () => {},
+export const AuthContext = createContext<AuthInterface>({
+  credential: initialCredentials,
+  login: () => {},
+  logout: () => {},
 });
 
-/**
- * TODO: Rewrite as functional component. Definitely got this from Stack Overflow
- */
-export class AuthContextProvider extends React.Component {
-  setAuthenticated = (newAuthState: boolean) => {
-    console.log("NEW STATE: " + newAuthState);
-    this.setState({ authenticated: newAuthState });
-    sessionStorage.setItem("AuthState", "true");
+function AuthContextProvider(props: any) {
+  const [authData, setAuthData] = useState(initialCredentials);
+  const authKey = "auth";
+
+  useEffect(() => {
+    const currentAuthData = sessionStorage.getItem(authKey);
+    if (currentAuthData) {
+      const data: Credential = JSON.parse(currentAuthData);
+      setAuthData(data);
+    }
+  }, []);
+
+  const onLogout = () => setAuthData(initialCredentials);
+
+  const onLogin = (newCredential: Credential) => {
+    sessionStorage.setItem(authKey, JSON.stringify(newCredential));
+    setAuthData(newCredential);
   };
 
-  state = {
-    authenticated: sessionStorage.getItem("AuthState") === "true",
-    setAuthenticated: this.setAuthenticated,
+  const value: AuthInterface = {
+    credential: authData,
+    login: onLogin,
+    logout: onLogout,
   };
 
-  render() {
-    return (
-      <AuthContext.Provider value={this.state}>
-        {this.props.children}
-      </AuthContext.Provider>
-    );
-  }
+  return <AuthContext.Provider value={value} {...props} />;
 }
 
-export const AuthContextConsumer = AuthContext.Consumer;
+export default AuthContextProvider;
