@@ -81,7 +81,7 @@ const LandingPage: React.FC = () => {
 
     // TODO: Send onlineResponse.tokenId to the backend to validate the token
     // Then, if the backend response is valid, store the user information and session ID
-    // in localStorage
+    // in sessionStorage
     setAuthenticated(true);
   }
 

@@ -17,11 +17,11 @@ export class AuthContextProvider extends React.Component {
   setAuthenticated = (newAuthState: boolean) => {
     console.log("NEW STATE: " + newAuthState);
     this.setState({ authenticated: newAuthState });
-    localStorage.setItem("AuthState", "true");
+    sessionStorage.setItem("AuthState", "true");
   };
 
   state = {
-    authenticated: localStorage.getItem("AuthState") === "true",
+    authenticated: sessionStorage.getItem("AuthState") === "true",
     setAuthenticated: this.setAuthenticated,
   };
 
