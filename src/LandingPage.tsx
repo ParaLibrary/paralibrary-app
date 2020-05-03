@@ -1,6 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-import { GoogleLogin } from 'react-google-login';
+import {
+  GoogleLogin,
+  GoogleLoginResponse,
+  GoogleLoginResponseOffline,
+} from "react-google-login";
 
 const LandingLayout = styled.div`
   display: grid;
@@ -46,7 +50,7 @@ const TitleText = styled.img`
   width: 100%;
   display: block;
   object-fit: contain;
-  
+
   @media screen and (min-width: 480px) {
     grid-area: title;
     align-self: center;
@@ -61,19 +65,35 @@ const SignIn = styled.div`
 `;
 
 const LandingPage: React.FC = () => {
+  function loginSuccessHandler(
+    response: GoogleLoginResponse | GoogleLoginResponseOffline
+  ) {
+    console.log(response);
+    let onlineResponse = response as GoogleLoginResponse;
+    if (!onlineResponse) {
+      // Not supported yet
+      return;
+    }
+    // TODO: Send onlineResponse.tokenId to the backend to validate the token, get the user object, and store that in localStorage
+    localStorage.setItem("token", onlineResponse.tokenId);
+    localStorage.setItem("user", onlineResponse.profileObj.name);
+  }
+
+  const loginFailureHandler = (error: GoogleLoginResponse) => {
+    console.log(error);
+  };
   return (
     <LandingLayout>
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com"/>
-      <Logo src="/images/logo-icon-black.png" alt=""/>
-      <TitleText src="/images/logo-text-black.png"/>
+      <Logo src="/images/logo-icon-black.png" alt="" />
+      <TitleText src="/images/logo-text-black.png" />
       <SignIn>
         <GoogleLogin
-          clientId=""
+          clientId="631703414652-navvamq2108qu88d9i7bo77gn2kqsi40.apps.googleusercontent.com"
+          disabled={false}
           buttonText="Sign in with Google"
-          onSuccess={() => {}}
-          onFailure={() => {}}
-          cookiePolicy={'single_host_origin'}
+          onSuccess={loginSuccessHandler}
+          onFailure={loginFailureHandler}
+          cookiePolicy={"single_host_origin"}
         />
       </SignIn>
     </LandingLayout>
