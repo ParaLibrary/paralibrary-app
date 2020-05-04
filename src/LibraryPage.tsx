@@ -7,8 +7,8 @@ import { Book } from "./ourtypes";
 
 const LibraryPage: React.FC = () => {
   const emptyBook: Book = {
-    id: 0,
-    user_id: 0, // We will need to set this when user authentification happens
+    id: "",
+    user_id: "", // We will need to set this when user authentification happens
     title: "",
     author: "",
     isbn: "",

@@ -5,10 +5,10 @@ import { useHistory } from "react-router-dom";
 import { Loan } from "./ourtypes";
 
 interface LRBProps {
-  id: number;
-  userID: number;
+  id: string;
+  userID: string;
   loans: Loan[];
-  requestLoan?: (bookID: number) => Promise<boolean>;
+  requestLoan?: (bookID: string) => Promise<boolean>;
   cancelLoan?: (loan: Loan) => Promise<boolean>;
 }
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Friend } from "./ourtypes";
 import PageLayout from "./PageLayout";
-import AutoTable, { TableHeader } from "./Table";
+import AutoTable, { TableHeader } from "./AutoTable";
 import FriendRequestButtons from "./FriendRequestButtons";
 
 const FriendsPage: React.FC = () => {
@@ -10,34 +10,34 @@ const FriendsPage: React.FC = () => {
   const [friends, setFriends] = useState<Friend[]>([]);
   const [nearbyPeople] = useState<Friend[]>([]);
 
-  function AcceptFriendship(id: number) {
+  function AcceptFriendship(id: string) {
     const options = {
-      method: 'POST'
-    }
+      method: "POST",
+    };
     return fetch(`http://paralibrary.digital/api/friends/${id}/accept`, options)
-    .then(response => response.status === 200)
-    .then(success => {
-      if(success) {
-        let friend = friends.find(friend => friend.id === id);
-        if(friend) {
-          friend.status = "friends";
-          setFriends([...friends]);
+      .then((response) => response.status === 200)
+      .then((success) => {
+        if (success) {
+          let friend = friends.find((friend) => friend.id === id);
+          if (friend) {
+            friend.status = "friends";
+            setFriends([...friends]);
+          }
         }
-      }
-    })
+      });
   }
-  
-  function RejectFriendship(id: number) {
+
+  function RejectFriendship(id: string) {
     const options = {
-      method: 'POST'
-    }
+      method: "POST",
+    };
     return fetch(`http://paralibrary.digital/api/friends/${id}/reject`, options)
-    .then(response => response.status === 200)
-    .then(success => {
-      if(success) {
-        setFriends(friends.filter(friend => friend.id !== id));
-      }
-    })
+      .then((response) => response.status === 200)
+      .then((success) => {
+        if (success) {
+          setFriends(friends.filter((friend) => friend.id !== id));
+        }
+      });
   }
   useEffect(() => {
     fetch("http://paralibrary.digital/api/friends")
@@ -84,9 +84,11 @@ const FriendsPage: React.FC = () => {
         </AutoTable>
       }
     >
-      {!isLoaded ? ("Loading...")
-      : error ? ("An error occured.")
-      : (
+      {!isLoaded ? (
+        "Loading..."
+      ) : error ? (
+        "An error occured."
+      ) : (
         <>
           <AutoTable
             data={friendRequests}
@@ -94,7 +96,11 @@ const FriendsPage: React.FC = () => {
             hideOnEmpty
           >
             <TableHeader col={"display_name"}>Username</TableHeader>
-            <FriendRequestButtons id={0} onAccept={AcceptFriendship} onReject={RejectFriendship}/>
+            <FriendRequestButtons
+              id={"0"}
+              onAccept={AcceptFriendship}
+              onReject={RejectFriendship}
+            />
           </AutoTable>
           <AutoTable
             data={currentFriends}
