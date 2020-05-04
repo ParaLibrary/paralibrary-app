@@ -8,16 +8,16 @@ interface LRBProps {
   id: number;
   userID: number;
   loans: Loan[];
-  requestLoan?: (bookID: number) => Promise<boolean>;
-  cancelLoan?: (loan: Loan) => Promise<boolean>;
+  onRequest?: (bookID: number) => Promise<boolean>;
+  onCancel?: (loan: Loan) => Promise<boolean>;
 }
 
 const LoanRequestButton: React.FC<LRBProps> = ({
   id: bookID,
   userID, //probably use authentication context when that's up instead
   loans,
-  requestLoan,
-  cancelLoan,
+  onRequest: requestLoan,
+  onCancel: cancelLoan,
 }) => {
   const existingLoan = useMemo(
     () => loans.find((value: Loan) => value.book_id === bookID),
@@ -27,11 +27,11 @@ const LoanRequestButton: React.FC<LRBProps> = ({
 
   const handleRequest = useCallback(async () => {
     setIsDisabled(true);
-    const success = !!requestLoan && (await requestLoan(bookID));
+    const success = requestLoan !== undefined && (await requestLoan(bookID));
     if (!success) {
       setIsDisabled(false);
     }
-  }, [requestLoan]);
+  }, [bookID, requestLoan]);
 
   const handleCancel = useCallback(async () => {
     setIsDisabled(true);
@@ -40,7 +40,7 @@ const LoanRequestButton: React.FC<LRBProps> = ({
     if (!success) {
       setIsDisabled(false);
     }
-  }, [cancelLoan]);
+  }, [existingLoan, cancelLoan]);
 
   const history = useHistory();
 
