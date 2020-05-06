@@ -1,4 +1,5 @@
-import React, { createContext, useState, useEffect, useMemo } from "react";
+import React, { createContext, useState, useEffect } from "react";
+import Cookie from "js-cookie";
 
 export interface Credential {
   authenticated: boolean;
@@ -29,17 +30,20 @@ function AuthContextProvider(props: any) {
   const authKey = "auth";
 
   useEffect(() => {
-    const currentAuthData = sessionStorage.getItem(authKey);
+    const currentAuthData = Cookie.get(authKey);
     if (currentAuthData) {
       const data: Credential = JSON.parse(currentAuthData);
       setAuthData(data);
     }
   }, []);
 
-  const onLogout = () => setAuthData(initialCredentials);
+  const onLogout = () => {
+    Cookie.remove(authKey);
+    setAuthData(initialCredentials);
+  };
 
   const onLogin = (newCredential: Credential) => {
-    sessionStorage.setItem(authKey, JSON.stringify(newCredential));
+    Cookie.set(authKey, JSON.stringify(newCredential)); // Cookies can be set to expire with the 'expires' option
     setAuthData(newCredential);
   };
 

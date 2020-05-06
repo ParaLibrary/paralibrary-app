@@ -70,25 +70,32 @@ const LandingPage: React.FC = () => {
   const auth = useContext(AuthContext);
 
   function loginSuccesHandler(
-    response: GoogleLoginResponse | GoogleLoginResponseOffline
+    googleResponse: GoogleLoginResponse | GoogleLoginResponseOffline
   ) {
-    console.log(response);
-    let onlineResponse = response as GoogleLoginResponse;
+    let onlineResponse = googleResponse as GoogleLoginResponse;
     if (!onlineResponse) {
       // Not supported yet
       return;
     }
 
-    // const options = {
-    //   method: "POST",
-    // };
-    // return fetch(`http://paralibrary.digital/api/login`, options).then(
-    //   (response) => {
-    //     if (response.status === 200) {
-    auth.login({ authenticated: true });
-    //     }
-    //   }
-    // );
+    const options = {
+      credentials: "include" as const,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: `idtoken=${onlineResponse.tokenId}`,
+    };
+    return fetch(`http://paralibrary.digital/api/login`, options)
+      .then(async (response) => {
+        if (response.status === 200) {
+          let json = await response.json();
+          auth.login({ authenticated: true, userId: json.userId });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   const loginFailureHandler = (error: GoogleLoginResponse) => {
