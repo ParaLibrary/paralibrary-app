@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
-import { AuthContext } from "./AuthDataProvider";
+import { AuthContext } from "./AuthContextProvider";
 import { Redirect } from "react-router-dom";
 
 interface PageLayoutProps {

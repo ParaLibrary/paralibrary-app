@@ -4,13 +4,11 @@ import Cookie from "js-cookie";
 export interface Credential {
   authenticated: boolean;
   userId?: number;
-  sessionId?: number;
 }
 
 const initialCredentials: Credential = {
   authenticated: false,
   userId: undefined,
-  sessionId: undefined,
 };
 
 export interface AuthInterface {

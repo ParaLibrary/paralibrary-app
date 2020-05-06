@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import styled, { ThemeProvider } from "styled-components";
 
-import AuthContextProvider from "./AuthDataProvider";
+import AuthContextProvider from "./AuthContextProvider";
 import LibraryPage from "./LibraryPage";
 import FriendLibraryPage from "./FriendLibraryPage";
 import LandingPage from "./LandingPage";

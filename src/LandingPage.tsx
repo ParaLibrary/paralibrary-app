@@ -6,7 +6,7 @@ import {
   GoogleLoginResponse,
   GoogleLoginResponseOffline,
 } from "react-google-login";
-import { AuthContext } from "./AuthDataProvider";
+import { AuthContext } from "./AuthContextProvider";
 
 const LandingLayout = styled.div`
   display: grid;
