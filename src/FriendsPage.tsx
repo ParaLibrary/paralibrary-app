@@ -97,7 +97,7 @@ const FriendsPage: React.FC = () => {
           >
             <TableHeader col={"display_name"}>Username</TableHeader>
             <FriendRequestButtons
-              id={"0"}
+              id={""}
               onAccept={AcceptFriendship}
               onReject={RejectFriendship}
             />
