@@ -1,18 +1,12 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
-<<<<<<< HEAD
 import { Redirect } from "react-router-dom";
-=======
->>>>>>> origin
 import {
   GoogleLogin,
   GoogleLoginResponse,
   GoogleLoginResponseOffline,
 } from "react-google-login";
-<<<<<<< HEAD
 import { AuthContext } from "./AuthDataProvider";
-=======
->>>>>>> origin
 
 const LandingLayout = styled.div`
   display: grid;
@@ -75,7 +69,7 @@ const SignIn = styled.div`
 const LandingPage: React.FC = () => {
   const auth = useContext(AuthContext);
 
-  function loginSuccesHandler(
+  function loginSuccessHandler(
     googleResponse: GoogleLoginResponse | GoogleLoginResponseOffline
   ) {
     let onlineResponse = googleResponse as GoogleLoginResponse;
@@ -107,13 +101,10 @@ const LandingPage: React.FC = () => {
   const loginFailureHandler = (error: GoogleLoginResponse) => {
     console.log(error);
   };
-<<<<<<< HEAD
 
   if (auth.credential.authenticated) {
     return <Redirect to="/library" />;
   }
-=======
->>>>>>> origin
   return (
     <LandingLayout>
       <Logo src="/images/logo-icon-black.png" alt="" />

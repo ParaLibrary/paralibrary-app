@@ -12,35 +12,37 @@ const FriendsPage: React.FC = () => {
 
   function AcceptFriendship(id: number) {
     const options = {
-      method: 'POST'
-    }
+      method: "POST",
+      credentials: "include" as const,
+    };
     return fetch(`http://paralibrary.digital/api/friends/${id}/accept`, options)
-    .then(response => response.status === 200)
-    .then(success => {
-      if(success) {
-        let friend = friends.find(friend => friend.id === id);
-        if(friend) {
-          friend.status = "friends";
-          setFriends([...friends]);
+      .then((response) => response.status === 200)
+      .then((success) => {
+        if (success) {
+          let friend = friends.find((friend) => friend.id === id);
+          if (friend) {
+            friend.status = "friends";
+            setFriends([...friends]);
+          }
         }
-      }
-    })
+      });
   }
-  
+
   function RejectFriendship(id: number) {
     const options = {
-      method: 'POST'
-    }
+      method: "POST",
+      credentials: "include" as const,
+    };
     return fetch(`http://paralibrary.digital/api/friends/${id}/reject`, options)
-    .then(response => response.status === 200)
-    .then(success => {
-      if(success) {
-        setFriends(friends.filter(friend => friend.id !== id));
-      }
-    })
+      .then((response) => response.status === 200)
+      .then((success) => {
+        if (success) {
+          setFriends(friends.filter((friend) => friend.id !== id));
+        }
+      });
   }
   useEffect(() => {
-    fetch("http://paralibrary.digital/api/friends")
+    fetch("http://paralibrary.digital/api/friends", { credentials: "include" })
       .then((res) => {
         return res.json();
       })
@@ -84,9 +86,11 @@ const FriendsPage: React.FC = () => {
         </AutoTable>
       }
     >
-      {!isLoaded ? ("Loading...")
-      : error ? ("An error occured.")
-      : (
+      {!isLoaded ? (
+        "Loading..."
+      ) : error ? (
+        "An error occured."
+      ) : (
         <>
           <AutoTable
             data={friendRequests}
@@ -94,7 +98,11 @@ const FriendsPage: React.FC = () => {
             hideOnEmpty
           >
             <TableHeader col={"display_name"}>Username</TableHeader>
-            <FriendRequestButtons id={0} onAccept={AcceptFriendship} onReject={RejectFriendship}/>
+            <FriendRequestButtons
+              id={0}
+              onAccept={AcceptFriendship}
+              onReject={RejectFriendship}
+            />
           </AutoTable>
           <AutoTable
             data={currentFriends}
