@@ -4,6 +4,7 @@ import styled, { ThemeProvider } from "styled-components";
 
 import AuthContextProvider from "./AuthDataProvider";
 import LibraryPage from "./LibraryPage";
+import FriendLibraryPage from "./FriendLibraryPage";
 import LandingPage from "./LandingPage";
 import FriendsPage from "./FriendsPage";
 import LoansPage from "./LoansPage";
@@ -41,7 +42,11 @@ const App = () => {
                 <Link to={"/settings"}>Settings</Link>
               </NavBar>
               <MainContent>
-                <Route path="/library" component={LibraryPage}></Route>
+                <Route path="/library" exact component={LibraryPage}></Route>
+                <Route
+                  path="/library/:id"
+                  component={FriendLibraryPage}
+                ></Route>
                 <Route path="/friends" component={FriendsPage}></Route>
                 <Route path="/loans" component={LoansPage}></Route>
                 <Route path="/settings" component={SettingsPage}></Route>
