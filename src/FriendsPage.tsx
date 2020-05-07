@@ -71,8 +71,8 @@ const FriendsPage: React.FC = () => {
   );
 
   return (
-    <PageLayout>
-      <h1>My Friends</h1>
+    <PageLayout
+      header={<h1>My Friends</h1>}
       sidebar={
         <AutoTable
           data={nearbyPeople}
