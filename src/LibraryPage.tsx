@@ -4,7 +4,7 @@ import { Modal, Button } from "react-bootstrap";
 import PageLayout from "./PageLayout";
 import BookFormik from "./BookForm";
 import { Book } from "./ourtypes";
-import AutoTable, { TableHeader } from "./Table";
+import AutoTable, { TableHeader } from "./AutoTable";
 
 import { Table } from "react-bootstrap";
 import styled from "styled-components";
@@ -29,8 +29,8 @@ const LibraryPage: React.FC = () => {
   const [isNewBook, setIsNewBook] = useState(true);
   const [selectedBook, setSelectedBook] = useState<Book>(emptyBook);
   const tableData = {
-    id: 1,
-    user_id: 1, 
+    id: "1",
+    user_id: "1", 
     title: "Test book",
     author: "Some Schmuck",
     isbn: "978-3-16-148410-0",
