@@ -32,6 +32,7 @@ export interface Book {
   isbn: string;
   summary: string;
   private: boolean;
+  loan?: Loan;
 }
 
 export interface User {

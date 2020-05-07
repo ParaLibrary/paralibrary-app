@@ -16,10 +16,10 @@ const LoanForm: React.FC<FormikProps<LoanRequest>> = ({
   return (
     <Form noValidate onSubmit={handleSubmit}>
       <Form.Group as={Form.Row} controlId="contactInfo">
-        <Form.Label>Email owner can contact my with:</Form.Label>
+        <Form.Label>Email:</Form.Label>
         <Form.Control
           type="email"
-          name="email"
+          name="requester_contact"
           value={values.requester_contact}
           onChange={handleChange}
           isInvalid={touched.requester_contact && !!errors.requester_contact}
@@ -29,9 +29,7 @@ const LoanForm: React.FC<FormikProps<LoanRequest>> = ({
         </Form.Control.Feedback>
       </Form.Group>
       <Form.Row>
-        <Col sm={2}>
-          <Button type="submit">Save</Button>
-        </Col>
+        <Button type="submit">Save</Button>
       </Form.Row>
     </Form>
   );

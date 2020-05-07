@@ -2,26 +2,26 @@ import React, { useState, useMemo, useCallback } from "react";
 import { Button } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 
-import { Loan } from "./ourtypes";
+import { Book, Loan } from "./ourtypes";
 
 interface LRBProps {
   id: number;
   userID: number;
-  loans: Loan[];
-  onRequest?: (bookID: number) => Promise<boolean>;
-  onCancel?: (loan: Loan) => Promise<boolean>;
+  books: Book[];
+  onRequest: (bookID: number) => Promise<boolean> | boolean;
+  onCancel: (loan: Loan) => Promise<boolean> | boolean;
 }
 
 const LoanRequestButton: React.FC<LRBProps> = ({
   id: bookID,
   userID, //probably use authentication context when that's up instead
-  loans,
+  books,
   onRequest: requestLoan,
   onCancel: cancelLoan,
 }) => {
   const existingLoan = useMemo(
-    () => loans.find((value: Loan) => value.book_id === bookID),
-    [bookID, loans]
+    () => books.find((value: Book) => value.id === bookID)?.loan,
+    [bookID, books]
   );
   const [isDisabled, setIsDisabled] = useState(false);
 
@@ -35,8 +35,7 @@ const LoanRequestButton: React.FC<LRBProps> = ({
 
   const handleCancel = useCallback(async () => {
     setIsDisabled(true);
-    const success =
-      !!cancelLoan && !!existingLoan && (await cancelLoan(existingLoan));
+    const success = !!existingLoan && (await cancelLoan(existingLoan));
     if (!success) {
       setIsDisabled(false);
     }

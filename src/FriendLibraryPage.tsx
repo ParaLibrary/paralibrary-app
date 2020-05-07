@@ -13,19 +13,16 @@ const FriendLibraryPage: React.FC = () => {
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [books, setBooks] = useState<Book[]>([]);
-  const [requests, setRequests] = useState<Loan[]>([]);
   const [user, setUser] = useState<User>();
   useEffect(() => {
     fetch(`http://paralibrary.digital/api/libraries/${id}`)
       .then((res) => {
-        console.log(res);
         return res.json();
       })
       .then(
         (result) => {
           setBooks(result.books);
           setUser(result.user);
-          console.log(result);
         },
         (error) => {
           console.log(error);
@@ -41,18 +38,20 @@ const FriendLibraryPage: React.FC = () => {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [isNewRequest, setIsNewRequest] = useState(true);
-  const [successPromise, setRequestPromise] = useState<Promise<boolean>>();
+  const [successPromise, setRequestPromise] = useState<
+    Promise<boolean> | boolean
+  >(false);
   const [selectedLoan, setSelectedLoan] = useState<{
     book_id: number;
     requester_contact: string;
   }>({ book_id: -1, requester_contact: "" });
 
   const handleRequest = useCallback(
-    async (bookID: number) => {
+    (bookID: number) => {
       setIsNewRequest(true);
       setSelectedLoan({ book_id: bookID, requester_contact: "" });
       setModalOpen(true);
-      return successPromise !== undefined && (await successPromise);
+      return successPromise;
     },
     [successPromise]
   );
@@ -62,7 +61,9 @@ const FriendLibraryPage: React.FC = () => {
       fetch("http://paralibrary.digital/api/loans", {
         method: "PUT",
         body: JSON.stringify(loan),
-      }).then((resp) => resp.ok)
+      })
+        .then((resp) => resp.ok)
+        .catch(() => false)
     );
   }, []);
 
@@ -91,7 +92,7 @@ const FriendLibraryPage: React.FC = () => {
         <LoanRequestButton
           userID={1}
           id={0}
-          loans={requests}
+          books={books}
           onRequest={handleRequest}
           onCancel={handleCancel}
         />
