@@ -31,7 +31,7 @@ const TableCell = <T,>(props: CellProps<T>) => {
 };
 
 interface RowProps<T> {
-  id: number;
+  id: string;
   template: React.ReactElement | React.ReactElement[];
   data: T;
 }
@@ -54,7 +54,7 @@ const TableRow = <T,>(props: RowProps<T>) => {
   );
 };
 
-const AutoTable = <T extends { id: number }>(props: TableProps<T>) => {
+const AutoTable = <T extends { id: string }>(props: TableProps<T>) => {
   const { title, data, children, hideOnEmpty, placeholder } = props;
   const filteredHeaders = useMemo(
     () =>

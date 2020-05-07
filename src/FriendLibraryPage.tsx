@@ -3,7 +3,7 @@ import { useParams } from "react-router";
 
 import PageLayout from "./PageLayout";
 import { Book, Loan, User } from "./ourtypes";
-import AutoTable, { TableHeader } from "./Table";
+import AutoTable, { TableHeader } from "./AutoTable";
 import LoanRequestButton from "./LoanRequestButton";
 
 const FriendLibraryPage: React.FC = () => {
@@ -105,7 +105,7 @@ const FriendLibraryPage: React.FC = () => {
             <TableHeader col="title">Title</TableHeader>
             <TableHeader col="author">Author</TableHeader>
             <TableHeader col="summary">Description</TableHeader>
-            <LoanRequestButton userID={1} id={0} loans={requests} />
+            <LoanRequestButton userID="" id="" loans={requests} />
           </AutoTable>
         </>
       )}

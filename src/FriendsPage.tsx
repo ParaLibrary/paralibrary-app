@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Friend } from "./ourtypes";
 import PageLayout from "./PageLayout";
-import AutoTable, { TableHeader } from "./Table";
+import AutoTable, { TableHeader } from "./AutoTable";
 import FriendRequestButtons from "./FriendRequestButtons";
 
 const FriendsPage: React.FC = () => {
@@ -10,7 +10,7 @@ const FriendsPage: React.FC = () => {
   const [friends, setFriends] = useState<Friend[]>([]);
   const [nearbyPeople] = useState<Friend[]>([]);
 
-  function AcceptFriendship(id: number) {
+  function AcceptFriendship(id: string) {
     const options = {
       method: "POST",
       credentials: "include" as const,
@@ -28,7 +28,7 @@ const FriendsPage: React.FC = () => {
       });
   }
 
-  function RejectFriendship(id: number) {
+  function RejectFriendship(id: string) {
     const options = {
       method: "POST",
       credentials: "include" as const,
@@ -75,7 +75,8 @@ const FriendsPage: React.FC = () => {
   return (
     <PageLayout>
       <h1>My Friends</h1>
-      sidebar={
+      sidebar=
+      {
         <AutoTable
           data={nearbyPeople}
           title={<h3>Nearby People</h3>}
@@ -85,7 +86,7 @@ const FriendsPage: React.FC = () => {
           <button>Invite!</button>
         </AutoTable>
       }
-    >
+      >
       {!isLoaded ? (
         "Loading..."
       ) : error ? (
@@ -99,7 +100,7 @@ const FriendsPage: React.FC = () => {
           >
             <TableHeader col={"display_name"}>Username</TableHeader>
             <FriendRequestButtons
-              id={0}
+              id={""}
               onAccept={AcceptFriendship}
               onReject={RejectFriendship}
             />

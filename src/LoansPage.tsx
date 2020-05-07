@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import { Loan } from "./ourtypes";
 import PageLayout from "./PageLayout";
-import AutoTable, { TableHeader } from "./Table";
+import AutoTable, { TableHeader } from "./AutoTable";
 import { Button } from "react-bootstrap";
 
 const LoansPage: React.FC = () => {
