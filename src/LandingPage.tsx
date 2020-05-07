@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
+import { Redirect } from "react-router-dom";
 import {
   GoogleLogin,
   GoogleLoginResponse,
   GoogleLoginResponseOffline,
 } from "react-google-login";
+import { AuthContext } from "./AuthContextProvider";
 
 const LandingLayout = styled.div`
   display: grid;
@@ -65,23 +67,44 @@ const SignIn = styled.div`
 `;
 
 const LandingPage: React.FC = () => {
+  const auth = useContext(AuthContext);
+
   function loginSuccessHandler(
-    response: GoogleLoginResponse | GoogleLoginResponseOffline
+    googleResponse: GoogleLoginResponse | GoogleLoginResponseOffline
   ) {
-    console.log(response);
-    let onlineResponse = response as GoogleLoginResponse;
+    let onlineResponse = googleResponse as GoogleLoginResponse;
     if (!onlineResponse) {
       // Not supported yet
       return;
     }
-    // TODO: Send onlineResponse.tokenId to the backend to validate the token, get the user object, and store that in localStorage
-    localStorage.setItem("token", onlineResponse.tokenId);
-    localStorage.setItem("user", onlineResponse.profileObj.name);
+
+    const options = {
+      credentials: "include" as const,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: `idtoken=${onlineResponse.tokenId}`,
+    };
+    return fetch(`http://paralibrary.digital/api/login`, options)
+      .then(async (response) => {
+        if (response.status === 200) {
+          let json = await response.json();
+          auth.login({ authenticated: true, userId: json.userId });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   const loginFailureHandler = (error: GoogleLoginResponse) => {
     console.log(error);
   };
+
+  if (auth.credential.authenticated) {
+    return <Redirect to="/library" />;
+  }
   return (
     <LandingLayout>
       <Logo src="/images/logo-icon-black.png" alt="" />
@@ -89,7 +112,6 @@ const LandingPage: React.FC = () => {
       <SignIn>
         <GoogleLogin
           clientId="631703414652-navvamq2108qu88d9i7bo77gn2kqsi40.apps.googleusercontent.com"
-          disabled={false}
           buttonText="Sign in with Google"
           onSuccess={loginSuccessHandler}
           onFailure={loginFailureHandler}

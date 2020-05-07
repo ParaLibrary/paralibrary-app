@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
+import { AuthContext } from "./AuthContextProvider";
+import { Redirect } from "react-router-dom";
 
 interface PageLayoutProps {
   header?: React.ReactNode;
@@ -46,6 +48,11 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   sidebar,
   children,
 }) => {
+  const auth = useContext(AuthContext);
+
+  if (!auth.credential.authenticated) {
+    return <Redirect to="/" />;
+  }
   return (
     <Layout>
       {header && <Header>{header}</Header>}

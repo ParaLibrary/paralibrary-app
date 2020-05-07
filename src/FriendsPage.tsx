@@ -13,6 +13,7 @@ const FriendsPage: React.FC = () => {
   function AcceptFriendship(id: string) {
     const options = {
       method: "POST",
+      credentials: "include" as const,
     };
     return fetch(`http://paralibrary.digital/api/friends/${id}/accept`, options)
       .then((response) => response.status === 200)
@@ -30,6 +31,7 @@ const FriendsPage: React.FC = () => {
   function RejectFriendship(id: string) {
     const options = {
       method: "POST",
+      credentials: "include" as const,
     };
     return fetch(`http://paralibrary.digital/api/friends/${id}/reject`, options)
       .then((response) => response.status === 200)
@@ -40,7 +42,7 @@ const FriendsPage: React.FC = () => {
       });
   }
   useEffect(() => {
-    fetch("http://paralibrary.digital/api/friends")
+    fetch("http://paralibrary.digital/api/friends", { credentials: "include" })
       .then((res) => {
         return res.json();
       })
@@ -73,7 +75,8 @@ const FriendsPage: React.FC = () => {
   return (
     <PageLayout>
       <h1>My Friends</h1>
-      sidebar={
+      sidebar=
+      {
         <AutoTable
           data={nearbyPeople}
           title={<h3>Nearby People</h3>}
@@ -83,7 +86,7 @@ const FriendsPage: React.FC = () => {
           <button>Invite!</button>
         </AutoTable>
       }
-    >
+      >
       {!isLoaded ? (
         "Loading..."
       ) : error ? (

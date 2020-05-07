@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import styled, { ThemeProvider } from "styled-components";
 
+import AuthContextProvider from "./AuthContextProvider";
 import LibraryPage from "./LibraryPage";
 import FriendLibraryPage from "./FriendLibraryPage";
 import LandingPage from "./LandingPage";
@@ -29,26 +30,31 @@ const MainContent = styled.div`
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
-      <Router>
-        <Switch>
-          <Route exact path="/" component={LandingPage}></Route>
-          <PageLayout>
-            <NavBar>
-              <Link to={"/library"}>My Library</Link>
-              <Link to={"/friends"}>Friends</Link>
-              <Link to={"/loans"}>Loans</Link>
-              <Link to={"/settings"}>Settings</Link>
-            </NavBar>
-            <MainContent>
-              <Route path="/library" exact component={LibraryPage}></Route>
-              <Route path="/library/:id" component={FriendLibraryPage}></Route>
-              <Route path="/friends" component={FriendsPage}></Route>
-              <Route path="/loans" component={LoansPage}></Route>
-              <Route path="/settings" component={SettingsPage}></Route>
-            </MainContent>
-          </PageLayout>
-        </Switch>
-      </Router>
+      <AuthContextProvider>
+        <Router>
+          <Switch>
+            <Route exact path="/" component={LandingPage}></Route>
+            <PageLayout>
+              <NavBar>
+                <Link to={"/library"}>My Library</Link>
+                <Link to={"/friends"}>Friends</Link>
+                <Link to={"/loans"}>Loans</Link>
+                <Link to={"/settings"}>Settings</Link>
+              </NavBar>
+              <MainContent>
+                <Route path="/library" exact component={LibraryPage}></Route>
+                <Route
+                  path="/library/:id"
+                  component={FriendLibraryPage}
+                ></Route>
+                <Route path="/friends" component={FriendsPage}></Route>
+                <Route path="/loans" component={LoansPage}></Route>
+                <Route path="/settings" component={SettingsPage}></Route>
+              </MainContent>
+            </PageLayout>
+          </Switch>
+        </Router>
+      </AuthContextProvider>
     </ThemeProvider>
   );
 };
