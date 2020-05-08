@@ -11,11 +11,16 @@ const FriendsPage: React.FC = () => {
   const [nearbyPeople] = useState<Friend[]>([]);
 
   function AcceptFriendship(id: string) {
-    const options = {
+    return fetch(`http://paralibrary.digital/api/friends/${id}`, {
       method: "POST",
-      credentials: "include" as const,
-    };
-    return fetch(`http://paralibrary.digital/api/friends/${id}/accept`, options)
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        status: "accepted",
+      }),
+    })
       .then((response) => response.status === 200)
       .then((success) => {
         if (success) {
@@ -29,11 +34,16 @@ const FriendsPage: React.FC = () => {
   }
 
   function RejectFriendship(id: string) {
-    const options = {
+    return fetch(`http://paralibrary.digital/api/friends/${id}`, {
       method: "POST",
-      credentials: "include" as const,
-    };
-    return fetch(`http://paralibrary.digital/api/friends/${id}/reject`, options)
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        status: "rejected",
+      }),
+    })
       .then((response) => response.status === 200)
       .then((success) => {
         if (success) {
