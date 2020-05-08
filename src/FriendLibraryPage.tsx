@@ -34,7 +34,9 @@ const FriendLibraryPage: React.FC = () => {
   ]);
   const [user, setUser] = useState<User>();
   useEffect(() => {
-    fetch(`http://paralibrary.digital/api/libraries/${id}`)
+    fetch(`http://paralibrary.digital/api/libraries/${id}`, {
+      credentials: "include",
+    })
       .then((res) => {
         return res.json();
       })
@@ -57,36 +59,52 @@ const FriendLibraryPage: React.FC = () => {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [isNewRequest, setIsNewRequest] = useState(true);
-  const [selectedLoan, setSelectedLoan] = useState<{
-    book_id: number;
-    requester_contact: string;
-  }>({ book_id: -1, requester_contact: "" });
+  const [selectedLoan, setSelectedLoan] = useState<Loan | LoanRequest>({
+    book_id: -1,
+    requester_contact: "",
+    status: "pending",
+  });
 
   const handleRequest = useCallback((bookID: number) => {
     setIsNewRequest(true);
-    setSelectedLoan({ book_id: bookID, requester_contact: "" });
+    setSelectedLoan({
+      book_id: bookID,
+      requester_contact: "",
+      status: "pending",
+    });
     setModalOpen(true);
   }, []);
 
-  const updateDatabase = useCallback((loan: LoanRequest) => {
-    fetch("http://paralibrary.digital/api/loans", {
-      method: "PUT",
-      body: JSON.stringify(loan),
-    })
-      .then((res) => res.json())
-      .then((res: Loan) => {
-        setBooks(
-          books.map((book) =>
-            book.id !== loan.book_id ? book : { ...book, loan: res }
-          )
-        );
+  const updateDatabase = useCallback(
+    (loan: LoanRequest) => {
+      fetch("http://paralibrary.digital/api/loans", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(loan),
       })
-      .catch(() => false);
-  }, []);
+        .then((res) => res.json())
+        .then((res: Loan) => {
+          setBooks(
+            books.map((book) =>
+              book.id !== loan.book_id ? book : { ...book, loan: res }
+            )
+          );
+        })
+        .catch(() => false);
+    },
+    [books]
+  );
 
   const handleCancel = useCallback(async (loan: Loan) => {
     fetch(`http://paralibrary.digital/api/loans/${loan.id}`, {
       method: "DELETE",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(loan),
     });
   }, []);
@@ -95,7 +113,13 @@ const FriendLibraryPage: React.FC = () => {
     <PageLayout header={<h1>Loading...</h1>} />
   ) : (
     <PageLayout
-      header={!user ? null : <h1>{user && user.display_name}'s Library</h1>}
+      header={
+        !user ? (
+          <h1>User Not Found</h1>
+        ) : (
+          <h1>{user && user.display_name}'s Library</h1>
+        )
+      }
     >
       <AutoTable
         data={books}

@@ -52,6 +52,8 @@ const BookFormik: React.FC<LoanFormProps> = ({
         if (!values.requester_contact) {
           errors.requester_contact =
             "Must provide contact information for owner to reach you by.";
+        } else if (!/\S+@\S+\.\S+/.test(values.requester_contact)) {
+          errors.requester_contact = 'Missing "@" and/or "." in email.';
         }
         return errors;
       }}
