@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useMemo } from "react";
 import { Button } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 
@@ -8,8 +8,8 @@ interface LRBProps {
   id: number;
   userID: number;
   books: Book[];
-  onRequest: (bookID: number) => Promise<boolean> | boolean;
-  onCancel: (loan: Loan) => Promise<boolean> | boolean;
+  onRequest: (bookID: number) => void;
+  onCancel: (loan: Loan) => void;
 }
 
 const LoanRequestButton: React.FC<LRBProps> = ({
@@ -23,23 +23,6 @@ const LoanRequestButton: React.FC<LRBProps> = ({
     () => books.find((value: Book) => value.id === bookID)?.loan,
     [bookID, books]
   );
-  const [isDisabled, setIsDisabled] = useState(false);
-
-  const handleRequest = useCallback(async () => {
-    setIsDisabled(true);
-    const success = requestLoan !== undefined && (await requestLoan(bookID));
-    if (!success) {
-      setIsDisabled(false);
-    }
-  }, [bookID, requestLoan]);
-
-  const handleCancel = useCallback(async () => {
-    setIsDisabled(true);
-    const success = !!existingLoan && (await cancelLoan(existingLoan));
-    if (!success) {
-      setIsDisabled(false);
-    }
-  }, [existingLoan, cancelLoan]);
 
   const history = useHistory();
 
@@ -52,34 +35,26 @@ const LoanRequestButton: React.FC<LRBProps> = ({
     existingLoan.status === "returned" ||
     (existingLoan.status === "pending" && existingLoan.requester_id !== userID)
   ) {
-    return (
-      <Button disabled={isDisabled} onClick={handleRequest}>
-        Request Book
-      </Button>
-    );
+    return <Button onClick={() => requestLoan(bookID)}>Request Book</Button>;
   } else if (
     existingLoan.status === "pending" ||
     (existingLoan.status === "accepted" && existingLoan.requester_id === userID)
   ) {
     return (
-      <Button
-        variant="outline-danger"
-        disabled={isDisabled}
-        onClick={handleCancel}
-      >
+      <Button variant="outline-danger" onClick={() => cancelLoan(existingLoan)}>
         Cancel?
       </Button>
     );
   } else {
     if (existingLoan.requester_id === userID) {
       return (
-        <Button variant="outline-success" onClick={handleNavigate}>
+        <Button variant="success" onClick={handleNavigate}>
           Loaned Out
         </Button>
       );
     } else {
       return (
-        <Button variant="outline-info" disabled>
+        <Button variant="info" disabled>
           Loaned Out
         </Button>
       );

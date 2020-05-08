@@ -12,7 +12,26 @@ const FriendLibraryPage: React.FC = () => {
   const { id } = useParams();
 
   const [isLoaded, setIsLoaded] = useState(false);
-  const [books, setBooks] = useState<Book[]>([]);
+  const [books, setBooks] = useState<Book[]>([
+    {
+      id: 1,
+      user_id: 5,
+      title: "Book 1",
+      author: "A1",
+      isbn: "",
+      summary: "Sums it right up",
+      private: false,
+    },
+    {
+      id: 2,
+      user_id: 2,
+      title: "Book 1",
+      author: "A1",
+      isbn: "",
+      summary: "Sums it right up",
+      private: false,
+    },
+  ]);
   const [user, setUser] = useState<User>();
   useEffect(() => {
     fetch(`http://paralibrary.digital/api/libraries/${id}`)
@@ -34,48 +53,50 @@ const FriendLibraryPage: React.FC = () => {
       .finally(() => {
         setIsLoaded(true);
       });
-  }, []);
+  }, [id]);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [isNewRequest, setIsNewRequest] = useState(true);
-  const [successPromise, setRequestPromise] = useState<
-    Promise<boolean> | boolean
-  >(false);
   const [selectedLoan, setSelectedLoan] = useState<{
     book_id: number;
     requester_contact: string;
   }>({ book_id: -1, requester_contact: "" });
 
-  const handleRequest = useCallback(
-    (bookID: number) => {
-      setIsNewRequest(true);
-      setSelectedLoan({ book_id: bookID, requester_contact: "" });
-      setModalOpen(true);
-      return successPromise;
-    },
-    [successPromise]
-  );
+  const handleRequest = useCallback((bookID: number) => {
+    setIsNewRequest(true);
+    setSelectedLoan({ book_id: bookID, requester_contact: "" });
+    setModalOpen(true);
+  }, []);
 
   const updateDatabase = useCallback((loan: LoanRequest) => {
-    setRequestPromise(
-      fetch("http://paralibrary.digital/api/loans", {
-        method: "PUT",
-        body: JSON.stringify(loan),
+    fetch("http://paralibrary.digital/api/loans", {
+      method: "PUT",
+      body: JSON.stringify(loan),
+    })
+      .then((res) => res.json())
+      .then((res: Loan) => {
+        setBooks(
+          books.map((book) =>
+            book.id !== loan.book_id ? book : { ...book, loan: res }
+          )
+        );
       })
-        .then((resp) => resp.ok)
-        .catch(() => false)
-    );
+      .catch(() => false);
   }, []);
 
   const handleCancel = useCallback(async (loan: Loan) => {
-    return fetch(`http://paralibrary.digital/api/loans/${loan.id}`, {
+    fetch(`http://paralibrary.digital/api/loans/${loan.id}`, {
       method: "DELETE",
       body: JSON.stringify(loan),
-    }).then((res) => res.ok);
+    });
   }, []);
 
-  return (
-    <PageLayout header={!user ? null : <h1>{user.display_name}'s Library</h1>}>
+  return !isLoaded ? (
+    <PageLayout header={<h1>Loading...</h1>} />
+  ) : (
+    <PageLayout
+      header={!user ? null : <h1>{user && user.display_name}'s Library</h1>}
+    >
       <AutoTable
         data={books}
         title={<h3>Books</h3>}
