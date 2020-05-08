@@ -3,7 +3,7 @@ import Cookie from "js-cookie";
 
 export interface Credential {
   authenticated: boolean;
-  userId?: number;
+  userId?: string;
 }
 
 const initialCredentials: Credential = {

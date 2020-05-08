@@ -1,12 +1,12 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useContext } from "react";
 import { Button } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 
+import { AuthContext } from "./AuthContextProvider";
 import { Book, Loan } from "./ourtypes";
 
 interface LRBProps {
   id: string;
-  userID: string;
   books: Book[];
   onRequest: (bookID: string) => void;
   onCancel: (loan: Loan) => void;
@@ -14,11 +14,12 @@ interface LRBProps {
 
 const LoanRequestButton: React.FC<LRBProps> = ({
   id: bookID,
-  userID, //probably use authentication context when that's up instead
   books,
   onRequest: requestLoan,
   onCancel: cancelLoan,
 }) => {
+  const auth = useContext(AuthContext);
+  const userID = auth.credential.userId;
   const existingLoan = useMemo(
     () => books.find((value: Book) => value.id === bookID)?.loan,
     [bookID, books]
@@ -46,7 +47,7 @@ const LoanRequestButton: React.FC<LRBProps> = ({
       </Button>
     );
   } else {
-    if (existingLoan.requester_id === userID) {
+    if (existingLoan.requester_id === auth.credential.userId) {
       return (
         <Button variant="success" onClick={handleNavigate}>
           Loaned Out

@@ -5,11 +5,12 @@ export interface Friend {
   status: "requested" | "friends";
 }
 
-
 export interface Loan extends LoanRequest {
   id: string;
   owner_id: string;
+  owner_contact: string;
   requester_id: string;
+  requester_contact: string;
   book_id: string;
   request_date: Date;
   accept_date: Date;
@@ -19,7 +20,7 @@ export interface Loan extends LoanRequest {
 }
 
 export interface LoanRequest {
-  book_id: number;
+  book_id: string;
   requester_contact: string;
 }
 

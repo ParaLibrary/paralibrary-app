@@ -4,8 +4,7 @@ import { Modal } from "react-bootstrap";
 
 import PageLayout from "./PageLayout";
 import { Book, LoanRequest, Loan, User } from "./ourtypes";
-import AutoTable, { TableHeader } from "./Table";
-
+import AutoTable, { TableHeader } from "./AutoTable";
 import LoanRequestButton from "./LoanRequestButton";
 import LoanFormik from "./LoanForm";
 
@@ -13,26 +12,7 @@ const FriendLibraryPage: React.FC = () => {
   const { id } = useParams();
 
   const [isLoaded, setIsLoaded] = useState(false);
-  const [books, setBooks] = useState<Book[]>([
-    {
-      id: 1,
-      user_id: 5,
-      title: "Book 1",
-      author: "A1",
-      isbn: "",
-      summary: "Sums it right up",
-      private: false,
-    },
-    {
-      id: 2,
-      user_id: 2,
-      title: "Book 1",
-      author: "A1",
-      isbn: "",
-      summary: "Sums it right up",
-      private: false,
-    },
-  ]);
+  const [books, setBooks] = useState<Book[]>([]);
   const [user, setUser] = useState<User>();
   useEffect(() => {
     fetch(`http://paralibrary.digital/api/libraries/${id}`, {
@@ -61,12 +41,12 @@ const FriendLibraryPage: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [isNewRequest, setIsNewRequest] = useState(true);
   const [selectedLoan, setSelectedLoan] = useState<Loan | LoanRequest>({
-    book_id: -1,
+    book_id: "",
     requester_contact: "",
     status: "pending",
   });
 
-  const handleRequest = useCallback((bookID: number) => {
+  const handleRequest = useCallback((bookID: string) => {
     setIsNewRequest(true);
     setSelectedLoan({
       book_id: bookID,
@@ -136,8 +116,7 @@ const FriendLibraryPage: React.FC = () => {
         <TableHeader col="author">Author</TableHeader>
         <TableHeader col="summary">Description</TableHeader>
         <LoanRequestButton
-          userID={1}
-          id={0}
+          id=""
           books={books}
           onRequest={handleRequest}
           onCancel={handleCancel}
@@ -157,7 +136,6 @@ const FriendLibraryPage: React.FC = () => {
           />
         </Modal.Body>
       </Modal>
-
     </PageLayout>
   );
 };
