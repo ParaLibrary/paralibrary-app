@@ -5,6 +5,7 @@ import { Modal } from "react-bootstrap";
 import PageLayout from "./PageLayout";
 import { Book, LoanRequest, Loan, User } from "./ourtypes";
 import AutoTable, { TableHeader } from "./Table";
+
 import LoanRequestButton from "./LoanRequestButton";
 import LoanFormik from "./LoanForm";
 
@@ -156,6 +157,7 @@ const FriendLibraryPage: React.FC = () => {
           />
         </Modal.Body>
       </Modal>
+
     </PageLayout>
   );
 };

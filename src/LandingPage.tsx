@@ -1,6 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
-import { GoogleLogin } from 'react-google-login';
+import { Redirect } from "react-router-dom";
+import {
+  GoogleLogin,
+  GoogleLoginResponse,
+  GoogleLoginResponseOffline,
+} from "react-google-login";
+import { AuthContext } from "./AuthContextProvider";
 
 const LandingLayout = styled.div`
   display: grid;
@@ -46,7 +52,7 @@ const TitleText = styled.img`
   width: 100%;
   display: block;
   object-fit: contain;
-  
+
   @media screen and (min-width: 480px) {
     grid-area: title;
     align-self: center;
@@ -61,19 +67,55 @@ const SignIn = styled.div`
 `;
 
 const LandingPage: React.FC = () => {
+  const auth = useContext(AuthContext);
+
+  function loginSuccessHandler(
+    googleResponse: GoogleLoginResponse | GoogleLoginResponseOffline
+  ) {
+    let onlineResponse = googleResponse as GoogleLoginResponse;
+    if (!onlineResponse) {
+      // Not supported yet
+      return;
+    }
+
+    const options = {
+      credentials: "include" as const,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: `idtoken=${onlineResponse.tokenId}`,
+    };
+    return fetch(`http://paralibrary.digital/api/login`, options)
+      .then(async (response) => {
+        if (response.status === 200) {
+          let json = await response.json();
+          auth.login({ authenticated: true, userId: json.userId });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  const loginFailureHandler = (error: GoogleLoginResponse) => {
+    console.log(error);
+  };
+
+  if (auth.credential.authenticated) {
+    return <Redirect to="/library" />;
+  }
   return (
     <LandingLayout>
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com"/>
-      <Logo src="/images/logo-icon-black.png" alt=""/>
-      <TitleText src="/images/logo-text-black.png"/>
+      <Logo src="/images/logo-icon-black.png" alt="" />
+      <TitleText src="/images/logo-text-black.png" />
       <SignIn>
         <GoogleLogin
-          clientId=""
+          clientId="631703414652-navvamq2108qu88d9i7bo77gn2kqsi40.apps.googleusercontent.com"
           buttonText="Sign in with Google"
-          onSuccess={() => {}}
-          onFailure={() => {}}
-          cookiePolicy={'single_host_origin'}
+          onSuccess={loginSuccessHandler}
+          onFailure={loginFailureHandler}
+          cookiePolicy={"single_host_origin"}
         />
       </SignIn>
     </LandingLayout>

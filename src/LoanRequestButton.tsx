@@ -5,10 +5,10 @@ import { useHistory } from "react-router-dom";
 import { Book, Loan } from "./ourtypes";
 
 interface LRBProps {
-  id: number;
-  userID: number;
+  id: string;
+  userID: string;
   books: Book[];
-  onRequest: (bookID: number) => void;
+  onRequest: (bookID: string) => void;
   onCancel: (loan: Loan) => void;
 }
 
