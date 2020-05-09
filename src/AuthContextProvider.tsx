@@ -50,8 +50,8 @@ function AuthContextProvider(props: any) {
     setAuthData(newCredential);
   };
 
-  function msToDays(days: number) {
-    return days / (24 * 60 * 60 * 1000);
+  function msToDays(ms: number) {
+    return ms / (24 * 60 * 60 * 1000);
   }
 
   const value: AuthInterface = {
