@@ -6,13 +6,13 @@ import { AuthContext } from "./AuthContextProvider";
 import { Book, Loan } from "./ourtypes";
 
 interface LRBProps {
-  data?: Book;
+  rowItem?: Book;
   onRequest: (bookID: string) => void;
   onCancel: (loan: Loan) => void;
 }
 
 const LoanRequestButton: React.FC<LRBProps> = ({
-  data: book,
+  rowItem: book,
   onRequest: requestLoan,
   onCancel: cancelLoan,
 }) => {

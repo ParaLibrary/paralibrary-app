@@ -4,17 +4,17 @@ import { Button } from "react-bootstrap";
 import { Friend } from "./ourtypes";
 
 interface ButtonGroupProps {
-  data?: Friend;
+  rowItem?: Friend;
   onAccept: (id: string) => {};
   onReject: (id: string) => {};
 }
 
 const FriendRequestButtons: React.FC<ButtonGroupProps> = ({
-  data,
+  rowItem: friend,
   onAccept,
   onReject,
 }) => {
-  if (!data) {
+  if (!friend) {
     throw new Error("Row lacks valid data");
   }
   return (
@@ -24,7 +24,7 @@ const FriendRequestButtons: React.FC<ButtonGroupProps> = ({
         variant="primary"
         size="sm"
         onClick={() => {
-          onAccept(data.id);
+          onAccept(friend.id);
         }}
       >
         Accept
@@ -34,7 +34,7 @@ const FriendRequestButtons: React.FC<ButtonGroupProps> = ({
         variant="outline-danger"
         size="sm"
         onClick={() => {
-          onReject(data.id);
+          onReject(friend.id);
         }}
       >
         Reject
