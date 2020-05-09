@@ -115,12 +115,7 @@ const FriendLibraryPage: React.FC = () => {
         <TableColumn col="title">Title</TableColumn>
         <TableColumn col="author">Author</TableColumn>
         <TableColumn col="summary">Description</TableColumn>
-        <LoanRequestButton
-          id=""
-          books={books}
-          onRequest={handleRequest}
-          onCancel={handleCancel}
-        />
+        <LoanRequestButton onRequest={handleRequest} onCancel={handleCancel} />
       </AutoTable>
       <Modal show={modalOpen} onHide={() => setModalOpen(false)} centered>
         <Modal.Header closeButton>

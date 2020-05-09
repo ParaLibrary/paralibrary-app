@@ -16,7 +16,6 @@ const Padding = styled.div`
 `;
 
 interface RowProps<T> {
-  id: string;
   template: React.ReactElement | React.ReactElement[];
   data: T;
   rowAs?:
@@ -29,7 +28,7 @@ interface RowProps<T> {
 }
 
 const TableRow = <T,>(props: RowProps<T>) => {
-  const { id, template, data, rowAs } = props;
+  const { template, data, rowAs } = props;
   const Row = rowAs || "tr";
   return (
     <Row>
@@ -48,7 +47,7 @@ const TableRow = <T,>(props: RowProps<T>) => {
           }
           return <Cell>{data[col]}</Cell>;
         }
-        return <Cell>{cloneElement(child, { id })}</Cell>;
+        return <Cell>{cloneElement(child, { data })}</Cell>;
       })}
     </Row>
   );
@@ -108,11 +107,10 @@ const AutoTable = <T extends { id: string }>(props: TableProps<T>) => {
             {data.map((row: T) => (
               <TableRow
                 key={row.id}
-                id={row.id}
                 data={row}
                 template={children}
                 rowAs={!!tableAs ? rowAs : undefined}
-              ></TableRow>
+              />
             ))}
           </Body>
         </Wrapper>

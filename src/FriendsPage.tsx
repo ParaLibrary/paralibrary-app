@@ -110,7 +110,6 @@ const FriendsPage: React.FC = () => {
           >
             <TableColumn col={"display_name"}>Username</TableColumn>
             <FriendRequestButtons
-              id={""}
               onAccept={AcceptFriendship}
               onReject={RejectFriendship}
             />

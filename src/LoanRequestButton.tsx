@@ -1,4 +1,4 @@
-import React, { useMemo, useContext } from "react";
+import React, { useContext } from "react";
 import { Button } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 
@@ -6,24 +6,23 @@ import { AuthContext } from "./AuthContextProvider";
 import { Book, Loan } from "./ourtypes";
 
 interface LRBProps {
-  id: string;
-  books: Book[];
+  data?: Book;
   onRequest: (bookID: string) => void;
   onCancel: (loan: Loan) => void;
 }
 
 const LoanRequestButton: React.FC<LRBProps> = ({
-  id: bookID,
-  books,
+  data: book,
   onRequest: requestLoan,
   onCancel: cancelLoan,
 }) => {
+  if (!book) {
+    throw new Error("Row lacks valid data");
+  }
   const auth = useContext(AuthContext);
   const userID = auth.credential.userId;
-  const existingLoan = useMemo(
-    () => books.find((value: Book) => value.id === bookID)?.loan,
-    [bookID, books]
-  );
+  const existingLoan = book.loan;
+
   auth.logout();
 
   const history = useHistory();
@@ -37,7 +36,7 @@ const LoanRequestButton: React.FC<LRBProps> = ({
     existingLoan.status === "returned" ||
     (existingLoan.status === "pending" && existingLoan.requester_id !== userID)
   ) {
-    return <Button onClick={() => requestLoan(bookID)}>Request Book</Button>;
+    return <Button onClick={() => requestLoan(book.id)}>Request Book</Button>;
   } else if (
     existingLoan.status === "pending" ||
     (existingLoan.status === "accepted" && existingLoan.requester_id === userID)

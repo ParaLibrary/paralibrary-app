@@ -32,7 +32,7 @@ const LoanStatus: React.FC<LoanStatusProps> = ({ data }) => {
     );
   } else if (data.status === "accepted") {
     return (
-      <NoWrapButton block size="sm" variant="success" onClick={handleClick}>
+      <NoWrapButton block size="sm" variant="warning" onClick={handleClick}>
         Outgoing
       </NoWrapButton>
     );
