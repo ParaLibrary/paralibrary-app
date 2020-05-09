@@ -4,7 +4,7 @@ import { Modal } from "react-bootstrap";
 
 import PageLayout from "./PageLayout";
 import { Book, LoanRequest, Loan, User } from "./ourtypes";
-import AutoTable, { TableHeader } from "./AutoTable";
+import AutoTable, { TableColumn } from "./AutoTable";
 import LoanRequestButton from "./LoanRequestButton";
 import LoanFormik from "./LoanForm";
 
@@ -112,9 +112,9 @@ const FriendLibraryPage: React.FC = () => {
           </span>
         }
       >
-        <TableHeader col="title">Title</TableHeader>
-        <TableHeader col="author">Author</TableHeader>
-        <TableHeader col="summary">Description</TableHeader>
+        <TableColumn col="title">Title</TableColumn>
+        <TableColumn col="author">Author</TableColumn>
+        <TableColumn col="summary">Description</TableColumn>
         <LoanRequestButton
           id=""
           books={books}

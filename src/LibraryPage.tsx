@@ -4,7 +4,7 @@ import { Modal, Button } from "react-bootstrap";
 import PageLayout from "./PageLayout";
 import BookFormik from "./BookForm";
 import { Book } from "./ourtypes";
-import AutoTable, { TableHeader } from "./AutoTable";
+import AutoTable, { TableColumn } from "./AutoTable";
 
 interface ButtonGroupProps {
   id: number;
@@ -25,16 +25,28 @@ const LibraryPage: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [isNewBook, setIsNewBook] = useState(true);
   const [selectedBook, setSelectedBook] = useState<Book>(emptyBook);
-  const tableData = {
-    id: "1",
-    user_id: "1",
-    title: "Test book",
-    author: "Some Schmuck",
-    isbn: "978-3-16-148410-0",
-    summary:
-      "this is an example of when I am putting in data with no idea of what to write in.",
-    private: false,
-  };
+  const tableData = [
+    {
+      id: "1",
+      user_id: "1",
+      title: "Test book",
+      author: "Some ",
+      isbn: "978-3-16-148410-0",
+      summary:
+        "this is an example of when I am putting in data with no idea of what to write in.",
+      private: false,
+    },
+    {
+      id: "2",
+      user_id: "1",
+      title: "Test book",
+      author: "Some ",
+      isbn: "978-3-16-148410-0",
+      summary:
+        "this is an example of when I am putting in data with no idea of what to write in.",
+      private: false,
+    },
+  ];
 
   return (
     <PageLayout>
@@ -56,10 +68,10 @@ const LibraryPage: React.FC = () => {
 
       <Button onClick={() => setModalOpen(true)}>New Book</Button>
 
-      <AutoTable data={[tableData]}>
-        <TableHeader col="title">Title</TableHeader>
-        <TableHeader col="author">Author</TableHeader>
-        <TableHeader col="summary">Summary</TableHeader>
+      <AutoTable data={tableData} tableAs="div" rowAs="span">
+        <TableColumn col="title">Title</TableColumn>
+        <TableColumn col="author">Author</TableColumn>
+        <TableColumn col="summary">Summary</TableColumn>
         <button>Edit</button>
       </AutoTable>
     </PageLayout>

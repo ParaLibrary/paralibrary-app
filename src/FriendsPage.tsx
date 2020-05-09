@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Friend } from "./ourtypes";
 import PageLayout from "./PageLayout";
-import AutoTable, { TableHeader } from "./AutoTable";
+import AutoTable, { TableColumn } from "./AutoTable";
 import FriendRequestButtons from "./FriendRequestButtons";
 
 const FriendsPage: React.FC = () => {
@@ -92,7 +92,7 @@ const FriendsPage: React.FC = () => {
           title={<h3>Nearby People</h3>}
           placeholder={"Huh, seems like no one's around..."}
         >
-          <TableHeader col={"name"}>Name</TableHeader>
+          <TableColumn col={"name"}>Name</TableColumn>
           <button>Invite!</button>
         </AutoTable>
       }
@@ -108,7 +108,7 @@ const FriendsPage: React.FC = () => {
             title={<h3>Friend Requests</h3>}
             hideOnEmpty
           >
-            <TableHeader col={"display_name"}>Username</TableHeader>
+            <TableColumn col={"display_name"}>Username</TableColumn>
             <FriendRequestButtons
               id={""}
               onAccept={AcceptFriendship}
@@ -120,7 +120,7 @@ const FriendsPage: React.FC = () => {
             title={<h3>Current Friends</h3>}
             hideOnEmpty
           >
-            <TableHeader col={"display_name"}>Username</TableHeader>
+            <TableColumn col={"display_name"}>Username</TableColumn>
           </AutoTable>
         </>
       )}
