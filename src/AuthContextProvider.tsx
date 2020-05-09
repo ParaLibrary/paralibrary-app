@@ -13,7 +13,7 @@ const initialCredentials: Credential = {
 
 export interface AuthInterface {
   credential: Credential;
-  login(newAuthState: Credential): void;
+  login(newAuthState: Credential, maxAge: number): void;
   logout(): void;
 }
 
@@ -26,6 +26,7 @@ export const AuthContext = createContext<AuthInterface>({
 function AuthContextProvider(props: any) {
   const [authData, setAuthData] = useState(initialCredentials);
   const authKey = "auth";
+  const [isSetupComplete, setIsSetupComplete] = useState(false);
 
   useEffect(() => {
     const currentAuthData = Cookie.get(authKey);
@@ -33,6 +34,7 @@ function AuthContextProvider(props: any) {
       const data: Credential = JSON.parse(currentAuthData);
       setAuthData(data);
     }
+    setIsSetupComplete(true);
   }, []);
 
   const onLogout = () => {
@@ -40,10 +42,17 @@ function AuthContextProvider(props: any) {
     setAuthData(initialCredentials);
   };
 
-  const onLogin = (newCredential: Credential) => {
-    Cookie.set(authKey, JSON.stringify(newCredential)); // Cookies can be set to expire with the 'expires' option
+  const onLogin = (newCredential: Credential, maxAge: number) => {
+    Cookie.remove(authKey);
+    Cookie.set(authKey, JSON.stringify(newCredential), {
+      expires: msToDays(maxAge),
+    });
     setAuthData(newCredential);
   };
+
+  function msToDays(days: number) {
+    return days / (24 * 60 * 60 * 1000);
+  }
 
   const value: AuthInterface = {
     credential: authData,
@@ -51,7 +60,11 @@ function AuthContextProvider(props: any) {
     logout: onLogout,
   };
 
-  return <AuthContext.Provider value={value} {...props} />;
+  return isSetupComplete ? (
+    <AuthContext.Provider value={value} {...props} />
+  ) : (
+    <></>
+  );
 }
 
 export default AuthContextProvider;

@@ -83,10 +83,9 @@ const FriendsPage: React.FC = () => {
   );
 
   return (
-    <PageLayout>
-      <h1>My Friends</h1>
-      sidebar=
-      {
+    <PageLayout
+      header={<h1>My Friends</h1>}
+      sidebar={
         <AutoTable
           data={nearbyPeople}
           title={<h3>Nearby People</h3>}
@@ -96,7 +95,7 @@ const FriendsPage: React.FC = () => {
           <button>Invite!</button>
         </AutoTable>
       }
-      >
+    >
       {!isLoaded ? (
         "Loading..."
       ) : error ? (
