@@ -1,46 +1,29 @@
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useMemo, useContext } from "react";
 import { Button } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 
-import { Loan } from "./ourtypes";
+import { AuthContext } from "./AuthContextProvider";
+import { Book, Loan } from "./ourtypes";
 
 interface LRBProps {
   id: string;
-  userID: string;
-  loans: Loan[];
-  requestLoan?: (bookID: string) => Promise<boolean>;
-  cancelLoan?: (loan: Loan) => Promise<boolean>;
+  books: Book[];
+  onRequest: (bookID: string) => void;
+  onCancel: (loan: Loan) => void;
 }
 
 const LoanRequestButton: React.FC<LRBProps> = ({
   id: bookID,
-  userID, //probably use authentication context when that's up instead
-  loans,
-  requestLoan,
-  cancelLoan,
+  books,
+  onRequest: requestLoan,
+  onCancel: cancelLoan,
 }) => {
+  const auth = useContext(AuthContext);
+  const userID = auth.credential.userId;
   const existingLoan = useMemo(
-    () => loans.find((value: Loan) => value.book_id === bookID),
-    [bookID, loans]
+    () => books.find((value: Book) => value.id === bookID)?.loan,
+    [bookID, books]
   );
-  const [isDisabled, setIsDisabled] = useState(false);
-
-  const handleRequest = useCallback(async () => {
-    setIsDisabled(true);
-    const success = !!requestLoan && (await requestLoan(bookID));
-    if (!success) {
-      setIsDisabled(false);
-    }
-  }, [requestLoan]);
-
-  const handleCancel = useCallback(async () => {
-    setIsDisabled(true);
-    const success =
-      !!cancelLoan && !!existingLoan && (await cancelLoan(existingLoan));
-    if (!success) {
-      setIsDisabled(false);
-    }
-  }, [cancelLoan]);
 
   const history = useHistory();
 
@@ -53,34 +36,26 @@ const LoanRequestButton: React.FC<LRBProps> = ({
     existingLoan.status === "returned" ||
     (existingLoan.status === "pending" && existingLoan.requester_id !== userID)
   ) {
-    return (
-      <Button disabled={isDisabled} onClick={handleRequest}>
-        Request Book
-      </Button>
-    );
+    return <Button onClick={() => requestLoan(bookID)}>Request Book</Button>;
   } else if (
     existingLoan.status === "pending" ||
     (existingLoan.status === "accepted" && existingLoan.requester_id === userID)
   ) {
     return (
-      <Button
-        variant="outline-danger"
-        disabled={isDisabled}
-        onClick={handleCancel}
-      >
+      <Button variant="outline-danger" onClick={() => cancelLoan(existingLoan)}>
         Cancel?
       </Button>
     );
   } else {
-    if (existingLoan.requester_id === userID) {
+    if (existingLoan.requester_id === auth.credential.userId) {
       return (
-        <Button variant="outline-success" onClick={handleNavigate}>
+        <Button variant="success" onClick={handleNavigate}>
           Loaned Out
         </Button>
       );
     } else {
       return (
-        <Button variant="outline-info" disabled>
+        <Button variant="info" disabled>
           Loaned Out
         </Button>
       );

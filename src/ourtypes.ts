@@ -5,16 +5,23 @@ export interface Friend {
   status: "requested" | "friends";
 }
 
-export interface Loan {
+export interface Loan extends LoanRequest {
   id: string;
   owner_id: string;
+  owner_contact: string;
   requester_id: string;
+  requester_contact: string;
   book_id: string;
   request_date: Date;
   accept_date: Date;
   loan_start_date: Date;
   loan_end_date: Date;
   status: "pending" | "accepted" | "loaned" | "returned" | "late";
+}
+
+export interface LoanRequest {
+  book_id: string;
+  requester_contact: string;
 }
 
 export interface Book {
@@ -25,6 +32,7 @@ export interface Book {
   isbn: string;
   summary: string;
   private: boolean;
+  loan?: Loan;
 }
 
 export interface User {
