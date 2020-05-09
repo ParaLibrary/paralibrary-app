@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 interface TableColumnProps {
   col: string;
-  wrapper?: any;
+  component?: any;
 }
 
 export const TableColumn: React.FC<TableColumnProps> = ({ children }) => {
@@ -35,17 +35,20 @@ const TableRow = <T,>(props: RowProps<T>) => {
     <Row>
       {React.Children.map(template, (child: React.ReactElement) => {
         const childProps = child.props as TableColumnProps;
-        const Outer = !!rowAs ? React.Fragment : "td";
-        const Data = !!childProps.wrapper ? childProps.wrapper : React.Fragment;
+        const Cell = !!rowAs ? React.Fragment : "td";
+        const Wrapper = childProps.component;
         const col = (child.props as TableColumnProps).col as keyof T;
         if (col) {
-          return (
-            <Outer>
-              <Data data={data[col]}>{data[col]}</Data>
-            </Outer>
-          );
+          if (Wrapper) {
+            return (
+              <Cell>
+                <Wrapper data={data[col]} />
+              </Cell>
+            );
+          }
+          return <Cell>{data[col]}</Cell>;
         }
-        return <Data>{cloneElement(child, { id })}</Data>;
+        return <Cell>{cloneElement(child, { id })}</Cell>;
       })}
     </Row>
   );

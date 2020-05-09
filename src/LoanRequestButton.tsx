@@ -24,6 +24,7 @@ const LoanRequestButton: React.FC<LRBProps> = ({
     () => books.find((value: Book) => value.id === bookID)?.loan,
     [bookID, books]
   );
+  auth.logout();
 
   const history = useHistory();
 

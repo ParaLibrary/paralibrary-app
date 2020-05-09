@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Modal, Button } from "react-bootstrap";
 
 import PageLayout from "./PageLayout";
+import LoanStatus from "./LoanStatus";
 import BookFormik from "./BookForm";
 import { Book } from "./ourtypes";
 import AutoTable, { TableColumn } from "./AutoTable";
@@ -25,12 +26,12 @@ const LibraryPage: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [isNewBook, setIsNewBook] = useState(true);
   const [selectedBook, setSelectedBook] = useState<Book>(emptyBook);
-  const tableData = [
+  const tableData: Book[] = [
     {
       id: "1",
       user_id: "1",
-      title: "Test book",
-      author: "Some ",
+      title: "Test book 1",
+      author: "A",
       isbn: "978-3-16-148410-0",
       summary:
         "this is an example of when I am putting in data with no idea of what to write in.",
@@ -39,12 +40,25 @@ const LibraryPage: React.FC = () => {
     {
       id: "2",
       user_id: "1",
-      title: "Test book",
-      author: "Some ",
+      title: "Test book 2",
+      author: "B",
       isbn: "978-3-16-148410-0",
       summary:
         "this is an example of when I am putting in data with no idea of what to write in.",
       private: false,
+      loan: {
+        id: "1",
+        book_id: "2",
+        status: "pending",
+        owner_id: "1",
+        owner_contact: "",
+        requester_id: "",
+        requester_contact: "",
+        accept_date: new Date(),
+        request_date: new Date(),
+        loan_start_date: new Date(),
+        loan_end_date: new Date(),
+      },
     },
   ];
 
@@ -68,10 +82,13 @@ const LibraryPage: React.FC = () => {
 
       <Button onClick={() => setModalOpen(true)}>New Book</Button>
 
-      <AutoTable data={tableData} tableAs="div" rowAs="span">
+      <AutoTable data={tableData}>
         <TableColumn col="title">Title</TableColumn>
         <TableColumn col="author">Author</TableColumn>
         <TableColumn col="summary">Summary</TableColumn>
+        <TableColumn col="loan" component={LoanStatus}>
+          Status
+        </TableColumn>
         <button>Edit</button>
       </AutoTable>
     </PageLayout>
