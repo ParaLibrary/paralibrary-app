@@ -89,7 +89,6 @@ const LibraryPage: React.FC = () => {
         <TableColumn col="loan" component={LoanStatus}>
           Status
         </TableColumn>
-        <button>Edit</button>
       </AutoTable>
     </PageLayout>
   );
