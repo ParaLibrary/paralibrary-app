@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Friend } from "./ourtypes";
+import { toFriend } from "./mappers";
 import PageLayout from "./PageLayout";
 import AutoTable, { TableColumn } from "./AutoTable";
 import FriendRequestButtons from "./FriendRequestButtons";
@@ -58,7 +59,7 @@ const FriendsPage: React.FC = () => {
       })
       .then(
         (result) => {
-          setFriends(result);
+          setFriends(result.map(toFriend));
         },
         (error) => {
           setError(error);
@@ -107,7 +108,7 @@ const FriendsPage: React.FC = () => {
             title={<h3>Friend Requests</h3>}
             hideOnEmpty
           >
-            <TableColumn col={"display_name"}>Username</TableColumn>
+            <TableColumn col={"name"}>Username</TableColumn>
             <FriendRequestButtons
               onAccept={AcceptFriendship}
               onReject={RejectFriendship}
@@ -118,7 +119,7 @@ const FriendsPage: React.FC = () => {
             title={<h3>Current Friends</h3>}
             hideOnEmpty
           >
-            <TableColumn col={"display_name"}>Username</TableColumn>
+            <TableColumn col={"name"}>Username</TableColumn>
           </AutoTable>
         </>
       )}

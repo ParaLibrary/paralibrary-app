@@ -7,6 +7,7 @@ import { Book, LoanRequest, Loan, User } from "./ourtypes";
 import AutoTable, { TableColumn } from "./AutoTable";
 import LoanRequestButton from "./LoanRequestButton";
 import LoanFormik from "./LoanForm";
+import { toLibrary } from "./mappers";
 
 const FriendLibraryPage: React.FC = () => {
   const { id } = useParams();
@@ -23,8 +24,9 @@ const FriendLibraryPage: React.FC = () => {
       })
       .then(
         (result) => {
-          setBooks(result.books);
-          setUser(result.user);
+          const lib = toLibrary(result);
+          setBooks(lib.books);
+          setUser(lib.user);
         },
         (error) => {
           console.log(error);

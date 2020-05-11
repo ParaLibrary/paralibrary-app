@@ -5,6 +5,7 @@ import { Loan } from "./ourtypes";
 import PageLayout from "./PageLayout";
 import AutoTable, { TableColumn } from "./AutoTable";
 import { Button } from "react-bootstrap";
+import { toLoan } from "./mappers";
 
 const LoansPage: React.FC = () => {
   const [reqIsLoaded, setReqIsLoaded] = useState(false);
@@ -21,7 +22,7 @@ const LoansPage: React.FC = () => {
       })
       .then(
         (result) => {
-          setLoanedToMe(result);
+          setLoanedToMe(result.map(toLoan));
         },
         (error) => {
           console.log(error);
@@ -44,7 +45,7 @@ const LoansPage: React.FC = () => {
       })
       .then(
         (result) => {
-          setLoanedByMe(result);
+          setLoanedByMe(result.map(toLoan));
         },
         (error) => {
           console.log(error);
