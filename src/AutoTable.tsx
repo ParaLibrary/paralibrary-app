@@ -47,7 +47,7 @@ const TableRow = <T,>(props: RowProps<T>) => {
           }
           return <Cell>{data[col]}</Cell>;
         }
-        return <Cell>{cloneElement(child, { rowItem: data })}</Cell>;
+        return <Cell>{cloneElement(child, { rowitem: data })}</Cell>;
       })}
     </Row>
   );

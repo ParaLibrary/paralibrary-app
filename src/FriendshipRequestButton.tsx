@@ -4,10 +4,10 @@ import Button from "react-bootstrap/Button";
 import { Friend } from "./ourtypes";
 
 interface FRBProps {
-  rowItem?: Friend;
+  rowitem?: Friend;
 }
 
-const FriendshipRequestButton: React.FC<FRBProps> = ({ rowItem: friend }) => {
+const FriendshipRequestButton: React.FC<FRBProps> = ({ rowitem: friend }) => {
   if (!friend) {
     throw new Error("Row lacks data");
   }
