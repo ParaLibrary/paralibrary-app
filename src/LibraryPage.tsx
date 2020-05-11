@@ -20,7 +20,7 @@ const LibraryPage: React.FC = () => {
     author: "",
     isbn: "",
     summary: "",
-    private: false,
+    visibility: "public",
   };
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -35,7 +35,7 @@ const LibraryPage: React.FC = () => {
       isbn: "978-3-16-148410-0",
       summary:
         "this is an example of when I am putting in data with no idea of what to write in.",
-      private: false,
+      visibility: "public",
     },
     {
       id: "2",
@@ -45,14 +45,20 @@ const LibraryPage: React.FC = () => {
       isbn: "978-3-16-148410-0",
       summary:
         "this is an example of when I am putting in data with no idea of what to write in.",
-      private: false,
+      visibility: "public",
       loan: {
         id: "1",
         book_id: "2",
         status: "pending",
-        owner_id: "1",
+        owner: {
+          id: "1",
+          name: "Bob",
+        },
+        requester: {
+          id: "2",
+          name: "Sally",
+        },
         owner_contact: "",
-        requester_id: "",
         requester_contact: "",
         accept_date: new Date(),
         request_date: new Date(),
