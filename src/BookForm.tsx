@@ -85,14 +85,21 @@ const BookForm: React.FC<FormikProps<Book>> = ({
         </Col>
       </Form.Group>
       <Form.Group as={Form.Row} controlId="bookVis">
-        <Col sm={2}></Col>
-        <Form.Check
-          type="switch"
-          label="Private"
-          name="private"
-          value={values.private.toString()}
-          onChange={handleChange}
-        />
+        <Form.Label column sm={2}>
+          Visibility
+        </Form.Label>
+        <Col sm={10}>
+          <Form.Control
+            as="select"
+            name="visibility"
+            value={values.visibility}
+            onChange={handleChange}
+          >
+            <option value="public">Public</option>
+            <option value="friends">Friends Only</option>
+            <option value="private">Private</option>
+          </Form.Control>
+        </Col>
       </Form.Group>
       <Form.Row>
         <Col sm={2}>
@@ -130,6 +137,7 @@ const BookFormik: React.FC<BookFormProps> = ({
       }}
       initialValues={book}
       onSubmit={(values: Book) => {
+        console.log(values);
         updateDatabase(values);
         updateBookList(values);
         closeModal();
