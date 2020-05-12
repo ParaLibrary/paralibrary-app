@@ -7,7 +7,6 @@ import BookFormik from "./BookForm";
 import AutoTable, { TableHeader } from "./AutoTable";
 import { Book, User } from "./ourtypes";
 
-
 import { Table } from "react-bootstrap";
 import styled from "styled-components";
 
@@ -20,6 +19,8 @@ const LibraryPage: React.FC = () => {
   const emptyBook: Book = {
     id: 0,
     user_id: "0", 
+    id: "",
+    user_id: "", // We will need to set this when user authentification happens
     title: "",
     author: "",
     isbn: "",
@@ -89,12 +90,14 @@ const LibraryPage: React.FC = () => {
   const tableSampleData = {
     id: 1,
     user_id: 1, 
+  const tableData = {
+    id: 1,
+    user_id: "1", 
     title: "Test book",
     author: "Some Schmuck",
     isbn: "978-3-16-148410-0",
     summary: "this is an example of when I am putting in data with no idea of what to write in.",
     private: false,
-    
   };
   useEffect(() => {
     fetch(`http://paralibrary.digital/api/books/${id}`)
@@ -151,5 +154,6 @@ const LibraryPage: React.FC = () => {
     </PageLayout>
   );
 };
+
 
 export default LibraryPage;

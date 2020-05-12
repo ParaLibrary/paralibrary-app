@@ -16,6 +16,7 @@ const FriendLibraryPage: React.FC = () => {
   const [user, setUser] = useState<User>();
   useEffect(() => {
     fetch(`http://paralibrary.digital/api/books`)
+    fetch(`http://paralibrary.digital/api/books`, { credentials: "include" })
       .then((res) => {
         console.log(res);
         return res.json();
@@ -38,6 +39,9 @@ const FriendLibraryPage: React.FC = () => {
 
   useEffect(() => {
     fetch("http://paralibrary.digital/api/loans/requester")
+    fetch("http://paralibrary.digital/api/loans/requester", {
+      credentials: "include",
+    })
       .then((res) => {
         return res.json();
       })
@@ -59,6 +63,9 @@ const FriendLibraryPage: React.FC = () => {
 
   useEffect(() => {
     fetch(`http://paralibrary.digital/api/users/${id}`)
+   fetch(`http://paralibrary.digital/api/users/${id}`, {
+      credentials: "include",
+    })
       .then((res) => {
         return res.json();
       })
@@ -90,6 +97,7 @@ const FriendLibraryPage: React.FC = () => {
 
           <AutoTable
             data={id}
+            data={books}
             title={<h3>Books</h3>}
             placeholder={
               <span>
@@ -102,6 +110,7 @@ const FriendLibraryPage: React.FC = () => {
             <TableHeader col="author">Author</TableHeader>
             <TableHeader col="summary">Description</TableHeader>
             <LoanRequestButton userID={1} id={0} loans={requests} />
+            <LoanRequestButton userID="" id="" loans={requests} />
           </AutoTable>
         </>
       )}
