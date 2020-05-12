@@ -3,6 +3,7 @@ import { Friend } from "./ourtypes";
 import PageLayout from "./PageLayout";
 import AutoTable, { TableColumn } from "./AutoTable";
 import FriendRequestButtons from "./FriendRequestButtons";
+import FriendSearchBar from "./FriendSearchBar";
 
 const FriendsPage: React.FC = () => {
   const [error, setError] = useState<any>();
@@ -102,6 +103,7 @@ const FriendsPage: React.FC = () => {
         "An error occured."
       ) : (
         <>
+          <FriendSearchBar />
           <AutoTable
             data={friendRequests}
             title={<h3>Friend Requests</h3>}
