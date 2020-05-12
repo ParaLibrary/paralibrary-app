@@ -1,11 +1,3 @@
-export interface Friend {
-  id: string;
-  name: string;
-  status: FriendStatus;
-}
-
-export type FriendStatus = "requested" | "friends";
-
 export interface Loan extends LoanRequest {
   id: string;
   owner: User;
@@ -49,7 +41,10 @@ export type Visibility = "public" | "private" | "friends";
 export interface User {
   id: string;
   name: string;
+  status?: FriendStatus;
 }
+
+export type FriendStatus = "requested" | "friends" | "waiting";
 
 export interface Library {
   user: User;

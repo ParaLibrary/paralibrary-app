@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Friend } from "./ourtypes";
-import { toFriend } from "./mappers";
+import { User } from "./ourtypes";
+import { toUser } from "./mappers";
 import PageLayout from "./PageLayout";
 import AutoTable, { TableColumn } from "./AutoTable";
 import FriendRequestButtons from "./FriendRequestButtons";
@@ -8,8 +8,8 @@ import FriendRequestButtons from "./FriendRequestButtons";
 const FriendsPage: React.FC = () => {
   const [error, setError] = useState<any>();
   const [isLoaded, setIsLoaded] = useState(false);
-  const [friends, setFriends] = useState<Friend[]>([]);
-  const [nearbyPeople] = useState<Friend[]>([]);
+  const [friends, setFriends] = useState<User[]>([]);
+  const [nearbyPeople] = useState<User[]>([]);
 
   function AcceptFriendship(id: string) {
     return fetch(`http://paralibrary.digital/api/friends/${id}`, {
@@ -59,7 +59,7 @@ const FriendsPage: React.FC = () => {
       })
       .then(
         (result) => {
-          setFriends(result.map(toFriend));
+          setFriends(result.map(toUser));
         },
         (error) => {
           setError(error);
@@ -73,13 +73,13 @@ const FriendsPage: React.FC = () => {
       });
   }, []);
 
-  const friendRequests: Friend[] = useMemo(
-    () => friends.filter((friend: Friend) => friend.status === "requested"),
+  const friendRequests: User[] = useMemo(
+    () => friends.filter((friend: User) => friend.status === "requested"),
     [friends]
   );
 
-  const currentFriends: Friend[] = useMemo(
-    () => friends.filter((friend: Friend) => friend.status === "friends"),
+  const currentFriends: User[] = useMemo(
+    () => friends.filter((friend: User) => friend.status === "friends"),
     [friends]
   );
 

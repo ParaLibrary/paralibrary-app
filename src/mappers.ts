@@ -1,6 +1,5 @@
 import {
   Book,
-  Friend,
   FriendStatus,
   Library,
   Loan,
@@ -32,6 +31,7 @@ export function toUser(obj: any): User {
   return {
     id: obj.id,
     name: obj.name,
+    status: obj.status as FriendStatus,
   };
 }
 
@@ -67,23 +67,6 @@ export function toBook(obj: any): Book {
     summary: obj.summary,
     visibility: obj.visibility,
     loan: !!obj.loan ? toLoan(obj.loan) : undefined,
-  };
-}
-
-export function toFriend(obj: any): Friend {
-  if (!obj.id) {
-    throw new Error("Missing property 'id' in friend");
-  }
-  if (!obj.name) {
-    throw new Error("Missing property 'name' in friend");
-  }
-  if (!(obj.status as FriendStatus)) {
-    throw new Error("Missing or invalid property 'status' in friend");
-  }
-  return {
-    id: obj.id,
-    name: obj.name,
-    status: obj.status,
   };
 }
 

@@ -1,10 +1,10 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 
-import { Friend } from "./ourtypes";
+import { User } from "./ourtypes";
 
 interface ButtonGroupProps {
-  rowitem?: Friend;
+  rowitem?: User;
   onAccept: (id: string) => {};
   onReject: (id: string) => {};
 }
