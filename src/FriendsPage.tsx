@@ -104,26 +104,24 @@ const FriendsPage: React.FC = () => {
       ) : (
         <>
           <FriendSearchBar />
-          <div style={{ zIndex: 0, position: "sticky" }}>
-            <AutoTable
-              data={friendRequests}
-              title={<h3>Friend Requests</h3>}
-              hideOnEmpty
-            >
-              <TableColumn col={"display_name"}>Username</TableColumn>
-              <FriendRequestButtons
-                onAccept={AcceptFriendship}
-                onReject={RejectFriendship}
-              />
-            </AutoTable>
-            <AutoTable
-              data={currentFriends}
-              title={<h3>Current Friends</h3>}
-              hideOnEmpty
-            >
-              <TableColumn col={"display_name"}>Username</TableColumn>
-            </AutoTable>
-          </div>
+          <AutoTable
+            data={friendRequests}
+            title={<h3>Friend Requests</h3>}
+            hideOnEmpty
+          >
+            <TableColumn col={"display_name"}>Username</TableColumn>
+            <FriendRequestButtons
+              onAccept={AcceptFriendship}
+              onReject={RejectFriendship}
+            />
+          </AutoTable>
+          <AutoTable
+            data={currentFriends}
+            title={<h3>Current Friends</h3>}
+            hideOnEmpty
+          >
+            <TableColumn col={"display_name"}>Username</TableColumn>
+          </AutoTable>
         </>
       )}
     </PageLayout>
