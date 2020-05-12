@@ -3,6 +3,7 @@ import { Friend } from "./ourtypes";
 import PageLayout from "./PageLayout";
 import AutoTable, { TableHeader } from "./AutoTable";
 import FriendRequestButtons from "./FriendRequestButtons";
+import FriendSearchBar from "./FriendSearchBar";
 
 const FriendsPage: React.FC = () => {
   const [error, setError] = useState<any>();
@@ -102,25 +103,28 @@ const FriendsPage: React.FC = () => {
         "An error occured."
       ) : (
         <>
-          <AutoTable
-            data={friendRequests}
-            title={<h3>Friend Requests</h3>}
-            hideOnEmpty
-          >
-            <TableHeader col={"display_name"}>Username</TableHeader>
-            <FriendRequestButtons
-              id={""}
-              onAccept={AcceptFriendship}
-              onReject={RejectFriendship}
-            />
-          </AutoTable>
-          <AutoTable
-            data={currentFriends}
-            title={<h3>Current Friends</h3>}
-            hideOnEmpty
-          >
-            <TableHeader col={"display_name"}>Username</TableHeader>
-          </AutoTable>
+          <FriendSearchBar />
+          <div style={{ zIndex: 0, position: "sticky" }}>
+            <AutoTable
+              data={friendRequests}
+              title={<h3>Friend Requests</h3>}
+              hideOnEmpty
+            >
+              <TableHeader col={"display_name"}>Username</TableHeader>
+              <FriendRequestButtons
+                id={""}
+                onAccept={AcceptFriendship}
+                onReject={RejectFriendship}
+              />
+            </AutoTable>
+            <AutoTable
+              data={currentFriends}
+              title={<h3>Current Friends</h3>}
+              hideOnEmpty
+            >
+              <TableHeader col={"display_name"}>Username</TableHeader>
+            </AutoTable>
+          </div>
         </>
       )}
     </PageLayout>
