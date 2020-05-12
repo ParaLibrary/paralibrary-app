@@ -137,7 +137,6 @@ const BookFormik: React.FC<BookFormProps> = ({
       }}
       initialValues={book}
       onSubmit={(values: Book) => {
-        console.log(values);
         updateDatabase(values);
         updateBookList(values);
         closeModal();
