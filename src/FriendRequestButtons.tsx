@@ -1,16 +1,16 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 
-import { Friend } from "./ourtypes";
+import { User } from "./ourtypes";
 
 interface ButtonGroupProps {
-  rowItem?: Friend;
+  rowitem?: User;
   onAccept: (id: string) => {};
   onReject: (id: string) => {};
 }
 
 const FriendRequestButtons: React.FC<ButtonGroupProps> = ({
-  rowItem: friend,
+  rowitem: friend,
   onAccept,
   onReject,
 }) => {

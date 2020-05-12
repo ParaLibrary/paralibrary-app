@@ -7,6 +7,7 @@ import { Book, LoanRequest, Loan, User } from "./ourtypes";
 import AutoTable, { TableColumn } from "./AutoTable";
 import LoanRequestButton from "./LoanRequestButton";
 import LoanFormik from "./LoanForm";
+import { toLibrary } from "./mappers";
 
 const FriendLibraryPage: React.FC = () => {
   const { id } = useParams();
@@ -23,8 +24,9 @@ const FriendLibraryPage: React.FC = () => {
       })
       .then(
         (result) => {
-          setBooks(result.books);
-          setUser(result.user);
+          const lib = toLibrary(result);
+          setBooks(lib.books);
+          setUser(lib.user);
         },
         (error) => {
           console.log(error);
@@ -95,11 +97,7 @@ const FriendLibraryPage: React.FC = () => {
   ) : (
     <PageLayout
       header={
-        !user ? (
-          <h1>User Not Found</h1>
-        ) : (
-          <h1>{user && user.display_name}'s Library</h1>
-        )
+        !user ? <h1>User Not Found</h1> : <h1>{user && user.name}'s Library</h1>
       }
     >
       <AutoTable
@@ -107,8 +105,8 @@ const FriendLibraryPage: React.FC = () => {
         title={<h3>Books</h3>}
         placeholder={
           <span>
-            Huh, looks like {user && user.display_name} hasn't added anything to
-            their library.
+            Huh, looks like {user && user.name} hasn't added anything to their
+            library.
           </span>
         }
       >
