@@ -118,5 +118,5 @@ const AutoTable = <T extends { id: string }>(props: TableProps<T>) => {
     </>
   );
 };
-}
+
 export default AutoTable;

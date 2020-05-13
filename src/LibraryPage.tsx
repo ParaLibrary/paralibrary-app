@@ -1,41 +1,46 @@
-import React, { useState, cloneElement, useMemo, ReactElement, Component, useEffect } from "react";
+import React, {
+  useState,
+  cloneElement,
+  useMemo,
+  ReactElement,
+  Component,
+  useEffect,
+} from "react";
 import { Modal, Button } from "react-bootstrap";
 import { useParams } from "react-router";
 
 import PageLayout from "./PageLayout";
 import BookFormik from "./BookForm";
-import AutoTable, { TableHeader } from "./AutoTable";
+import AutoTable, { TableColumn } from "./AutoTable";
 import { Book, User } from "./ourtypes";
 
 import { Table } from "react-bootstrap";
 import styled from "styled-components";
 
 interface ButtonGroupProps {
-  id: number,
-  onEdit: (id: number) => {}
+  id: number;
+  onEdit: (id: number) => {};
 }
 
 const LibraryPage: React.FC = () => {
   const emptyBook: Book = {
-    id: 0,
-    user_id: "0", 
     id: "",
     user_id: "", // We will need to set this when user authentification happens
-      isbn: "",
+    isbn: "",
     summary: "",
-  title: "",
+    title: "",
     author: "",
-    private: false,
+    visibility: "public",
   };
   const openBook: Book = {
-    id: 0,
+    id: "0",
     user_id: "0",
     title: "",
     author: "",
     isbn: "",
     summary: "",
-    private: false,
-  }
+    visibility: "public",
+  };
 
   const { id } = useParams();
   const [booksAreLoaded, setBooksAreLoaded] = useState(false);
@@ -87,17 +92,15 @@ const LibraryPage: React.FC = () => {
         setBooksAreLoaded(true);
       });
   }, []);
-  const tableSampleData = {
-    id: 1,
-    user_id: 1, 
-  const tableData = {
-    id: 1,
-    user_id: "1", 
+  const tableSampleData: Book = {
+    id: "1",
+    user_id: "1",
     title: "Test book",
     author: "Some Schmuck",
     isbn: "978-3-16-148410-0",
-    summary: "this is an example of when I am putting in data with no idea of what to write in.",
-    private: false,
+    summary:
+      "this is an example of when I am putting in data with no idea of what to write in.",
+    visibility: "public",
   };
   useEffect(() => {
     fetch(`http://paralibrary.digital/api/books/${id}`)
@@ -116,11 +119,10 @@ const LibraryPage: React.FC = () => {
         console.log(error);
       });
   }, [id]);
-      console.log ('http://paralibrary.digital/api/Library')
+  console.log("http://paralibrary.digital/api/Library");
 
   return (
     <PageLayout>
-
       <h1>My Library</h1>
 
       <Modal show={modalOpen} onHide={() => setModalOpen(false)} centered>
@@ -139,21 +141,14 @@ const LibraryPage: React.FC = () => {
 
       <Button onClick={() => setModalOpen(true)}>New Book</Button>
 
-      <AutoTable data = {[tableSampleData]}>
-        <TableHeader col = "title">
-          Title
-        </TableHeader>
-        <TableHeader col = "author">
-          Author
-        </TableHeader>
-        <TableHeader col = "summary">
-          Summary
-        </TableHeader>
+      <AutoTable data={[tableSampleData]}>
+        <TableColumn col="title">Title</TableColumn>
+        <TableColumn col="author">Author</TableColumn>
+        <TableColumn col="summary">Summary</TableColumn>
         <Button onClick={() => setModalOpen(true)}>Edit</Button>
       </AutoTable>
     </PageLayout>
   );
 };
-
 
 export default LibraryPage;

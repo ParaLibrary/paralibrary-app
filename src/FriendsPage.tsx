@@ -1,4 +1,3 @@
-import React from "react";
 import React, { useState, useEffect, useMemo } from "react";
 import { User } from "./ourtypes";
 import { toUser } from "./mappers";
