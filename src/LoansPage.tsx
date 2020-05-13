@@ -7,6 +7,18 @@ import AutoTable, { TableColumn } from "./AutoTable";
 import { Button } from "react-bootstrap";
 import { toLoan } from "./mappers";
 
+interface LoanContext {
+  loans: Loan[];
+  setLoans: (loans: Loan[]) => void;
+}
+
+const defaultLoanContext: LoanContext = {
+  loans: [],
+  setLoans: (loans: Loan[]) => {},
+};
+
+export const LoanContext = React.createContext<LoanContext>(defaultLoanContext);
+
 const LoansPage: React.FC = () => {
   const [reqIsLoaded, setReqIsLoaded] = useState(false);
   const [ownIsLoaded, setOwnIsLoaded] = useState(false);
@@ -91,61 +103,81 @@ const LoansPage: React.FC = () => {
         "Loading..."
       ) : (
         <>
-          <AutoTable
-            data={requestedFromMe}
-            title={<h3>Requested Books</h3>}
-            placeholder={
-              <>
-                <span>No requests? </span>
-                <Link to={"/library"}>Add more books to your library!</Link>
-              </>
-            }
+          <LoanContext.Provider
+            value={{ loans: loanedByMe, setLoans: setLoanedByMe }}
           >
-            <TableColumn col={"requester_id"}>Requester ID</TableColumn>
-            <span>wants</span>
-            <TableColumn col={"book_id"}>Book ID</TableColumn>
-          </AutoTable>
-
-          <AutoTable data={myRequests} title={<h3>My Requests</h3>}>
-            <span>You requested</span>
-            <TableColumn col={"book_id"}>Book ID</TableColumn>
-            <span>from</span>
-            <TableColumn col={"requester_id"}>Requester ID</TableColumn>
-            <Button>Cancel Request?</Button>
-          </AutoTable>
-
-          <AutoTable data={loanedOut} title={<h3>Loaned Books</h3>} hideOnEmpty>
-            <span>You've lent</span>
-            <TableColumn col={"book_id"}>Book ID</TableColumn>
-            <span>to</span>
-            <TableColumn col={"owner_id"}>Owner ID</TableColumn>
-            <span>due</span>
-            <TableColumn col={"loan_end_date"}>Due Date</TableColumn>
-          </AutoTable>
-
-          <AutoTable
-            data={myBorrowing}
-            title={<h3>Borrowed Books</h3>}
-            placeholder={
-              myRequests.length === 0 ? (
+            <AutoTable
+              data={requestedFromMe}
+              title={<h3>Requested Books</h3>}
+              placeholder={
                 <>
-                  <span>Doesn't look like you've borrowed any books.</span>
-                  <br />
-                  <Link to={"/friends"}>Check out a friend's library!</Link>
+                  <span>No requests? </span>
+                  <Link to={"/library"}>Add more books to your library!</Link>
                 </>
-              ) : (
-                <span>No books currently borrowed.</span>
-              )
-            }
+              }
+            >
+              <TableColumn col={"requester_id"}>Requester ID</TableColumn>
+              <span>wants</span>
+              <TableColumn col={"book_id"}>Book ID</TableColumn>
+            </AutoTable>
+          </LoanContext.Provider>
+
+          <LoanContext.Provider
+            value={{ loans: loanedToMe, setLoans: setLoanedToMe }}
           >
-            <span>You borrowed</span>
-            <TableColumn col={"book_id"}>Book ID</TableColumn>
-            <span>from</span>
-            <TableColumn col={"requester_id"}>Requester ID</TableColumn>
-            <span>on</span>
-            <TableColumn col={"loan_start_date"}>Loan Date</TableColumn>
-            <Button>Returned It!</Button>
-          </AutoTable>
+            <AutoTable data={myRequests} title={<h3>My Requests</h3>}>
+              <span>You requested</span>
+              <TableColumn col={"book_id"}>Book ID</TableColumn>
+              <span>from</span>
+              <TableColumn col={"requester_id"}>Requester ID</TableColumn>
+              <Button>Cancel Request?</Button>
+            </AutoTable>
+          </LoanContext.Provider>
+
+          <LoanContext.Provider
+            value={{ loans: loanedByMe, setLoans: setLoanedByMe }}
+          >
+            <AutoTable
+              data={loanedOut}
+              title={<h3>Loaned Books</h3>}
+              hideOnEmpty
+            >
+              <span>You've lent</span>
+              <TableColumn col={"book_id"}>Book ID</TableColumn>
+              <span>to</span>
+              <TableColumn col={"owner_id"}>Owner ID</TableColumn>
+              <span>due</span>
+              <TableColumn col={"loan_end_date"}>Due Date</TableColumn>
+            </AutoTable>
+          </LoanContext.Provider>
+
+          <LoanContext.Provider
+            value={{ loans: loanedToMe, setLoans: setLoanedToMe }}
+          >
+            <AutoTable
+              data={myBorrowing}
+              title={<h3>Borrowed Books</h3>}
+              placeholder={
+                myRequests.length === 0 ? (
+                  <>
+                    <span>Doesn't look like you've borrowed any books.</span>
+                    <br />
+                    <Link to={"/friends"}>Check out a friend's library!</Link>
+                  </>
+                ) : (
+                  <span>No books currently borrowed.</span>
+                )
+              }
+            >
+              <span>You borrowed</span>
+              <TableColumn col={"book_id"}>Book ID</TableColumn>
+              <span>from</span>
+              <TableColumn col={"requester_id"}>Requester ID</TableColumn>
+              <span>on</span>
+              <TableColumn col={"loan_start_date"}>Loan Date</TableColumn>
+              <Button>Returned It!</Button>
+            </AutoTable>
+          </LoanContext.Provider>
         </>
       )}
     </PageLayout>
