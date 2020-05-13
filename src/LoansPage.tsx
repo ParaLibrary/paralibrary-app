@@ -6,6 +6,7 @@ import PageLayout from "./PageLayout";
 import AutoTable, { TableColumn } from "./AutoTable";
 import { Button } from "react-bootstrap";
 import { toLoan } from "./mappers";
+import { OwnerLoanManager, RequesterLoanManager } from "./LoanManagers";
 
 interface LoanContext {
   loans: Loan[];
@@ -22,7 +23,46 @@ export const LoanContext = React.createContext<LoanContext>(defaultLoanContext);
 const LoansPage: React.FC = () => {
   const [reqIsLoaded, setReqIsLoaded] = useState(false);
   const [ownIsLoaded, setOwnIsLoaded] = useState(false);
-  const [loanedToMe, setLoanedToMe] = useState<Loan[]>([]);
+  const [loanedToMe, setLoanedToMe] = useState<Loan[]>([
+    {
+      id: "1",
+      book_id: "2",
+      status: "pending",
+      owner: {
+        id: "1",
+        name: "Bob",
+      },
+      requester: {
+        id: "2",
+        name: "Sally",
+      },
+      owner_contact: "",
+      requester_contact: "",
+      accept_date: new Date(),
+      request_date: new Date(),
+      loan_start_date: new Date(),
+      loan_end_date: new Date(),
+    },
+    {
+      id: "2",
+      book_id: "1",
+      status: "accepted",
+      owner: {
+        id: "1",
+        name: "Bob",
+      },
+      requester: {
+        id: "2",
+        name: "Sally",
+      },
+      owner_contact: "",
+      requester_contact: "",
+      accept_date: new Date(),
+      request_date: new Date(),
+      loan_start_date: new Date(),
+      loan_end_date: new Date(),
+    },
+  ]);
   const [loanedByMe, setLoanedByMe] = useState<Loan[]>([]);
 
   useEffect(() => {
@@ -77,7 +117,13 @@ const LoansPage: React.FC = () => {
   );
 
   const myRequests: Loan[] = useMemo(
-    () => loanedToMe.filter((loan: Loan) => loan.status === "pending"),
+    () =>
+      loanedToMe
+        .filter(
+          (loan: Loan) =>
+            loan.status === "pending" || loan.status === "accepted"
+        )
+        .sort((a: Loan, b: Loan) => Number(a.status > b.status)),
     [loanedToMe]
   );
 
@@ -119,6 +165,7 @@ const LoansPage: React.FC = () => {
               <TableColumn col={"requester_id"}>Requester ID</TableColumn>
               <span>wants</span>
               <TableColumn col={"book_id"}>Book ID</TableColumn>
+              <OwnerLoanManager />
             </AutoTable>
           </LoanContext.Provider>
 
@@ -130,7 +177,7 @@ const LoansPage: React.FC = () => {
               <TableColumn col={"book_id"}>Book ID</TableColumn>
               <span>from</span>
               <TableColumn col={"requester_id"}>Requester ID</TableColumn>
-              <Button>Cancel Request?</Button>
+              <RequesterLoanManager />
             </AutoTable>
           </LoanContext.Provider>
 
@@ -148,6 +195,7 @@ const LoansPage: React.FC = () => {
               <TableColumn col={"owner_id"}>Owner ID</TableColumn>
               <span>due</span>
               <TableColumn col={"loan_end_date"}>Due Date</TableColumn>
+              <OwnerLoanManager />
             </AutoTable>
           </LoanContext.Provider>
 
@@ -175,7 +223,7 @@ const LoansPage: React.FC = () => {
               <TableColumn col={"requester_id"}>Requester ID</TableColumn>
               <span>on</span>
               <TableColumn col={"loan_start_date"}>Loan Date</TableColumn>
-              <Button>Returned It!</Button>
+              <RequesterLoanManager />
             </AutoTable>
           </LoanContext.Provider>
         </>
