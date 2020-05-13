@@ -35,7 +35,7 @@ const LibraryPage: React.FC = () => {
   }
 
   const filteredBooks: Book[] = useMemo(() => {
-    const regExp = new RegExp(searchTerm, "gi");
+    const regExp = new RegExp(searchTerm.trim(), "gi");
     if (searchTerm === "") {
       return books;
     }
@@ -113,9 +113,11 @@ const LibraryPage: React.FC = () => {
       <AutoTable
         data={filteredBooks}
         placeholder={
-          books
-            ? "No search results found"
-            : "Press the New Book button to get started!"
+          books ? (
+            <span>No search results found</span>
+          ) : (
+            <span>Press the Add Book button to get started!</span>
+          )
         }
       >
         <TableColumn col="title">Title</TableColumn>
