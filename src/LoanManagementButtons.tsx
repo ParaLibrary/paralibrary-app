@@ -1,15 +1,19 @@
 import React, { useCallback, useContext, useState } from "react";
-import Button from "react-bootstrap/Button";
+import Button, { ButtonProps } from "react-bootstrap/Button";
 
 import { LoanContext } from "./LoansPage";
 import { Loan, LoanStatus } from "./ourtypes";
 
+type ButtonVariant = ButtonProps["variant"];
+
 interface DeleteButtonProps {
   loan: Loan;
+  variant?: ButtonVariant;
 }
 
 export const DeleteButton: React.FC<DeleteButtonProps> = ({
   loan: thisLoan,
+  variant,
   children,
 }) => {
   const { loans, setLoans } = useContext(LoanContext);
@@ -36,7 +40,7 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
   );
 
   return (
-    <Button disabled={disabled} variant="outline-danger">
+    <Button size="sm" disabled={disabled} variant={variant}>
       {children}
     </Button>
   );
@@ -44,12 +48,14 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
 
 interface UpdateButtonProps {
   loan: Loan;
+  variant?: ButtonVariant;
   status: LoanStatus;
 }
 
 export const UpdateButton: React.FC<UpdateButtonProps> = ({
   loan: thisLoan,
   status: thisStatus,
+  variant,
   children,
 }) => {
   const { loans, setLoans } = useContext(LoanContext);
@@ -58,20 +64,19 @@ export const UpdateButton: React.FC<UpdateButtonProps> = ({
   const handleClick = useCallback(
     (loan: Loan) => {
       setDisabled(true);
+      const newLoan: Loan = { ...thisLoan, status: thisStatus };
       fetch(`http://paralibrary.digital/loans/${thisLoan.id}`, {
         method: "PUT",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ...thisLoan, status: thisStatus }),
+        body: JSON.stringify(newLoan),
       })
         .then((res) => {
           if (res.ok) {
             setLoans(
-              loans.map((loan) =>
-                loan.id !== thisLoan.id ? loan : { ...loan, status: thisStatus }
-              )
+              loans.map((loan) => (loan.id !== thisLoan.id ? loan : newLoan))
             );
           }
         })
@@ -82,7 +87,11 @@ export const UpdateButton: React.FC<UpdateButtonProps> = ({
     },
     [loans]
   );
-  return <Button disabled={disabled}>{children}</Button>;
+  return (
+    <Button size="sm" disabled={disabled}>
+      {children}
+    </Button>
+  );
 };
 
 interface ContactButtonProps {
@@ -96,6 +105,8 @@ export const ContactButton: React.FC<ContactButtonProps> = ({
 }) => {
   return (
     <Button
+      size="sm"
+      variant="info"
       href={`mailto:${
         userType === "owner" ? loan.owner_contact : loan.requester_contact
       }`}
