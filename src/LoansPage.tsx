@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 
 import { Loan } from "./ourtypes";
 import PageLayout from "./PageLayout";
-import AutoTable, { TableHeader } from "./AutoTable";
+import AutoTable, { TableColumn } from "./AutoTable";
 import { Button } from "react-bootstrap";
+import { toLoan } from "./mappers";
 
 const LoansPage: React.FC = () => {
   const [reqIsLoaded, setReqIsLoaded] = useState(false);
@@ -21,7 +22,7 @@ const LoansPage: React.FC = () => {
       })
       .then(
         (result) => {
-          setLoanedToMe(result);
+          setLoanedToMe(result.map(toLoan));
         },
         (error) => {
           console.log(error);
@@ -44,7 +45,7 @@ const LoansPage: React.FC = () => {
       })
       .then(
         (result) => {
-          setLoanedByMe(result);
+          setLoanedByMe(result.map(toLoan));
         },
         (error) => {
           console.log(error);
@@ -100,26 +101,26 @@ const LoansPage: React.FC = () => {
               </>
             }
           >
-            <TableHeader col={"requester_id"}>Requester ID</TableHeader>
+            <TableColumn col={"requester_id"}>Requester ID</TableColumn>
             <span>wants</span>
-            <TableHeader col={"book_id"}>Book ID</TableHeader>
+            <TableColumn col={"book_id"}>Book ID</TableColumn>
           </AutoTable>
 
           <AutoTable data={myRequests} title={<h3>My Requests</h3>}>
             <span>You requested</span>
-            <TableHeader col={"book_id"}>Book ID</TableHeader>
+            <TableColumn col={"book_id"}>Book ID</TableColumn>
             <span>from</span>
-            <TableHeader col={"requester_id"}>Requester ID</TableHeader>
+            <TableColumn col={"requester_id"}>Requester ID</TableColumn>
             <Button>Cancel Request?</Button>
           </AutoTable>
 
           <AutoTable data={loanedOut} title={<h3>Loaned Books</h3>} hideOnEmpty>
             <span>You've lent</span>
-            <TableHeader col={"book_id"}>Book ID</TableHeader>
+            <TableColumn col={"book_id"}>Book ID</TableColumn>
             <span>to</span>
-            <TableHeader col={"owner_id"}>Owner ID</TableHeader>
+            <TableColumn col={"owner_id"}>Owner ID</TableColumn>
             <span>due</span>
-            <TableHeader col={"loan_end_date"}>Due Date</TableHeader>
+            <TableColumn col={"loan_end_date"}>Due Date</TableColumn>
           </AutoTable>
 
           <AutoTable
@@ -138,11 +139,11 @@ const LoansPage: React.FC = () => {
             }
           >
             <span>You borrowed</span>
-            <TableHeader col={"book_id"}>Book ID</TableHeader>
+            <TableColumn col={"book_id"}>Book ID</TableColumn>
             <span>from</span>
-            <TableHeader col={"requester_id"}>Requester ID</TableHeader>
+            <TableColumn col={"requester_id"}>Requester ID</TableColumn>
             <span>on</span>
-            <TableHeader col={"loan_start_date"}>Loan Date</TableHeader>
+            <TableColumn col={"loan_start_date"}>Loan Date</TableColumn>
             <Button>Returned It!</Button>
           </AutoTable>
         </>

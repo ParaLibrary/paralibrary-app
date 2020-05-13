@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import styled from "styled-components";
 import { AuthContext } from "./AuthContextProvider";
 import { Redirect } from "react-router-dom";
@@ -48,17 +48,26 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   sidebar,
   children,
 }) => {
-  const auth = useContext(AuthContext);
-
-  if (!auth.credential.authenticated) {
-    return <Redirect to="/" />;
-  }
   return (
-    <Layout>
-      {header && <Header>{header}</Header>}
-      <Main>{children}</Main>
-      {sidebar && <Sidebar>{sidebar}</Sidebar>}
-    </Layout>
+    <AuthContext.Consumer>
+      {(context) => {
+        if (context === undefined) {
+          console.error(
+            "The AuthContext Consumer must be used inside an AuthContextProvider"
+          );
+        }
+        if (!context.credential.authenticated) {
+          return <Redirect to="/" />;
+        }
+        return (
+          <Layout>
+            {header && <Header>{header}</Header>}
+            <Main>{children}</Main>
+            {sidebar && <Sidebar>{sidebar}</Sidebar>}
+          </Layout>
+        );
+      }}
+    </AuthContext.Consumer>
   );
 };
 

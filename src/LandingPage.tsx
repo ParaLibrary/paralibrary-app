@@ -86,11 +86,11 @@ const LandingPage: React.FC = () => {
       },
       body: `idtoken=${onlineResponse.tokenId}`,
     };
-    return fetch(`http://paralibrary.digital/api/login`, options)
+    return fetch(`http://paralibrary.digital/api/auth/login`, options)
       .then(async (response) => {
         if (response.status === 200) {
           let json = await response.json();
-          auth.login({ authenticated: true, userId: json.userId });
+          auth.login({ authenticated: true, userId: json.userId }, json.maxAge);
         }
       })
       .catch((error) => {
@@ -102,23 +102,34 @@ const LandingPage: React.FC = () => {
     console.log(error);
   };
 
-  if (auth.credential.authenticated) {
-    return <Redirect to="/library" />;
-  }
   return (
-    <LandingLayout>
-      <Logo src="/images/logo-icon-black.png" alt="" />
-      <TitleText src="/images/logo-text-black.png" />
-      <SignIn>
-        <GoogleLogin
-          clientId="631703414652-navvamq2108qu88d9i7bo77gn2kqsi40.apps.googleusercontent.com"
-          buttonText="Sign in with Google"
-          onSuccess={loginSuccessHandler}
-          onFailure={loginFailureHandler}
-          cookiePolicy={"single_host_origin"}
-        />
-      </SignIn>
-    </LandingLayout>
+    <AuthContext.Consumer>
+      {(context) => {
+        if (context === undefined) {
+          console.error(
+            "The AuthContext Consumer must be used inside an AuthContextProvider"
+          );
+        }
+        if (context.credential.authenticated) {
+          return <Redirect to="/library" />;
+        }
+        return (
+          <LandingLayout>
+            <Logo src="/images/logo-icon-black.png" alt="" />
+            <TitleText src="/images/logo-text-black.png" />
+            <SignIn>
+              <GoogleLogin
+                clientId="631703414652-navvamq2108qu88d9i7bo77gn2kqsi40.apps.googleusercontent.com"
+                buttonText="Sign in with Google"
+                onSuccess={loginSuccessHandler}
+                onFailure={loginFailureHandler}
+                cookiePolicy={"single_host_origin"}
+              />
+            </SignIn>
+          </LandingLayout>
+        );
+      }}
+    </AuthContext.Consumer>
   );
 };
 

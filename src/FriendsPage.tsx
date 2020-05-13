@@ -1,22 +1,29 @@
 import React from "react";
 import React, { useState, useEffect, useMemo } from "react";
-import { Friend } from "./ourtypes";
+import { User } from "./ourtypes";
+import { toUser } from "./mappers";
 import PageLayout from "./PageLayout";
-import AutoTable, { TableHeader } from "./AutoTable";
+import AutoTable, { TableColumn } from "./AutoTable";
 import FriendRequestButtons from "./FriendRequestButtons";
+import FriendSearchBar from "./FriendSearchBar";
 
 const FriendsPage: React.FC = () => {
   const [error, setError] = useState<any>();
   const [isLoaded, setIsLoaded] = useState(false);
-  const [friends, setFriends] = useState<Friend[]>([]);
-  const [nearbyPeople] = useState<Friend[]>([]);
+  const [friends, setFriends] = useState<User[]>([]);
+  const [nearbyPeople] = useState<User[]>([]);
 
   function AcceptFriendship(id: string) {
-    const options = {
+    return fetch(`http://paralibrary.digital/api/friends/${id}`, {
       method: "POST",
-      credentials: "include" as const,
-    };
-    return fetch(`http://paralibrary.digital/api/friends/${id}/accept`, options)
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        status: "accepted",
+      }),
+    })
       .then((response) => response.status === 200)
       .then((success) => {
         if (success) {
@@ -30,11 +37,16 @@ const FriendsPage: React.FC = () => {
   }
 
   function RejectFriendship(id: string) {
-    const options = {
+    return fetch(`http://paralibrary.digital/api/friends/${id}`, {
       method: "POST",
-      credentials: "include" as const,
-    };
-    return fetch(`http://paralibrary.digital/api/friends/${id}/reject`, options)
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        status: "rejected",
+      }),
+    })
       .then((response) => response.status === 200)
       .then((success) => {
         if (success) {
@@ -49,7 +61,7 @@ const FriendsPage: React.FC = () => {
       })
       .then(
         (result) => {
-          setFriends(result);
+          setFriends(result.map(toUser));
         },
         (error) => {
           setError(error);
@@ -63,45 +75,44 @@ const FriendsPage: React.FC = () => {
       });
   }, []);
 
-  const friendRequests: Friend[] = useMemo(
-    () => friends.filter((friend: Friend) => friend.status === "requested"),
+  const friendRequests: User[] = useMemo(
+    () => friends.filter((friend: User) => friend.status === "requested"),
     [friends]
   );
 
-  const currentFriends: Friend[] = useMemo(
-    () => friends.filter((friend: Friend) => friend.status === "friends"),
+  const currentFriends: User[] = useMemo(
+    () => friends.filter((friend: User) => friend.status === "friends"),
     [friends]
   );
 
   return (
-    <PageLayout>
-      <h1>My Friends</h1>
-      sidebar=
-      {
+    <PageLayout
+      header={<h1>My Friends</h1>}
+      sidebar={
         <AutoTable
           data={nearbyPeople}
           title={<h3>Nearby People</h3>}
           placeholder={"Huh, seems like no one's around..."}
         >
-          <TableHeader col={"name"}>Name</TableHeader>
+          <TableColumn col={"name"}>Name</TableColumn>
           <button>Invite!</button>
         </AutoTable>
       }
-      >
+    >
       {!isLoaded ? (
         "Loading..."
       ) : error ? (
         "An error occured."
       ) : (
         <>
+          <FriendSearchBar />
           <AutoTable
             data={friendRequests}
             title={<h3>Friend Requests</h3>}
             hideOnEmpty
           >
-            <TableHeader col={"display_name"}>Username</TableHeader>
+            <TableColumn col={"name"}>Username</TableColumn>
             <FriendRequestButtons
-              id={""}
               onAccept={AcceptFriendship}
               onReject={RejectFriendship}
             />
@@ -111,7 +122,7 @@ const FriendsPage: React.FC = () => {
             title={<h3>Current Friends</h3>}
             hideOnEmpty
           >
-            <TableHeader col={"display_name"}>Username</TableHeader>
+            <TableColumn col={"name"}>Username</TableColumn>
           </AutoTable>
         </>
       )}

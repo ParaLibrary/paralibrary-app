@@ -1,25 +1,30 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 
+import { User } from "./ourtypes";
+
 interface ButtonGroupProps {
-  id: string;
+  rowitem?: User;
   onAccept: (id: string) => {};
   onReject: (id: string) => {};
 }
 
 const FriendRequestButtons: React.FC<ButtonGroupProps> = ({
-  id,
+  rowitem: friend,
   onAccept,
   onReject,
 }) => {
+  if (!friend) {
+    throw new Error("Row lacks valid data");
+  }
   return (
-    <div>
+    <>
       <Button
         type="button"
         variant="primary"
         size="sm"
         onClick={() => {
-          onAccept(id);
+          onAccept(friend.id);
         }}
       >
         Accept
@@ -29,12 +34,12 @@ const FriendRequestButtons: React.FC<ButtonGroupProps> = ({
         variant="outline-danger"
         size="sm"
         onClick={() => {
-          onReject(id);
+          onReject(friend.id);
         }}
       >
         Reject
       </Button>
-    </div>
+    </>
   );
 };
 

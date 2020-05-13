@@ -1,41 +1,52 @@
-export interface Friend {
-  id: number;
+export interface Loan extends LoanRequest {
   id: string;
-  display_name: string;
-  name: string;
-  status: "requested" | "friends";
-}
-
-export interface Loan {
-  id: number;
-  owner_id: number;
-  requester_id: number;
-  book_id: number;
-  id: string;
-  owner_id: string;
-  requester_id: string;
-  book_id: string;
+  owner: User;
+  owner_contact?: string;
+  requester: User;
+  requester_contact: string;
+  book?: Book;
   request_date: Date;
   accept_date: Date;
   loan_start_date: Date;
   loan_end_date: Date;
-  status: "pending" | "accepted" | "loaned" | "returned" | "late";
+  status: LoanStatus;
+}
+
+export type LoanStatus =
+  | "pending"
+  | "accepted"
+  | "loaned"
+  | "returned"
+  | "canceled"
+  | "declined";
+
+export interface LoanRequest {
+  book_id: string;
+  requester_contact: string;
 }
 
 export interface Book {
-  id: number;
   id: string;
   user_id: string;
   title: string;
   author: string;
   isbn: string;
   summary: string;
-  private: boolean;
+  visibility: Visibility;
+  loan?: Loan;
 }
 
+export type Visibility = "public" | "private" | "friends";
+
 export interface User {
-  id: number;
   id: string;
-  display_name: string;
   name: string;
+  status?: FriendStatus;
+}
+
+export type FriendStatus = "requested" | "friends" | "waiting";
+
+export interface Library {
+  user: User;
+  books: Book[];
 }

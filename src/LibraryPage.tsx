@@ -21,10 +21,10 @@ const LibraryPage: React.FC = () => {
     user_id: "0", 
     id: "",
     user_id: "", // We will need to set this when user authentification happens
-    title: "",
-    author: "",
-    isbn: "",
+      isbn: "",
     summary: "",
+  title: "",
+    author: "",
     private: false,
   };
   const openBook: Book = {
