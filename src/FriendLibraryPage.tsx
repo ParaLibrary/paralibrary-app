@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useParams } from "react-router";
 import { Modal } from "react-bootstrap";
 
@@ -8,6 +8,7 @@ import AutoTable, { TableColumn } from "./AutoTable";
 import LoanRequestButton from "./LoanRequestButton";
 import LoanFormik from "./LoanForm";
 import { toLibrary } from "./mappers";
+import LibrarySearchBar from "./LibrarySearchBar";
 
 const FriendLibraryPage: React.FC = () => {
   const { id } = useParams();
@@ -15,6 +16,22 @@ const FriendLibraryPage: React.FC = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [books, setBooks] = useState<Book[]>([]);
   const [user, setUser] = useState<User>();
+  const [searchTerm, setSearchTerm] = useState("");
+
+  function filterResults(searchTerm: string) {
+    setSearchTerm(searchTerm);
+  }
+
+  const filteredBooks: Book[] = useMemo(() => {
+    const regExp = new RegExp(searchTerm.trim(), "gi");
+    if (searchTerm === "") {
+      return books;
+    }
+    return books.filter(
+      (book: Book) => book.title.match(regExp) || book.author.match(regExp)
+    );
+  }, [searchTerm, books]);
+
   useEffect(() => {
     fetch(`http://paralibrary.digital/api/libraries/${id}`, {
       credentials: "include",
@@ -100,14 +117,22 @@ const FriendLibraryPage: React.FC = () => {
         !user ? <h1>User Not Found</h1> : <h1>{user && user.name}'s Library</h1>
       }
     >
+      <LibrarySearchBar
+        onSearchChange={filterResults}
+        header="Search this Library"
+      />
       <AutoTable
-        data={books}
+        data={filteredBooks}
         title={<h3>Books</h3>}
         placeholder={
-          <span>
-            Huh, looks like {user && user.name} hasn't added anything to their
-            library.
-          </span>
+          books ? (
+            <span>No search results found</span>
+          ) : (
+            <span>
+              Huh, looks like {user && user.name} hasn't added anything to their
+              library.
+            </span>
+          )
         }
       >
         <TableColumn col="title">Title</TableColumn>
