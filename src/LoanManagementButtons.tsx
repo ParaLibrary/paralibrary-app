@@ -21,7 +21,7 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
 
   const handleClick = useCallback(() => {
     setDisabled(true);
-    fetch(`http://paralibrary.digital/loans/${thisLoan.id}`, {
+    fetch(`http://paralibrary.digital/api/loans/${thisLoan.id}`, {
       method: "DELETE",
       credentials: "include",
     })
@@ -66,7 +66,7 @@ export const UpdateButton: React.FC<UpdateButtonProps> = ({
   const handleClick = useCallback(() => {
     setDisabled(true);
     const newLoan: Loan = { ...thisLoan, status: thisStatus };
-    fetch(`http://paralibrary.digital/loans/${thisLoan.id}`, {
+    fetch(`http://paralibrary.digital/api/loans/${thisLoan.id}`, {
       method: "PUT",
       credentials: "include",
       headers: {
