@@ -7,6 +7,7 @@ import AutoTable, { TableColumn } from "./AutoTable";
 import { Button } from "react-bootstrap";
 import { toLoan } from "./mappers";
 import { OwnerLoanManager, RequesterLoanManager } from "./LoanManagers";
+import StatusSpan from "./StatusSpan";
 
 interface LoanContext {
   loans: Loan[];
@@ -24,6 +25,84 @@ const LoansPage: React.FC = () => {
   const [reqIsLoaded, setReqIsLoaded] = useState(false);
   const [ownIsLoaded, setOwnIsLoaded] = useState(false);
   const [loanedToMe, setLoanedToMe] = useState<Loan[]>([
+    {
+      id: "5",
+      book_id: "91",
+      status: "pending",
+      owner: {
+        id: "1",
+        name: "Bob",
+      },
+      requester: {
+        id: "2",
+        name: "Sally",
+      },
+      owner_contact: "",
+      requester_contact: "",
+      accept_date: new Date(),
+      request_date: new Date(),
+      loan_start_date: new Date(),
+      loan_end_date: new Date(),
+    },
+    {
+      id: "6",
+      book_id: "73",
+      status: "accepted",
+      owner: {
+        id: "1",
+        name: "Bob",
+      },
+      requester: {
+        id: "2",
+        name: "Sally",
+      },
+      owner_contact: "test@test.test",
+      requester_contact: "",
+      accept_date: new Date(),
+      request_date: new Date(),
+      loan_start_date: new Date(),
+      loan_end_date: new Date(),
+    },
+    {
+      id: "7",
+      book_id: "37",
+      status: "loaned",
+      owner: {
+        id: "1",
+        name: "Bob",
+      },
+      requester: {
+        id: "2",
+        name: "Sally",
+      },
+      owner_contact: "",
+      requester_contact: "",
+      accept_date: new Date(),
+      request_date: new Date(),
+      loan_start_date: new Date(),
+      loan_end_date: new Date(),
+    },
+    {
+      id: "8",
+      book_id: "4",
+      status: "returned",
+      owner: {
+        id: "1",
+        name: "Bob",
+      },
+      requester: {
+        id: "2",
+        name: "Sally",
+      },
+      owner_contact: "",
+      requester_contact: "",
+      accept_date: new Date(),
+      request_date: new Date(),
+      loan_start_date: new Date(),
+      loan_end_date: new Date(),
+    },
+  ]);
+  const [loanedByMe, setLoanedByMe] = useState<Loan[]>([
     {
       id: "1",
       book_id: "2",
@@ -55,6 +134,44 @@ const LoansPage: React.FC = () => {
         id: "2",
         name: "Sally",
       },
+      owner_contact: "test@test.test",
+      requester_contact: "",
+      accept_date: new Date(),
+      request_date: new Date(),
+      loan_start_date: new Date(),
+      loan_end_date: new Date(),
+    },
+    {
+      id: "3",
+      book_id: "3",
+      status: "loaned",
+      owner: {
+        id: "1",
+        name: "Bob",
+      },
+      requester: {
+        id: "2",
+        name: "Sally",
+      },
+      owner_contact: "",
+      requester_contact: "",
+      accept_date: new Date(),
+      request_date: new Date(),
+      loan_start_date: new Date(),
+      loan_end_date: new Date(),
+    },
+    {
+      id: "4",
+      book_id: "4",
+      status: "returned",
+      owner: {
+        id: "1",
+        name: "Bob",
+      },
+      requester: {
+        id: "2",
+        name: "Sally",
+      },
       owner_contact: "",
       requester_contact: "",
       accept_date: new Date(),
@@ -63,7 +180,6 @@ const LoansPage: React.FC = () => {
       loan_end_date: new Date(),
     },
   ]);
-  const [loanedByMe, setLoanedByMe] = useState<Loan[]>([]);
 
   useEffect(() => {
     fetch("http://paralibrary.digital/api/loans/requester", {
@@ -112,7 +228,12 @@ const LoansPage: React.FC = () => {
   }, []);
 
   const myBorrowing: Loan[] = useMemo(
-    () => loanedToMe.filter((loan: Loan) => loan.status === "loaned"),
+    () =>
+      loanedToMe
+        .filter(
+          (loan: Loan) => loan.status === "loaned" || loan.status === "returned"
+        )
+        .sort((a: Loan, b: Loan) => Number(a.status < b.status)),
     [loanedToMe]
   );
 
@@ -173,9 +294,9 @@ const LoansPage: React.FC = () => {
             value={{ loans: loanedToMe, setLoans: setLoanedToMe }}
           >
             <AutoTable data={myRequests} title={<h3>My Requests</h3>}>
-              <span>You requested</span>
+              <StatusSpan pending="Requested" accepted="Request for" />
               <TableColumn col={"book_id"}>Book ID</TableColumn>
-              <span>from</span>
+              <StatusSpan pending="from" accepted="granted by" />
               <TableColumn col={"requester_id"}>Requester ID</TableColumn>
               <RequesterLoanManager />
             </AutoTable>
@@ -189,12 +310,10 @@ const LoansPage: React.FC = () => {
               title={<h3>Loaned Books</h3>}
               hideOnEmpty
             >
-              <span>You've lent</span>
-              <TableColumn col={"book_id"}>Book ID</TableColumn>
-              <span>to</span>
               <TableColumn col={"owner_id"}>Owner ID</TableColumn>
-              <span>due</span>
-              <TableColumn col={"loan_end_date"}>Due Date</TableColumn>
+              <StatusSpan loaned="borrowed" accepted="accepted request for" />
+              <TableColumn col={"book_id"}>Book ID</TableColumn>
+
               <OwnerLoanManager />
             </AutoTable>
           </LoanContext.Provider>
@@ -217,12 +336,10 @@ const LoansPage: React.FC = () => {
                 )
               }
             >
-              <span>You borrowed</span>
+              <StatusSpan loaned="You've borrowed" returned="You've returned" />
               <TableColumn col={"book_id"}>Book ID</TableColumn>
-              <span>from</span>
+              <StatusSpan loaned="from" returned="to" />
               <TableColumn col={"requester_id"}>Requester ID</TableColumn>
-              <span>on</span>
-              <TableColumn col={"loan_start_date"}>Loan Date</TableColumn>
               <RequesterLoanManager />
             </AutoTable>
           </LoanContext.Provider>
