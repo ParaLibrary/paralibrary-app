@@ -48,9 +48,9 @@ export function toBook(obj: any): Book {
   if (!obj.author) {
     throw new Error("Missing property 'author' in book");
   }
-  if (!obj.isbn) {
-    throw new Error("Missing property 'isbn' in book");
-  }
+  // if (!obj.isbn) {
+  //   throw new Error("Missing property 'isbn' in book");
+  // }
   if (!obj.summary) {
     throw new Error("Missing property 'summary' in book");
   }

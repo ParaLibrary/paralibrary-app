@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Modal, Button } from "react-bootstrap";
 import { useParams } from "react-router";
 
@@ -10,7 +10,7 @@ import { Book, User } from "./ourtypes";
 import { Table } from "react-bootstrap";
 import styled from "styled-components";
 import LibrarySearchBar from "./LibrarySearchBar";
-import { toLibrary } from "./mappers";
+import { toLibrary, toUser } from "./mappers";
 
 interface ButtonGroupProps {
   id: number;
@@ -20,7 +20,7 @@ interface ButtonGroupProps {
 const LibraryPage: React.FC = () => {
   const emptyBook: Book = {
     id: "",
-    user_id: "", // We will need to set this when user authentification happens
+    user_id: "",
     isbn: "",
     summary: "",
     title: "",
@@ -40,10 +40,19 @@ const LibraryPage: React.FC = () => {
   const { id } = useParams();
   const [isLoaded, setIsLoaded] = useState(false);
   const [books, setBooks] = useState<Book[]>([]);
+  const [user, setUser] = useState<User>();
   const [modalOpen, setModalOpen] = useState(false);
   const [isNewBook, setIsNewBook] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedBook, setSelectedBook] = useState<Book>(emptyBook);
+  const [selectedBook, setSelectedBook] = useState<Book>({
+    id: "",
+    user_id: "",
+    title: "",
+    author: "",
+    isbn: "",
+    summary: "",
+    visibility: "private",
+  });
 
   function filterResults(searchTerm: string) {
     setSearchTerm(searchTerm);
@@ -59,6 +68,27 @@ const LibraryPage: React.FC = () => {
     );
   }, [searchTerm, books]);
 
+  function EditBook(id: string) {
+    return fetch(`http://paralibrary.digital/api/libraries/`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        status: "rejected",
+      }),
+    })
+      .then((response) => response.status === 200)
+      .then((success) => {
+        if (success) {
+          setBooks(books.filter((book) => book.id !== id));
+        }
+      });
+  }
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
   useEffect(() => {
     fetch(`http://paralibrary.digital/api/libraries/`, {
       credentials: "include",
@@ -68,58 +98,10 @@ const LibraryPage: React.FC = () => {
       })
       .then(
         (result) => {
-          setBooks([
-            {
-              id: "1",
-              user_id: "1",
-              title: "Test book",
-              author: "Some Schmuck",
-              isbn: "978-3-16-148410-0",
-              summary:
-                "this is an example of when I am putting in data with no idea of what to write in.",
-              visibility: "public",
-            },
-            {
-              id: "21",
-              user_id: "3",
-              title: "Test book",
-              author: "Some Schmuck",
-              isbn: "978-3-16-148410-0",
-              summary:
-                "this is an example of when I am putting in data with no idea of what to write in.",
-              visibility: "public",
-            },
-            {
-              id: "22",
-              user_id: "3",
-              title: "Test book",
-              author: "Some Schmuck",
-              isbn: "978-3-16-148410-0",
-              summary:
-                "this is an example of when I am putting in data with no idea of what to write in.",
-              visibility: "public",
-            },
-            {
-              id: "23",
-              user_id: "3",
-              title: "Test book",
-              author: "Some Schmuck",
-              isbn: "978-3-16-148410-0",
-              summary:
-                "this is an example of when I am putting in data with no idea of what to write in.",
-              visibility: "public",
-            },
-            {
-              id: "24",
-              user_id: "3",
-              title: "Test book",
-              author: "Some Schmuck",
-              isbn: "978-3-16-148410-0",
-              summary:
-                "this is an example of when I am putting in data with no idea of what to write in.",
-              visibility: "public",
-            },
-          ]);
+          const lib = toLibrary(result);
+          setBooks(lib.books);
+          setUser(lib.user);
+          console.log(user);
         },
         (error) => {
           console.log(error);
@@ -132,7 +114,36 @@ const LibraryPage: React.FC = () => {
         setIsLoaded(true);
       });
   }, []);
-
+  const updateDatabase = useCallback(
+    (book: Book) => {
+      book.user_id = user ? user.id : "";
+      let BookString = JSON.stringify(book);
+      fetch("http://paralibrary.digital/api/books", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: BookString,
+      })
+        .then((res) => res.json())
+        .then((res: Book) => {
+          setBooks(
+            books.map((book) =>
+              book.id !== book.id ? book : { ...book, book: res }
+            )
+          );
+        })
+        .catch(() => false);
+    },
+    [books]
+  );
+  const fetchBooks = useCallback(
+    (book: Book) => {
+      setBooks((books) => [...books, book]);
+    },
+    [books]
+  );
   return (
     <PageLayout header={<h1>My Library</h1>}>
       <LibrarySearchBar
@@ -146,14 +157,21 @@ const LibraryPage: React.FC = () => {
         <Modal.Body>
           <BookFormik
             book={selectedBook}
-            updateBookList={() => useEffect}
-            updateDatabase={() => useEffect}
+            updateBookList={fetchBooks}
+            updateDatabase={updateDatabase}
             closeModal={() => setModalOpen(false)}
           />
         </Modal.Body>
       </Modal>
 
-      <Button onClick={() => setModalOpen(true)}>New Book</Button>
+      <Button
+        onClick={() => {
+          setSelectedBook(emptyBook);
+          setModalOpen(true);
+        }}
+      >
+        New Book
+      </Button>
 
       <AutoTable
         data={filteredBooks}
@@ -167,6 +185,7 @@ const LibraryPage: React.FC = () => {
       >
         <TableColumn col="title">Title</TableColumn>
         <TableColumn col="author">Author</TableColumn>
+        <TableColumn col="isbn">ISBN</TableColumn>
         <TableColumn col="summary">Summary</TableColumn>
         <Button onClick={() => setModalOpen(true)}>Edit</Button>
       </AutoTable>
