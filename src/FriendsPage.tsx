@@ -20,7 +20,7 @@ const FriendsPage: React.FC = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        status: "accepted",
+        action: "accept",
       }),
     })
       .then((response) => response.status === 200)
@@ -43,7 +43,7 @@ const FriendsPage: React.FC = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        status: "rejected",
+        action: "reject",
       }),
     })
       .then((response) => response.status === 200)
