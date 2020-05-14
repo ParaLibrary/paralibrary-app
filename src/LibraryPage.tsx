@@ -28,8 +28,8 @@ const LibraryPage: React.FC = () => {
     visibility: "public",
   };
   const openBook: Book = {
-    id: "0",
-    user_id: "0",
+    id: "",
+    user_id: "",
     title: "",
     author: "",
     isbn: "",
@@ -68,24 +68,6 @@ const LibraryPage: React.FC = () => {
     );
   }, [searchTerm, books]);
 
-  function EditBook(id: string) {
-    return fetch(`http://paralibrary.digital/api/libraries/`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        status: "rejected",
-      }),
-    })
-      .then((response) => response.status === 200)
-      .then((success) => {
-        if (success) {
-          setBooks(books.filter((book) => book.id !== id));
-        }
-      });
-  }
   useEffect(() => {
     console.log(user);
   }, [user]);
@@ -128,11 +110,7 @@ const LibraryPage: React.FC = () => {
       })
         .then((res) => res.json())
         .then((res: Book) => {
-          setBooks(
-            books.map((book) =>
-              book.id !== book.id ? book : { ...book, book: res }
-            )
-          );
+          setBooks(books.concat(res));
         })
         .catch(() => false);
     },
