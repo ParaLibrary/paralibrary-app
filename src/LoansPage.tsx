@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 import { Loan } from "./ourtypes";
 import PageLayout from "./PageLayout";
 import AutoTable, { TableColumn } from "./AutoTable";
-import { Button } from "react-bootstrap";
+import BookDisplay from "./BookDisplay";
+import UserDisplay from "./UserDisplay";
 import { toLoan } from "./mappers";
 import { OwnerLoanManager, RequesterLoanManager } from "./LoanManagers";
 import StatusSpan from "./StatusSpan";
@@ -116,7 +117,7 @@ const LoansPage: React.FC = () => {
         name: "Sally",
       },
       owner_contact: "",
-      requester_contact: "",
+      requester_contact: "test@test2.test",
       accept_date: new Date(),
       request_date: new Date(),
       loan_start_date: new Date(),
@@ -135,7 +136,7 @@ const LoansPage: React.FC = () => {
         name: "Sally",
       },
       owner_contact: "test@test.test",
-      requester_contact: "",
+      requester_contact: "test@test2.test",
       accept_date: new Date(),
       request_date: new Date(),
       loan_start_date: new Date(),
@@ -244,7 +245,7 @@ const LoansPage: React.FC = () => {
           (loan: Loan) =>
             loan.status === "pending" || loan.status === "accepted"
         )
-        .sort((a: Loan, b: Loan) => Number(a.status > b.status)),
+        .sort((a: Loan, b: Loan) => Number(a.status < b.status)),
     [loanedToMe]
   );
 
@@ -290,12 +291,16 @@ const LoansPage: React.FC = () => {
                 </>
               }
             >
-              <TableColumn col={"requester_id"}>Requester ID</TableColumn>
+              <TableColumn col={"requester"} component={UserDisplay}>
+                Requester ID
+              </TableColumn>
               <StatusSpan
                 pending="wants to borrow"
                 accepted="is waiting to pick up"
               />
-              <TableColumn col={"book_id"}>Book ID</TableColumn>
+              <TableColumn col={"book"} component={BookDisplay}>
+                Book ID
+              </TableColumn>
               <OwnerLoanManager />
             </AutoTable>
           </LoanContext.Provider>
@@ -305,9 +310,13 @@ const LoansPage: React.FC = () => {
           >
             <AutoTable data={myRequests} title={<h3>My Requests</h3>} noHeaders>
               <StatusSpan pending="Requested" accepted="Request for" />
-              <TableColumn col={"book_id"}>Book ID</TableColumn>
+              <TableColumn col={"book"} component={BookDisplay}>
+                Book ID
+              </TableColumn>
               <StatusSpan pending="from" accepted="granted by" />
-              <TableColumn col={"requester_id"}>Requester ID</TableColumn>
+              <TableColumn col={"requester"} component={UserDisplay}>
+                Requester ID
+              </TableColumn>
               <RequesterLoanManager />
             </AutoTable>
           </LoanContext.Provider>
@@ -321,9 +330,13 @@ const LoansPage: React.FC = () => {
               hideOnEmpty
               noHeaders
             >
-              <TableColumn col={"owner_id"}>Owner ID</TableColumn>
+              <TableColumn col={"owner"} component={UserDisplay}>
+                Owner ID
+              </TableColumn>
               <StatusSpan loaned="borrowed" returned="returned" />
-              <TableColumn col={"book_id"}>Book ID</TableColumn>
+              <TableColumn col={"book"} component={BookDisplay}>
+                Book ID
+              </TableColumn>
 
               <OwnerLoanManager />
             </AutoTable>
@@ -349,9 +362,13 @@ const LoansPage: React.FC = () => {
               }
             >
               <StatusSpan loaned="You've borrowed" returned="You've returned" />
-              <TableColumn col={"book_id"}>Book ID</TableColumn>
+              <TableColumn col={"book"} component={BookDisplay}>
+                Book ID
+              </TableColumn>
               <StatusSpan loaned="from" returned="to" />
-              <TableColumn col={"requester_id"}>Requester ID</TableColumn>
+              <TableColumn col={"owner"} component={UserDisplay}>
+                Requester ID
+              </TableColumn>
               <RequesterLoanManager />
             </AutoTable>
           </LoanContext.Provider>
