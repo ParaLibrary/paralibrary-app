@@ -7,7 +7,11 @@ interface BookDisplayProps {
 }
 
 const BookDisplay: React.FC<BookDisplayProps> = ({ data }) => {
-  return <span>{data?.title}</span>;
+  return (
+    <span>
+      <em>{data?.title}</em>
+    </span>
+  );
 };
 
 export default BookDisplay;

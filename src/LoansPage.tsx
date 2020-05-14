@@ -30,6 +30,15 @@ const LoansPage: React.FC = () => {
       id: "5",
       book_id: "91",
       status: "pending",
+      book: {
+        id: "1",
+        user_id: "1",
+        title: "Consider Phlebas",
+        author: "Iain M. Banks",
+        isbn: "",
+        summary: "",
+        visibility: "public",
+      },
       owner: {
         id: "1",
         name: "Bob",
@@ -38,8 +47,8 @@ const LoansPage: React.FC = () => {
         id: "2",
         name: "Sally",
       },
-      owner_contact: "",
-      requester_contact: "",
+      owner_contact: "bob@bob.bob",
+      requester_contact: "sally@sally.sally",
       accept_date: new Date(),
       request_date: new Date(),
       loan_start_date: new Date(),
@@ -49,6 +58,15 @@ const LoansPage: React.FC = () => {
       id: "6",
       book_id: "73",
       status: "accepted",
+      book: {
+        id: "73",
+        user_id: "1",
+        title: "Of Mice and Men",
+        author: "",
+        isbn: "",
+        summary: "",
+        visibility: "public",
+      },
       owner: {
         id: "1",
         name: "Bob",
@@ -57,8 +75,8 @@ const LoansPage: React.FC = () => {
         id: "2",
         name: "Sally",
       },
-      owner_contact: "test@test.test",
-      requester_contact: "",
+      owner_contact: "bob@bob.bob",
+      requester_contact: "sally@sally.sally",
       accept_date: new Date(),
       request_date: new Date(),
       loan_start_date: new Date(),
@@ -67,6 +85,15 @@ const LoansPage: React.FC = () => {
     {
       id: "7",
       book_id: "37",
+      book: {
+        id: "1",
+        user_id: "1",
+        title: "The Fifth Season",
+        author: "",
+        isbn: "",
+        summary: "",
+        visibility: "public",
+      },
       status: "loaned",
       owner: {
         id: "1",
@@ -76,8 +103,8 @@ const LoansPage: React.FC = () => {
         id: "2",
         name: "Sally",
       },
-      owner_contact: "",
-      requester_contact: "",
+      owner_contact: "bob@bob.bob",
+      requester_contact: "sally@sally.sally",
       accept_date: new Date(),
       request_date: new Date(),
       loan_start_date: new Date(),
@@ -87,6 +114,15 @@ const LoansPage: React.FC = () => {
       id: "8",
       book_id: "4",
       status: "returned",
+      book: {
+        id: "1",
+        user_id: "1",
+        title: "The Name of This Book is Secret",
+        author: "",
+        isbn: "",
+        summary: "",
+        visibility: "public",
+      },
       owner: {
         id: "1",
         name: "Bob",
@@ -95,8 +131,8 @@ const LoansPage: React.FC = () => {
         id: "2",
         name: "Sally",
       },
-      owner_contact: "",
-      requester_contact: "",
+      owner_contact: "bob@bob.bob",
+      requester_contact: "sally@sally.sally",
       accept_date: new Date(),
       request_date: new Date(),
       loan_start_date: new Date(),
@@ -108,6 +144,15 @@ const LoansPage: React.FC = () => {
       id: "1",
       book_id: "2",
       status: "pending",
+      book: {
+        id: "1",
+        user_id: "1",
+        title: "Dummy's Guide to Telekinesis",
+        author: "",
+        isbn: "",
+        summary: "",
+        visibility: "public",
+      },
       owner: {
         id: "1",
         name: "Bob",
@@ -116,8 +161,8 @@ const LoansPage: React.FC = () => {
         id: "2",
         name: "Sally",
       },
-      owner_contact: "",
-      requester_contact: "test@test2.test",
+      owner_contact: "bob@bob.bob",
+      requester_contact: "sally@sally.sally",
       accept_date: new Date(),
       request_date: new Date(),
       loan_start_date: new Date(),
@@ -127,6 +172,15 @@ const LoansPage: React.FC = () => {
       id: "2",
       book_id: "1",
       status: "accepted",
+      book: {
+        id: "1",
+        user_id: "1",
+        title: "Third Class Superhero",
+        author: "",
+        isbn: "",
+        summary: "",
+        visibility: "public",
+      },
       owner: {
         id: "1",
         name: "Bob",
@@ -135,8 +189,8 @@ const LoansPage: React.FC = () => {
         id: "2",
         name: "Sally",
       },
-      owner_contact: "test@test.test",
-      requester_contact: "test@test2.test",
+      owner_contact: "bob@bob.bob",
+      requester_contact: "sally@sally.sally",
       accept_date: new Date(),
       request_date: new Date(),
       loan_start_date: new Date(),
@@ -146,6 +200,15 @@ const LoansPage: React.FC = () => {
       id: "3",
       book_id: "3",
       status: "loaned",
+      book: {
+        id: "1",
+        user_id: "1",
+        title: "Genius at Play",
+        author: "",
+        isbn: "",
+        summary: "",
+        visibility: "public",
+      },
       owner: {
         id: "1",
         name: "Bob",
@@ -154,8 +217,8 @@ const LoansPage: React.FC = () => {
         id: "2",
         name: "Sally",
       },
-      owner_contact: "",
-      requester_contact: "",
+      owner_contact: "bob@bob.bob",
+      requester_contact: "sally@sally.sally",
       accept_date: new Date(),
       request_date: new Date(),
       loan_start_date: new Date(),
@@ -165,6 +228,15 @@ const LoansPage: React.FC = () => {
       id: "4",
       book_id: "4",
       status: "returned",
+      book: {
+        id: "1",
+        user_id: "1",
+        title: "Cryptonomicon",
+        author: "",
+        isbn: "",
+        summary: "",
+        visibility: "public",
+      },
       owner: {
         id: "1",
         name: "Bob",
@@ -173,8 +245,8 @@ const LoansPage: React.FC = () => {
         id: "2",
         name: "Sally",
       },
-      owner_contact: "",
-      requester_contact: "",
+      owner_contact: "bob@bob.bob",
+      requester_contact: "sally@sally.sally",
       accept_date: new Date(),
       request_date: new Date(),
       loan_start_date: new Date(),
@@ -314,7 +386,7 @@ const LoansPage: React.FC = () => {
                 Book ID
               </TableColumn>
               <StatusSpan pending="from" accepted="granted by" />
-              <TableColumn col={"requester"} component={UserDisplay}>
+              <TableColumn col={"owner"} component={UserDisplay}>
                 Requester ID
               </TableColumn>
               <RequesterLoanManager />
@@ -330,7 +402,7 @@ const LoansPage: React.FC = () => {
               hideOnEmpty
               noHeaders
             >
-              <TableColumn col={"owner"} component={UserDisplay}>
+              <TableColumn col={"requester"} component={UserDisplay}>
                 Owner ID
               </TableColumn>
               <StatusSpan loaned="borrowed" returned="returned" />
