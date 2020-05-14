@@ -20,6 +20,7 @@ const FriendsPage: React.FC = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        id: id,
         action: "accept",
       }),
     })
@@ -43,6 +44,7 @@ const FriendsPage: React.FC = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        id: id,
         action: "reject",
       }),
     })
