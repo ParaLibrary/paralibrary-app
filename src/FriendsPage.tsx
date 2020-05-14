@@ -3,7 +3,9 @@ import { User } from "./ourtypes";
 import { toUser } from "./mappers";
 import PageLayout from "./PageLayout";
 import AutoTable, { TableColumn } from "./AutoTable";
-import FriendRequestButtons from "./FriendRequestButtons";
+import FriendRequestButtons, {
+  FriendRequestEvent,
+} from "./FriendRequestButtons";
 import FriendSearchBar from "./FriendSearchBar";
 
 const FriendsPage: React.FC = () => {
@@ -12,49 +14,23 @@ const FriendsPage: React.FC = () => {
   const [friends, setFriends] = useState<User[]>([]);
   const [nearbyPeople] = useState<User[]>([]);
 
-  function AcceptFriendship(id: string) {
-    return fetch(`http://paralibrary.digital/api/friends/${id}`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: id,
-        action: "accept",
-      }),
-    })
-      .then((response) => response.status === 200)
-      .then((success) => {
-        if (success) {
-          let friend = friends.find((friend) => friend.id === id);
-          if (friend) {
-            friend.status = "friends";
-            setFriends([...friends]);
-          }
-        }
-      });
+  function onAcceptFriendship({ successful, id }: FriendRequestEvent) {
+    if (!successful) {
+      return;
+    }
+    let friend = friends.find((friend) => friend.id === id);
+    if (friend) {
+      friend.status = "friends";
+      setFriends([...friends]);
+    }
   }
 
-  function RejectFriendship(id: string) {
-    return fetch(`http://paralibrary.digital/api/friends/${id}`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: id,
-        action: "reject",
-      }),
-    })
-      .then((response) => response.status === 200)
-      .then((success) => {
-        if (success) {
-          setFriends(friends.filter((friend) => friend.id !== id));
-        }
-      });
+  function onRejectFriendship({ successful, id }: FriendRequestEvent) {
+    if (successful) {
+      setFriends(friends.filter((friend) => friend.id !== id));
+    }
   }
+
   useEffect(() => {
     fetch("http://paralibrary.digital/api/friends", { credentials: "include" })
       .then((res) => {
@@ -76,13 +52,18 @@ const FriendsPage: React.FC = () => {
       });
   }, []);
 
-  const friendRequests: User[] = useMemo(
-    () => friends.filter((friend: User) => friend.status === "requested"),
+  const incomingFriendRequests: User[] = useMemo(
+    () => friends.filter((friend: User) => friend.status === "waiting"),
     [friends]
   );
 
   const currentFriends: User[] = useMemo(
     () => friends.filter((friend: User) => friend.status === "friends"),
+    [friends]
+  );
+
+  const outgoingFriendRequests: User[] = useMemo(
+    () => friends.filter((friend: User) => friend.status === "requested"),
     [friends]
   );
 
@@ -108,14 +89,21 @@ const FriendsPage: React.FC = () => {
         <>
           <FriendSearchBar />
           <AutoTable
-            data={friendRequests}
+            data={outgoingFriendRequests}
+            title={<h3>Waiting for a response</h3>}
+            hideOnEmpty
+          >
+            <TableColumn col={"name"}>Username</TableColumn>
+          </AutoTable>
+          <AutoTable
+            data={incomingFriendRequests}
             title={<h3>Friend Requests</h3>}
             hideOnEmpty
           >
             <TableColumn col={"name"}>Username</TableColumn>
             <FriendRequestButtons
-              onAccept={AcceptFriendship}
-              onReject={RejectFriendship}
+              onAccept={onAcceptFriendship}
+              onReject={onRejectFriendship}
             />
           </AutoTable>
           <AutoTable

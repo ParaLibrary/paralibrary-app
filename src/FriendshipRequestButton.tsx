@@ -1,5 +1,6 @@
 import React, { useCallback } from "react";
 import Button from "react-bootstrap/Button";
+import FriendRequestButtons from "./FriendRequestButtons";
 
 import { User } from "./ourtypes";
 
@@ -9,10 +10,10 @@ interface FRBProps {
 
 const FriendshipRequestButton: React.FC<FRBProps> = ({ rowitem: friend }) => {
   if (!friend) {
-    throw new Error("Row lacks data");
+    throw new Error("Row lacks valid data");
   }
-  const handleClick = useCallback(() => {
-    fetch(`http://paralibrary.digital/friends/${friend.id}`, {
+  const requestFriendship = useCallback(() => {
+    fetch(`http://paralibrary.digital/api/friends/${friend.id}`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -24,7 +25,24 @@ const FriendshipRequestButton: React.FC<FRBProps> = ({ rowitem: friend }) => {
     // should happen in future use
   }, [friend]);
 
-  return <Button onClick={handleClick}>Send friend request</Button>;
+  return (
+    <>
+      {friend.status == null && (
+        <Button onClick={requestFriendship}>Send friend request</Button>
+      )}
+      {friend.status === "friends" && (
+        <Button variant="success" disabled>
+          Friends
+        </Button>
+      )}
+      {friend.status === "requested" && (
+        <Button variant="info" disabled onClick={requestFriendship}>
+          Send friend request
+        </Button>
+      )}
+      {friend.status === "waiting" && <FriendRequestButtons />}
+    </>
+  );
 };
 
 export default FriendshipRequestButton;

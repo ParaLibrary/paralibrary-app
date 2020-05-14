@@ -9,6 +9,7 @@ import LoanRequestButton from "./LoanRequestButton";
 import LoanFormik from "./LoanForm";
 import { toLibrary } from "./mappers";
 import LibrarySearchBar from "./LibrarySearchBar";
+import FriendshipRequestButton from "./FriendshipRequestButton";
 
 const FriendLibraryPage: React.FC = () => {
   const { id } = useParams();
@@ -117,6 +118,7 @@ const FriendLibraryPage: React.FC = () => {
         !user ? <h1>User Not Found</h1> : <h1>{user && user.name}'s Library</h1>
       }
     >
+      <FriendshipRequestButton rowitem={user} />
       <LibrarySearchBar
         onSearchChange={filterResults}
         header="Search this Library"
