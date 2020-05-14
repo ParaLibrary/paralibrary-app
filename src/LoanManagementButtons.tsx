@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useContext } from "react";
 import Button, { ButtonProps } from "react-bootstrap/Button";
 
 import { LoanContext } from "./LoansPage";
@@ -17,10 +17,8 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
   children,
 }) => {
   const { loans, setLoans } = useContext(LoanContext);
-  const [disabled, setDisabled] = useState<boolean>(false);
 
   const handleClick = useCallback(() => {
-    setDisabled(true);
     fetch(`http://paralibrary.digital/api/loans/${thisLoan.id}`, {
       method: "DELETE",
       credentials: "include",
@@ -37,12 +35,7 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
   }, [loans, thisLoan, setLoans]);
 
   return (
-    <Button
-      size="sm"
-      onClick={handleClick}
-      disabled={disabled}
-      variant={variant}
-    >
+    <Button size="sm" onClick={handleClick} variant={variant}>
       {children}
     </Button>
   );
@@ -61,10 +54,8 @@ export const UpdateButton: React.FC<UpdateButtonProps> = ({
   children,
 }) => {
   const { loans, setLoans } = useContext(LoanContext);
-  const [disabled, setDisabled] = useState<boolean>(false);
 
   const handleClick = useCallback(() => {
-    setDisabled(true);
     const newLoan: Loan = { ...thisLoan, status: thisStatus };
     fetch(`http://paralibrary.digital/api/loans/${thisLoan.id}`, {
       method: "PUT",
@@ -81,18 +72,10 @@ export const UpdateButton: React.FC<UpdateButtonProps> = ({
           );
         }
       })
-      .catch((error) => console.log(error))
-      .finally(() => {
-        setDisabled(false);
-      });
+      .catch((error) => console.log(error));
   }, [loans, thisLoan, setLoans, thisStatus]);
   return (
-    <Button
-      size="sm"
-      onClick={handleClick}
-      disabled={disabled}
-      variant={variant}
-    >
+    <Button size="sm" onClick={handleClick} variant={variant}>
       {children}
     </Button>
   );
