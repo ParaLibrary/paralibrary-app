@@ -249,7 +249,13 @@ const LoansPage: React.FC = () => {
   );
 
   const requestedFromMe: Loan[] = useMemo(
-    () => loanedByMe.filter((loan: Loan) => loan.status === "pending"),
+    () =>
+      loanedByMe
+        .filter(
+          (loan: Loan) =>
+            loan.status === "pending" || loan.status === "accepted"
+        )
+        .sort((a: Loan, b: Loan) => Number(a.status < b.status)),
     [loanedByMe]
   );
 
@@ -257,7 +263,7 @@ const LoansPage: React.FC = () => {
     () =>
       loanedByMe
         .filter(
-          (loan: Loan) => loan.status === "accepted" || loan.status === "loaned"
+          (loan: Loan) => loan.status === "returned" || loan.status === "loaned"
         )
         .sort((a: Loan, b: Loan) => Number(a.status > b.status)),
     // May need to revise this once we loan management flow
@@ -275,7 +281,8 @@ const LoansPage: React.FC = () => {
           >
             <AutoTable
               data={requestedFromMe}
-              title={<h3>Requested Books</h3>}
+              title={<h3>Incoming Requests</h3>}
+              noHeaders
               placeholder={
                 <>
                   <span>No requests? </span>
@@ -284,7 +291,10 @@ const LoansPage: React.FC = () => {
               }
             >
               <TableColumn col={"requester_id"}>Requester ID</TableColumn>
-              <span>wants</span>
+              <StatusSpan
+                pending="wants to borrow"
+                accepted="is waiting to pick up"
+              />
               <TableColumn col={"book_id"}>Book ID</TableColumn>
               <OwnerLoanManager />
             </AutoTable>
@@ -293,7 +303,7 @@ const LoansPage: React.FC = () => {
           <LoanContext.Provider
             value={{ loans: loanedToMe, setLoans: setLoanedToMe }}
           >
-            <AutoTable data={myRequests} title={<h3>My Requests</h3>}>
+            <AutoTable data={myRequests} title={<h3>My Requests</h3>} noHeaders>
               <StatusSpan pending="Requested" accepted="Request for" />
               <TableColumn col={"book_id"}>Book ID</TableColumn>
               <StatusSpan pending="from" accepted="granted by" />
@@ -307,11 +317,12 @@ const LoansPage: React.FC = () => {
           >
             <AutoTable
               data={loanedOut}
-              title={<h3>Loaned Books</h3>}
+              title={<h3>My Loaning</h3>}
               hideOnEmpty
+              noHeaders
             >
               <TableColumn col={"owner_id"}>Owner ID</TableColumn>
-              <StatusSpan loaned="borrowed" accepted="accepted request for" />
+              <StatusSpan loaned="borrowed" returned="returned" />
               <TableColumn col={"book_id"}>Book ID</TableColumn>
 
               <OwnerLoanManager />
@@ -323,7 +334,8 @@ const LoansPage: React.FC = () => {
           >
             <AutoTable
               data={myBorrowing}
-              title={<h3>Borrowed Books</h3>}
+              title={<h3>My Borrowing</h3>}
+              noHeaders
               placeholder={
                 myRequests.length === 0 ? (
                   <>

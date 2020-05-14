@@ -19,28 +19,30 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
   const { loans, setLoans } = useContext(LoanContext);
   const [disabled, setDisabled] = useState<boolean>(false);
 
-  const handleClick = useCallback(
-    (loan: Loan) => {
-      setDisabled(true);
-      fetch(`http://paralibrary.digital/loans/${thisLoan.id}`, {
-        method: "DELETE",
-        credentials: "include",
+  const handleClick = useCallback(() => {
+    setDisabled(true);
+    fetch(`http://paralibrary.digital/loans/${thisLoan.id}`, {
+      method: "DELETE",
+      credentials: "include",
+    })
+      .then((res) => {
+        if (res.ok) {
+          setLoans(loans.filter((loan) => loan.id !== thisLoan.id));
+        }
       })
-        .then((res) => {
-          if (res.ok) {
-            setLoans(loans.filter((loan) => loan.id !== thisLoan.id));
-          }
-        })
-        .catch((error) => console.log(error))
-        .finally(() => {
-          setDisabled(false);
-        });
-    },
-    [loans]
-  );
+      .catch((error) => console.log(error))
+      .finally(() => {
+        setDisabled(false);
+      });
+  }, [loans, thisLoan, setLoans]);
 
   return (
-    <Button size="sm" disabled={disabled} variant={variant}>
+    <Button
+      size="sm"
+      onClick={handleClick}
+      disabled={disabled}
+      variant={variant}
+    >
       {children}
     </Button>
   );
@@ -61,34 +63,36 @@ export const UpdateButton: React.FC<UpdateButtonProps> = ({
   const { loans, setLoans } = useContext(LoanContext);
   const [disabled, setDisabled] = useState<boolean>(false);
 
-  const handleClick = useCallback(
-    (loan: Loan) => {
-      setDisabled(true);
-      const newLoan: Loan = { ...thisLoan, status: thisStatus };
-      fetch(`http://paralibrary.digital/loans/${thisLoan.id}`, {
-        method: "PUT",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newLoan),
+  const handleClick = useCallback(() => {
+    setDisabled(true);
+    const newLoan: Loan = { ...thisLoan, status: thisStatus };
+    fetch(`http://paralibrary.digital/loans/${thisLoan.id}`, {
+      method: "PUT",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newLoan),
+    })
+      .then((res) => {
+        if (res.ok) {
+          setLoans(
+            loans.map((loan) => (loan.id !== thisLoan.id ? loan : newLoan))
+          );
+        }
       })
-        .then((res) => {
-          if (res.ok) {
-            setLoans(
-              loans.map((loan) => (loan.id !== thisLoan.id ? loan : newLoan))
-            );
-          }
-        })
-        .catch((error) => console.log(error))
-        .finally(() => {
-          setDisabled(false);
-        });
-    },
-    [loans]
-  );
+      .catch((error) => console.log(error))
+      .finally(() => {
+        setDisabled(false);
+      });
+  }, [loans, thisLoan, setLoans, thisStatus]);
   return (
-    <Button size="sm" disabled={disabled}>
+    <Button
+      size="sm"
+      onClick={handleClick}
+      disabled={disabled}
+      variant={variant}
+    >
       {children}
     </Button>
   );
@@ -111,7 +115,7 @@ export const ContactButton: React.FC<ContactButtonProps> = ({
         userType === "owner" ? loan.owner_contact : loan.requester_contact
       }`}
     >
-      Contact?
+      Contact
     </Button>
   );
 };

@@ -60,13 +60,13 @@ export const RequesterLoanManager: React.FC<LMProps> = ({ rowitem: loan }) => {
 
   return (
     <ActionPanel>
-      {loan.status === "accepted" && (
-        <UpdateButton loan={loan} status="loaned">
-          Book received!
-        </UpdateButton>
-      )}
       {loan.status === "accepted" && !!loan.owner_contact && (
         <ContactButton loan={loan} userType="owner" />
+      )}
+      {loan.status === "accepted" && (
+        <UpdateButton loan={loan} status="loaned">
+          Book received
+        </UpdateButton>
       )}
       {(loan.status === "pending" || loan.status === "accepted") && (
         <DeleteButton variant="outline-danger" loan={loan}>
@@ -76,8 +76,8 @@ export const RequesterLoanManager: React.FC<LMProps> = ({ rowitem: loan }) => {
       )}
 
       {loan.status === "returned" && (
-        <DeleteButton variant="info" loan={loan}>
-          OK
+        <DeleteButton variant="success" loan={loan}>
+          Confirm
         </DeleteButton>
       )}
     </ActionPanel>
