@@ -28,10 +28,7 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
           setLoans(loans.filter((loan) => loan.id !== thisLoan.id));
         }
       })
-      .catch((error) => console.log(error))
-      .finally(() => {
-        setDisabled(false);
-      });
+      .catch((error) => console.log(error));
   }, [loans, thisLoan, setLoans]);
 
   return (
