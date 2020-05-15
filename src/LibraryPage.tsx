@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  useContext,
+} from "react";
 import { Modal, Button } from "react-bootstrap";
 import { useParams } from "react-router";
 
@@ -11,6 +17,7 @@ import { Table } from "react-bootstrap";
 import styled from "styled-components";
 import LibrarySearchBar from "./LibrarySearchBar";
 import { toLibrary, toUser } from "./mappers";
+import { AuthContext } from "./AuthContextProvider";
 
 interface ButtonGroupProps {
   id: number;
@@ -18,41 +25,24 @@ interface ButtonGroupProps {
 }
 
 const LibraryPage: React.FC = () => {
+  const user_idGet = useContext(AuthContext);
   const emptyBook: Book = {
     id: "",
-    user_id: "",
+    user_id: user_idGet.credential.userId || "",
     isbn: "",
     summary: "",
     title: "",
     author: "",
-    visibility: "public",
-  };
-  const openBook: Book = {
-    id: "",
-    user_id: "",
-    title: "",
-    author: "",
-    isbn: "",
-    summary: "",
     visibility: "public",
   };
 
-  const { id } = useParams();
   const [isLoaded, setIsLoaded] = useState(false);
   const [books, setBooks] = useState<Book[]>([]);
   const [user, setUser] = useState<User>();
   const [modalOpen, setModalOpen] = useState(false);
   const [isNewBook, setIsNewBook] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedBook, setSelectedBook] = useState<Book>({
-    id: "",
-    user_id: "",
-    title: "",
-    author: "",
-    isbn: "",
-    summary: "",
-    visibility: "private",
-  });
+  const [selectedBook, setSelectedBook] = useState<Book>(emptyBook);
 
   function filterResults(searchTerm: string) {
     setSearchTerm(searchTerm);
@@ -96,9 +86,8 @@ const LibraryPage: React.FC = () => {
         setIsLoaded(true);
       });
   }, []);
-  const updateDatabase = useCallback(
+  const addToDatabase = useCallback(
     (book: Book) => {
-      book.user_id = user ? user.id : "";
       let BookString = JSON.stringify(book);
       fetch("http://paralibrary.digital/api/books", {
         method: "POST",
@@ -109,16 +98,10 @@ const LibraryPage: React.FC = () => {
         body: BookString,
       })
         .then((res) => res.json())
-        .then((res: Book) => {
-          setBooks(books.concat(res));
+        .then((res: { id: string }) => {
+          setBooks(books.concat({ ...book, id: res.id }));
         })
         .catch(() => false);
-    },
-    [books]
-  );
-  const fetchBooks = useCallback(
-    (book: Book) => {
-      setBooks((books) => [...books, book]);
     },
     [books]
   );
@@ -135,8 +118,7 @@ const LibraryPage: React.FC = () => {
         <Modal.Body>
           <BookFormik
             book={selectedBook}
-            updateBookList={fetchBooks}
-            updateDatabase={updateDatabase}
+            updateDatabase={addToDatabase}
             closeModal={() => setModalOpen(false)}
           />
         </Modal.Body>

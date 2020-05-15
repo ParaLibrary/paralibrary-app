@@ -112,14 +112,12 @@ const BookForm: React.FC<FormikProps<Book>> = ({
 
 interface BookFormProps {
   book: Book;
-  updateBookList: (book: Book) => void;
   updateDatabase: (book: Book) => void;
   closeModal: () => void;
 }
 
 const BookFormik: React.FC<BookFormProps> = ({
   book,
-  updateBookList,
   updateDatabase,
   closeModal,
 }) => {
@@ -138,7 +136,6 @@ const BookFormik: React.FC<BookFormProps> = ({
       initialValues={book}
       onSubmit={(values: Book) => {
         updateDatabase(values);
-        updateBookList(values);
         closeModal();
       }}
       component={BookForm}
