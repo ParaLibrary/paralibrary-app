@@ -65,6 +65,7 @@ interface TableProps<T> {
         children?: React.ReactNode;
       }>
     | string;
+  noHeaders?: boolean;
 }
 
 const AutoTable = <T extends { id: string }>(props: TableProps<T>) => {
@@ -76,6 +77,7 @@ const AutoTable = <T extends { id: string }>(props: TableProps<T>) => {
     placeholder,
     tableAs,
     rowAs,
+    noHeaders,
   } = props;
   const filteredHeaders = useMemo(
     () =>
@@ -98,7 +100,7 @@ const AutoTable = <T extends { id: string }>(props: TableProps<T>) => {
         <Padding>{placeholder}</Padding>
       ) : (
         <Wrapper bordered size={"sm"}>
-          {!tableAs && (
+          {!tableAs && !noHeaders && (
             <thead>
               <tr>{filteredHeaders}</tr>
             </thead>

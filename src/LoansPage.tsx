@@ -4,8 +4,23 @@ import { Link } from "react-router-dom";
 import { Loan } from "./ourtypes";
 import PageLayout from "./PageLayout";
 import AutoTable, { TableColumn } from "./AutoTable";
-import { Button } from "react-bootstrap";
+import BookDisplay from "./BookDisplay";
+import UserDisplay from "./UserDisplay";
 import { toLoan } from "./mappers";
+import { OwnerLoanManager, RequesterLoanManager } from "./LoanManagers";
+import StatusSpan from "./StatusSpan";
+
+interface LoanContext {
+  loans: Loan[];
+  setLoans: (loans: Loan[]) => void;
+}
+
+const defaultLoanContext: LoanContext = {
+  loans: [],
+  setLoans: (loans: Loan[]) => {},
+};
+
+export const LoanContext = React.createContext<LoanContext>(defaultLoanContext);
 
 const LoansPage: React.FC = () => {
   const [reqIsLoaded, setReqIsLoaded] = useState(false);
@@ -60,17 +75,34 @@ const LoansPage: React.FC = () => {
   }, []);
 
   const myBorrowing: Loan[] = useMemo(
-    () => loanedToMe.filter((loan: Loan) => loan.status === "loaned"),
+    () =>
+      loanedToMe
+        .filter(
+          (loan: Loan) => loan.status === "loaned" || loan.status === "returned"
+        )
+        .sort((a: Loan, b: Loan) => Number(a.status < b.status)),
     [loanedToMe]
   );
 
   const myRequests: Loan[] = useMemo(
-    () => loanedToMe.filter((loan: Loan) => loan.status === "pending"),
+    () =>
+      loanedToMe
+        .filter(
+          (loan: Loan) =>
+            loan.status === "pending" || loan.status === "accepted"
+        )
+        .sort((a: Loan, b: Loan) => Number(a.status < b.status)),
     [loanedToMe]
   );
 
   const requestedFromMe: Loan[] = useMemo(
-    () => loanedByMe.filter((loan: Loan) => loan.status === "pending"),
+    () =>
+      loanedByMe
+        .filter(
+          (loan: Loan) =>
+            loan.status === "pending" || loan.status === "accepted"
+        )
+        .sort((a: Loan, b: Loan) => Number(a.status < b.status)),
     [loanedByMe]
   );
 
@@ -78,7 +110,7 @@ const LoansPage: React.FC = () => {
     () =>
       loanedByMe
         .filter(
-          (loan: Loan) => loan.status === "accepted" || loan.status === "loaned"
+          (loan: Loan) => loan.status === "returned" || loan.status === "loaned"
         )
         .sort((a: Loan, b: Loan) => Number(a.status > b.status)),
     // May need to revise this once we loan management flow
@@ -91,61 +123,101 @@ const LoansPage: React.FC = () => {
         "Loading..."
       ) : (
         <>
-          <AutoTable
-            data={requestedFromMe}
-            title={<h3>Requested Books</h3>}
-            placeholder={
-              <>
-                <span>No requests? </span>
-                <Link to={"/library"}>Add more books to your library!</Link>
-              </>
-            }
+          <LoanContext.Provider
+            value={{ loans: loanedByMe, setLoans: setLoanedByMe }}
           >
-            <TableColumn col={"requester_id"}>Requester ID</TableColumn>
-            <span>wants</span>
-            <TableColumn col={"book_id"}>Book ID</TableColumn>
-          </AutoTable>
-
-          <AutoTable data={myRequests} title={<h3>My Requests</h3>}>
-            <span>You requested</span>
-            <TableColumn col={"book_id"}>Book ID</TableColumn>
-            <span>from</span>
-            <TableColumn col={"requester_id"}>Requester ID</TableColumn>
-            <Button>Cancel Request?</Button>
-          </AutoTable>
-
-          <AutoTable data={loanedOut} title={<h3>Loaned Books</h3>} hideOnEmpty>
-            <span>You've lent</span>
-            <TableColumn col={"book_id"}>Book ID</TableColumn>
-            <span>to</span>
-            <TableColumn col={"owner_id"}>Owner ID</TableColumn>
-            <span>due</span>
-            <TableColumn col={"loan_end_date"}>Due Date</TableColumn>
-          </AutoTable>
-
-          <AutoTable
-            data={myBorrowing}
-            title={<h3>Borrowed Books</h3>}
-            placeholder={
-              myRequests.length === 0 ? (
+            <AutoTable
+              data={requestedFromMe}
+              title={<h3>Incoming Requests</h3>}
+              noHeaders
+              placeholder={
                 <>
-                  <span>Doesn't look like you've borrowed any books.</span>
-                  <br />
-                  <Link to={"/friends"}>Check out a friend's library!</Link>
+                  <span>No requests? </span>
+                  <Link to={"/library"}>Add more books to your library!</Link>
                 </>
-              ) : (
-                <span>No books currently borrowed.</span>
-              )
-            }
+              }
+            >
+              <TableColumn col={"requester"} component={UserDisplay}>
+                Requester ID
+              </TableColumn>
+              <StatusSpan
+                pending="wants to borrow"
+                accepted="is waiting to pick up"
+              />
+              <TableColumn col={"book"} component={BookDisplay}>
+                Book ID
+              </TableColumn>
+              <OwnerLoanManager />
+            </AutoTable>
+          </LoanContext.Provider>
+
+          <LoanContext.Provider
+            value={{ loans: loanedToMe, setLoans: setLoanedToMe }}
           >
-            <span>You borrowed</span>
-            <TableColumn col={"book_id"}>Book ID</TableColumn>
-            <span>from</span>
-            <TableColumn col={"requester_id"}>Requester ID</TableColumn>
-            <span>on</span>
-            <TableColumn col={"loan_start_date"}>Loan Date</TableColumn>
-            <Button>Returned It!</Button>
-          </AutoTable>
+            <AutoTable data={myRequests} title={<h3>My Requests</h3>} noHeaders>
+              <StatusSpan pending="Requested" accepted="Request for" />
+              <TableColumn col={"book"} component={BookDisplay}>
+                Book ID
+              </TableColumn>
+              <StatusSpan pending="from" accepted="granted by" />
+              <TableColumn col={"owner"} component={UserDisplay}>
+                Requester ID
+              </TableColumn>
+              <RequesterLoanManager />
+            </AutoTable>
+          </LoanContext.Provider>
+
+          <LoanContext.Provider
+            value={{ loans: loanedByMe, setLoans: setLoanedByMe }}
+          >
+            <AutoTable
+              data={loanedOut}
+              title={<h3>My Loaning</h3>}
+              hideOnEmpty
+              noHeaders
+            >
+              <TableColumn col={"requester"} component={UserDisplay}>
+                Owner ID
+              </TableColumn>
+              <StatusSpan loaned="borrowed" returned="returned" />
+              <TableColumn col={"book"} component={BookDisplay}>
+                Book ID
+              </TableColumn>
+
+              <OwnerLoanManager />
+            </AutoTable>
+          </LoanContext.Provider>
+
+          <LoanContext.Provider
+            value={{ loans: loanedToMe, setLoans: setLoanedToMe }}
+          >
+            <AutoTable
+              data={myBorrowing}
+              title={<h3>My Borrowing</h3>}
+              noHeaders
+              placeholder={
+                myRequests.length === 0 ? (
+                  <>
+                    <span>Doesn't look like you've borrowed any books.</span>
+                    <br />
+                    <Link to={"/friends"}>Check out a friend's library!</Link>
+                  </>
+                ) : (
+                  <span>No books currently borrowed.</span>
+                )
+              }
+            >
+              <StatusSpan loaned="You've borrowed" returned="You've returned" />
+              <TableColumn col={"book"} component={BookDisplay}>
+                Book ID
+              </TableColumn>
+              <StatusSpan loaned="from" returned="to" />
+              <TableColumn col={"owner"} component={UserDisplay}>
+                Requester ID
+              </TableColumn>
+              <RequesterLoanManager />
+            </AutoTable>
+          </LoanContext.Provider>
         </>
       )}
     </PageLayout>

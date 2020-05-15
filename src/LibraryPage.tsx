@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useContext,
 } from "react";
+
 import { Modal, Button } from "react-bootstrap";
 import { useParams } from "react-router";
 
@@ -12,12 +13,12 @@ import PageLayout from "./PageLayout";
 import BookFormik from "./BookForm";
 import AutoTable, { TableColumn } from "./AutoTable";
 import { Book, User } from "./ourtypes";
-
 import { Table } from "react-bootstrap";
 import styled from "styled-components";
 import LibrarySearchBar from "./LibrarySearchBar";
 import { toLibrary, toUser } from "./mappers";
 import { AuthContext } from "./AuthContextProvider";
+
 
 interface ButtonGroupProps {
   id: number;
@@ -41,6 +42,7 @@ const LibraryPage: React.FC = () => {
   const [user, setUser] = useState<User>();
   const [modalOpen, setModalOpen] = useState(false);
   const [isNewBook, setIsNewBook] = useState(true);
+  const [books, setBooks] = useState<Book[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedBook, setSelectedBook] = useState<Book>(emptyBook);
 
@@ -59,6 +61,7 @@ const LibraryPage: React.FC = () => {
   }, [searchTerm, books]);
 
   useEffect(() => {
+
     console.log(user);
   }, [user]);
   useEffect(() => {
@@ -105,6 +108,7 @@ const LibraryPage: React.FC = () => {
     },
     [books]
   );
+
   return (
     <PageLayout header={<h1>My Library</h1>}>
       <LibrarySearchBar
