@@ -3,15 +3,15 @@ import { Button } from "react-bootstrap";
 
 import { User } from "./ourtypes";
 
-export interface FriendRequestEvent {
+export interface FriendshipChangeEvent {
   successful: boolean;
   id: string;
 }
 
 interface ButtonGroupProps {
   rowitem?: User;
-  onAccept?: (event: FriendRequestEvent) => void;
-  onReject?: (event: FriendRequestEvent) => void;
+  onAccept?: (event: FriendshipChangeEvent) => void;
+  onReject?: (event: FriendshipChangeEvent) => void;
 }
 
 function AcceptFriendship(id: string) {

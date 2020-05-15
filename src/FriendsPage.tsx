@@ -3,9 +3,9 @@ import { User } from "./ourtypes";
 import { toUser } from "./mappers";
 import PageLayout from "./PageLayout";
 import AutoTable, { TableColumn } from "./AutoTable";
-import FriendRequestButtons, {
-  FriendRequestEvent,
-} from "./FriendRequestButtons";
+import FriendshipResponseButtons, {
+  FriendshipChangeEvent,
+} from "./FriendshipResponseButtons";
 import FriendSearchBar from "./FriendSearchBar";
 
 const FriendsPage: React.FC = () => {
@@ -14,7 +14,7 @@ const FriendsPage: React.FC = () => {
   const [friends, setFriends] = useState<User[]>([]);
   const [nearbyPeople] = useState<User[]>([]);
 
-  function onAcceptFriendship({ successful, id }: FriendRequestEvent) {
+  function onAcceptFriendship({ successful, id }: FriendshipChangeEvent) {
     if (!successful) {
       return;
     }
@@ -25,7 +25,7 @@ const FriendsPage: React.FC = () => {
     }
   }
 
-  function onRejectFriendship({ successful, id }: FriendRequestEvent) {
+  function onRejectFriendship({ successful, id }: FriendshipChangeEvent) {
     if (successful) {
       setFriends(friends.filter((friend) => friend.id !== id));
     }
@@ -101,7 +101,7 @@ const FriendsPage: React.FC = () => {
             hideOnEmpty
           >
             <TableColumn col={"name"}>Username</TableColumn>
-            <FriendRequestButtons
+            <FriendshipResponseButtons
               onAccept={onAcceptFriendship}
               onReject={onRejectFriendship}
             />

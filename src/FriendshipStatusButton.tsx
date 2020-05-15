@@ -1,18 +1,27 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, Dispatch, SetStateAction } from "react";
 import Button from "react-bootstrap/Button";
-import FriendRequestButtons from "./FriendRequestButtons";
+import FriendshipResponseButtons from "./FriendshipResponseButtons";
 
 import { User } from "./ourtypes";
 
 interface FRBProps {
   rowitem?: User;
+  onClick: Dispatch<SetStateAction<User | undefined>>;
 }
 
-const FriendshipRequestButton: React.FC<FRBProps> = ({ rowitem: friend }) => {
-  if (!friend) {
-    throw new Error("Row lacks valid data");
-  }
+const FriendshipRequestButton: React.FC<FRBProps> = ({
+  rowitem: friend,
+  onClick,
+}) => {
+  useEffect(() => {
+    console.log(friend);
+  }, []);
+
   const requestFriendship = useCallback(() => {
+    if (!friend) {
+      return;
+    }
+    onClick({ ...friend, status: "requested" });
     fetch(`http://paralibrary.digital/api/friends/${friend.id}`, {
       method: "POST",
       credentials: "include",
@@ -21,9 +30,11 @@ const FriendshipRequestButton: React.FC<FRBProps> = ({ rowitem: friend }) => {
       },
       body: JSON.stringify({ ...friend, action: "request" }),
     }).catch((error) => console.log(error));
-    // TODO: add .then statements to handle any state updates that
-    // should happen in future use
   }, [friend]);
+
+  if (!friend) {
+    return <></>;
+  }
 
   return (
     <>
@@ -37,10 +48,15 @@ const FriendshipRequestButton: React.FC<FRBProps> = ({ rowitem: friend }) => {
       )}
       {friend.status === "requested" && (
         <Button variant="info" disabled onClick={requestFriendship}>
-          Send friend request
+          Requested
         </Button>
       )}
-      {friend.status === "waiting" && <FriendRequestButtons />}
+      {friend.status === "waiting" && (
+        <div>
+          <span>{friend.name} wants to be friends with you!</span>
+          <FriendshipResponseButtons />
+        </div>
+      )}
     </>
   );
 };

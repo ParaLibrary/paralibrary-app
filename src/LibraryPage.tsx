@@ -54,7 +54,7 @@ const LibraryPage: React.FC = () => {
         isbn: "978-3-16-148410-0",
         summary:
           "this is an example of when I am putting in data with no idea of what to write in.",
-        visibility: "public",
+        visibility: "public" as const,
       },
       {
         id: "2",
@@ -64,18 +64,20 @@ const LibraryPage: React.FC = () => {
         isbn: "978-3-16-148410-0",
         summary:
           "this is an example of when I am putting in data with no idea of what to write in.",
-        visibility: "public",
+        visibility: "public" as const,
         loan: {
           id: "1",
           book_id: "2",
-          status: "pending",
+          status: "pending" as const,
           owner: {
             id: "1",
             name: "Bob",
+            status: null,
           },
           requester: {
             id: "2",
             name: "Sally",
+            status: "friends",
           },
           owner_contact: "",
           requester_contact: "",

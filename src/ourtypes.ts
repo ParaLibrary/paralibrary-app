@@ -41,10 +41,10 @@ export type Visibility = "public" | "private" | "friends";
 export interface User {
   id: string;
   name: string;
-  status?: FriendStatus;
+  status: FriendStatus;
 }
 
-export type FriendStatus = "requested" | "friends" | "waiting";
+export type FriendStatus = "requested" | "friends" | "waiting" | null;
 
 export interface Library {
   user: User;
