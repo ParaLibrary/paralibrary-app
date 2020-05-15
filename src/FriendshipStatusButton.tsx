@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, Dispatch, SetStateAction } from "react";
 import Button from "react-bootstrap/Button";
 import FriendshipResponseButtons from "./FriendshipResponseButtons";
+import styled from "styled-components";
 
 import { User } from "./ourtypes";
 
@@ -9,14 +10,15 @@ interface FRBProps {
   onClick: Dispatch<SetStateAction<User | undefined>>;
 }
 
+const PaddedDiv = styled.div`
+  padding-top: 10px;
+  padding-bottom: 30px;
+`;
+
 const FriendshipRequestButton: React.FC<FRBProps> = ({
   rowitem: friend,
   onClick,
 }) => {
-  useEffect(() => {
-    console.log(friend);
-  }, []);
-
   const requestFriendship = useCallback(() => {
     if (!friend) {
       return;
@@ -37,7 +39,7 @@ const FriendshipRequestButton: React.FC<FRBProps> = ({
   }
 
   return (
-    <>
+    <PaddedDiv>
       {friend.status == null && (
         <Button onClick={requestFriendship}>Send friend request</Button>
       )}
@@ -53,11 +55,11 @@ const FriendshipRequestButton: React.FC<FRBProps> = ({
       )}
       {friend.status === "waiting" && (
         <div>
-          <span>{friend.name} wants to be friends with you!</span>
-          <FriendshipResponseButtons />
+          <div>{friend.name} wants to be friends with you!</div>
+          <FriendshipResponseButtons rowitem={friend} />
         </div>
       )}
-    </>
+    </PaddedDiv>
   );
 };
 

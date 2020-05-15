@@ -7,6 +7,7 @@ import FriendshipResponseButtons, {
   FriendshipChangeEvent,
 } from "./FriendshipResponseButtons";
 import FriendSearchBar from "./FriendSearchBar";
+import UserDisplay from "./UserDisplay";
 
 const FriendsPage: React.FC = () => {
   const [error, setError] = useState<any>();
@@ -74,6 +75,7 @@ const FriendsPage: React.FC = () => {
         <AutoTable
           data={nearbyPeople}
           title={<h3>Nearby People</h3>}
+          noHeaders
           placeholder={"Huh, seems like no one's around..."}
         >
           <TableColumn col={"name"}>Name</TableColumn>
@@ -91,16 +93,18 @@ const FriendsPage: React.FC = () => {
           <AutoTable
             data={outgoingFriendRequests}
             title={<h3>Waiting for a response</h3>}
+            noHeaders
             hideOnEmpty
           >
-            <TableColumn col={"name"}>Username</TableColumn>
+            <TableColumn component={UserDisplay}>Username</TableColumn>
           </AutoTable>
           <AutoTable
             data={incomingFriendRequests}
             title={<h3>Friend Requests</h3>}
+            noHeaders
             hideOnEmpty
           >
-            <TableColumn col={"name"}>Username</TableColumn>
+            <TableColumn component={UserDisplay}>Username</TableColumn>
             <FriendshipResponseButtons
               onAccept={onAcceptFriendship}
               onReject={onRejectFriendship}
@@ -109,9 +113,16 @@ const FriendsPage: React.FC = () => {
           <AutoTable
             data={currentFriends}
             title={<h3>Current Friends</h3>}
-            hideOnEmpty
+            noHeaders
+            placeholder={
+              <>
+                <span>
+                  Use the search bar above and start adding some friends!
+                </span>
+              </>
+            }
           >
-            <TableColumn col={"name"}>Username</TableColumn>
+            <TableColumn component={UserDisplay}>Username</TableColumn>
           </AutoTable>
         </>
       )}
