@@ -38,6 +38,20 @@ const FriendshipRequestButton: React.FC<FRBProps> = ({
     return <></>;
   }
 
+  function onAcceptClicked() {
+    if (!friend) {
+      return;
+    }
+    onClick({ ...friend, status: "friends" });
+  }
+
+  function onRejectClicked() {
+    if (!friend) {
+      return;
+    }
+    onClick({ ...friend, status: null });
+  }
+
   return (
     <PaddedDiv>
       {friend.status == null && (
@@ -56,7 +70,11 @@ const FriendshipRequestButton: React.FC<FRBProps> = ({
       {friend.status === "waiting" && (
         <div>
           <div>{friend.name} wants to be friends with you!</div>
-          <FriendshipResponseButtons rowitem={friend} />
+          <FriendshipResponseButtons
+            rowitem={friend}
+            onAccept={onAcceptClicked}
+            onReject={onRejectClicked}
+          />
         </div>
       )}
     </PaddedDiv>
