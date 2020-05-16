@@ -19,7 +19,6 @@ import LibrarySearchBar from "./LibrarySearchBar";
 import { toLibrary, toUser } from "./mappers";
 import { AuthContext } from "./AuthContextProvider";
 
-
 interface ButtonGroupProps {
   id: number;
   onEdit: (id: number) => {};
@@ -41,7 +40,6 @@ const LibraryPage: React.FC = () => {
   const [user, setUser] = useState<User>();
   const [modalOpen, setModalOpen] = useState(false);
   const [isNewBook, setIsNewBook] = useState(true);
-  const [books, setBooks] = useState<Book[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedBook, setSelectedBook] = useState<Book>(emptyBook);
 
@@ -59,9 +57,7 @@ const LibraryPage: React.FC = () => {
     );
   }, [searchTerm, books]);
 
-  useEffect(() => {
-
-  }, [user]);
+  useEffect(() => {}, [user]);
   useEffect(() => {
     fetch(`http://paralibrary.digital/api/libraries`, {
       credentials: "include",
