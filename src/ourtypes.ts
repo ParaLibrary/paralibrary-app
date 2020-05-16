@@ -44,7 +44,7 @@ export interface User {
   status?: FriendStatus;
 }
 
-export type FriendStatus = "requested" | "friends" | "waiting";
+export type FriendStatus = "requested" | "friends" | "waiting" | null;
 
 export interface Library {
   user: User;
