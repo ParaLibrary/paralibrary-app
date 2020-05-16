@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, Dispatch, SetStateAction } from "react";
 import Button from "react-bootstrap/Button";
-import FriendshipResponseButtons from "./FriendshipResponseButtons";
+import AcceptRejectButtons from "./FriendshipAcceptRejectGroup";
 import styled from "styled-components";
 
 import { User } from "./ourtypes";
 
 interface FRBProps {
-  rowitem?: User;
+  friend: User;
   onClick: Dispatch<SetStateAction<User | undefined>>;
 }
 
@@ -15,15 +15,8 @@ const PaddedDiv = styled.div`
   padding-bottom: 30px;
 `;
 
-const FriendshipRequestButton: React.FC<FRBProps> = ({
-  rowitem: friend,
-  onClick,
-}) => {
+const FriendshipRequestButton: React.FC<FRBProps> = ({ friend, onClick }) => {
   const requestFriendship = useCallback(() => {
-    if (!friend) {
-      return;
-    }
-    onClick({ ...friend, status: "requested" });
     fetch(`http://paralibrary.digital/api/friends/${friend.id}`, {
       method: "POST",
       credentials: "include",
@@ -31,54 +24,52 @@ const FriendshipRequestButton: React.FC<FRBProps> = ({
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ ...friend, action: "request" }),
-    }).catch((error) => console.log(error));
+    })
+      .then(() => {
+        onClick({ ...friend, status: "requested" });
+      })
+      .catch((error) => console.log(error));
   }, [friend]);
 
-  if (!friend) {
-    return <></>;
-  }
-
   function onAcceptClicked() {
-    if (!friend) {
-      return;
-    }
     onClick({ ...friend, status: "friends" });
   }
 
   function onRejectClicked() {
-    if (!friend) {
-      return;
-    }
     onClick({ ...friend, status: null });
   }
 
-  return (
-    <PaddedDiv>
-      {friend.status == null && (
-        <Button onClick={requestFriendship}>Send friend request</Button>
-      )}
-      {friend.status === "friends" && (
-        <Button variant="success" disabled>
-          Friends
-        </Button>
-      )}
-      {friend.status === "requested" && (
-        <Button variant="info" disabled onClick={requestFriendship}>
-          Requested
-        </Button>
-      )}
-      {friend.status === "waiting" && (
-        <div>
-          <div>{friend.name} wants to be friends with you!</div>
-          <FriendshipResponseButtons
-            rowitem={friend}
-            onAccept={onAcceptClicked}
-            onReject={onRejectClicked}
-          />
-        </div>
-      )}
-    </PaddedDiv>
-  );
+  function actionButton(friend: User) {
+    switch (friend.status) {
+      case null:
+        return <Button onClick={requestFriendship}>Send friend request</Button>;
+      case "friends":
+        return (
+          <Button variant="success" disabled>
+            Friends
+          </Button>
+        );
+      case "requested":
+        return (
+          <Button variant="info" disabled>
+            Requested
+          </Button>
+        );
+      case "waiting":
+        return (
+          <div>
+            <div>{friend.name} wants to be friends with you!</div>
+            <AcceptRejectButtons
+              rowitem={friend}
+              onAccept={onAcceptClicked}
+              onReject={onRejectClicked}
+            />
+          </div>
+        );
+    }
+  }
+
+  return <PaddedDiv>{actionButton(friend)}</PaddedDiv>;
 };
 
 export default FriendshipRequestButton;

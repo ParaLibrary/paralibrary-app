@@ -56,7 +56,7 @@ const FriendLibraryPage: React.FC = () => {
       .finally(() => {
         setIsLoaded(true);
       });
-  }, [id]);
+  }, [id, user]);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [isNewRequest, setIsNewRequest] = useState(true);
@@ -118,7 +118,7 @@ const FriendLibraryPage: React.FC = () => {
         !user ? <h1>User Not Found</h1> : <h1>{user && user.name}'s Library</h1>
       }
     >
-      <FriendshipStatusButton rowitem={user} onClick={setUser} />
+      {user && <FriendshipStatusButton friend={user} onClick={setUser} />}
       <LibrarySearchBar
         onSearchChange={filterResults}
         header="Search this Library"

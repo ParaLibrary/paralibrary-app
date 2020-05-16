@@ -3,9 +3,8 @@ import { User } from "./ourtypes";
 import { toUser } from "./mappers";
 import PageLayout from "./PageLayout";
 import AutoTable, { TableColumn } from "./AutoTable";
-import FriendshipResponseButtons, {
-  FriendshipChangeEvent,
-} from "./FriendshipResponseButtons";
+import AcceptRejectButtons from "./FriendshipAcceptRejectGroup";
+import { FriendshipChangeEvent } from "./FriendshipAcceptButton";
 import FriendSearchBar from "./FriendSearchBar";
 import UserDisplay from "./UserDisplay";
 
@@ -105,7 +104,7 @@ const FriendsPage: React.FC = () => {
             hideOnEmpty
           >
             <TableColumn component={UserDisplay}>Username</TableColumn>
-            <FriendshipResponseButtons
+            <AcceptRejectButtons
               onAccept={onAcceptFriendship}
               onReject={onRejectFriendship}
             />
