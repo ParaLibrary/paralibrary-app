@@ -38,7 +38,6 @@ const LibraryPage: React.FC = () => {
   };
 
   const [isLoaded, setIsLoaded] = useState(false);
-  const [books, setBooks] = useState<Book[]>([]);
   const [user, setUser] = useState<User>();
   const [modalOpen, setModalOpen] = useState(false);
   const [isNewBook, setIsNewBook] = useState(true);
