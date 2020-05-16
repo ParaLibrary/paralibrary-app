@@ -3,6 +3,7 @@ import Button, { ButtonProps } from "react-bootstrap/Button";
 
 import { LoanContext } from "./LoansPage";
 import { Loan, LoanStatus } from "./ourtypes";
+import ConfirmContext from "./ConfirmationContext";
 
 type ButtonVariant = ButtonProps["variant"];
 
@@ -17,6 +18,7 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
   children,
 }) => {
   const { loans, setLoans } = useContext(LoanContext);
+  const requestConfirmation = useContext(ConfirmContext);
 
   const handleClick = useCallback(() => {
     fetch(`http://paralibrary.digital/api/loans/${thisLoan.id}`, {
@@ -32,7 +34,16 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
   }, [loans, thisLoan, setLoans]);
 
   return (
-    <Button size="sm" onClick={handleClick} variant={variant}>
+    <Button
+      size="sm"
+      onClick={() =>
+        requestConfirmation(
+          { body: "Are you sure you want to delete this?" },
+          handleClick
+        )
+      }
+      variant={variant}
+    >
       {children}
     </Button>
   );

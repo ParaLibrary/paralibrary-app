@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useState, useCallback, useRef } from "react";
 import styled from "styled-components";
 import { AuthContext } from "./AuthContextProvider";
 import { Redirect } from "react-router-dom";
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
+
+import ConfirmationContext, { Message } from "./ConfirmationContext";
 
 interface PageLayoutProps {
   header?: React.ReactNode;
@@ -48,6 +52,27 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   sidebar,
   children,
 }) => {
+  const [confirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
+  const [confirmMessage, setConfirmMessage] = useState<Message>({
+    body: "",
+  });
+  const action = useRef<VoidFunction>(() => {});
+
+  const requestConfirmation = (message: Message, recall: VoidFunction) => {
+    setConfirmMessage(message);
+    setConfirmModalOpen(true);
+    action.current = recall;
+  };
+
+  const handleConfirm = useCallback(() => {
+    setConfirmModalOpen(false);
+    action.current();
+  }, []);
+
+  const handleCancel = useCallback(() => {
+    setConfirmModalOpen(false);
+  }, []);
+
   return (
     <AuthContext.Consumer>
       {(context) => {
@@ -60,11 +85,28 @@ const PageLayout: React.FC<PageLayoutProps> = ({
           return <Redirect to="/" />;
         }
         return (
-          <Layout>
-            {header && <Header>{header}</Header>}
-            <Main>{children}</Main>
-            {sidebar && <Sidebar>{sidebar}</Sidebar>}
-          </Layout>
+          <ConfirmationContext.Provider value={requestConfirmation}>
+            <Layout>
+              {header && <Header>{header}</Header>}
+              <Main>{children}</Main>
+              {sidebar && <Sidebar>{sidebar}</Sidebar>}
+
+              <Modal centered show={confirmModalOpen} onHide={handleCancel}>
+                <Modal.Header closeButton>
+                  <Modal.Title>{confirmMessage.title}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>{confirmMessage.body}</Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={() => handleCancel()}>
+                    Close
+                  </Button>
+                  <Button variant="primary" onClick={() => handleConfirm()}>
+                    Confirm
+                  </Button>
+                </Modal.Footer>
+              </Modal>
+            </Layout>
+          </ConfirmationContext.Provider>
         );
       }}
     </AuthContext.Consumer>
