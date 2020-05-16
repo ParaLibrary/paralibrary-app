@@ -6,7 +6,7 @@ export interface Message {
 }
 
 const ConfirmationContext = React.createContext<
-  (message: Message, recall: VoidFunction) => void
->((message: Message, recall: VoidFunction) => {});
+  (call: VoidFunction, message: Message) => void
+>((call: VoidFunction, message: Message) => {});
 
 export default ConfirmationContext;

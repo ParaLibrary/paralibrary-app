@@ -10,12 +10,16 @@ type ButtonVariant = ButtonProps["variant"];
 interface DeleteButtonProps {
   loan: Loan;
   variant?: ButtonVariant;
+  gated?: boolean;
+  message?: string;
 }
 
 export const DeleteButton: React.FC<DeleteButtonProps> = ({
   loan: thisLoan,
   variant,
   children,
+  gated,
+  message,
 }) => {
   const { loans, setLoans } = useContext(LoanContext);
   const requestConfirmation = useContext(ConfirmContext);
@@ -33,15 +37,19 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
       .catch((error) => console.log(error));
   }, [loans, thisLoan, setLoans]);
 
+  const gatedHandle = useCallback(
+    () =>
+      requestConfirmation(handleClick, {
+        title: children as string,
+        body: message || "Are you sure you want to proceed?",
+      }),
+    [requestConfirmation]
+  );
+
   return (
     <Button
       size="sm"
-      onClick={() =>
-        requestConfirmation(
-          { body: "Are you sure you want to delete this?" },
-          handleClick
-        )
-      }
+      onClick={gated ? gatedHandle : handleClick}
       variant={variant}
     >
       {children}
@@ -53,6 +61,8 @@ interface UpdateButtonProps {
   loan: Loan;
   variant?: ButtonVariant;
   status: LoanStatus;
+  gated?: boolean;
+  message?: string;
 }
 
 export const UpdateButton: React.FC<UpdateButtonProps> = ({
@@ -60,8 +70,11 @@ export const UpdateButton: React.FC<UpdateButtonProps> = ({
   status: thisStatus,
   variant,
   children,
+  gated,
+  message,
 }) => {
   const { loans, setLoans } = useContext(LoanContext);
+  const requestConfirmation = useContext(ConfirmContext);
 
   const handleClick = useCallback(() => {
     const newLoan: Loan = { ...thisLoan, status: thisStatus };
@@ -82,8 +95,21 @@ export const UpdateButton: React.FC<UpdateButtonProps> = ({
       })
       .catch((error) => console.log(error));
   }, [loans, thisLoan, setLoans, thisStatus]);
+
+  const gatedHandle = useCallback(
+    () =>
+      requestConfirmation(handleClick, {
+        title: children as string,
+        body: message || "Are you sure you want to proceed?",
+      }),
+    [requestConfirmation]
+  );
   return (
-    <Button size="sm" onClick={handleClick} variant={variant}>
+    <Button
+      size="sm"
+      onClick={gated ? gatedHandle : handleClick}
+      variant={variant}
+    >
       {children}
     </Button>
   );

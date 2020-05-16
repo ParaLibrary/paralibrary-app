@@ -58,10 +58,10 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   });
   const action = useRef<VoidFunction>(() => {});
 
-  const requestConfirmation = (message: Message, recall: VoidFunction) => {
+  const requestConfirmation = (call: VoidFunction, message: Message) => {
     setConfirmMessage(message);
     setConfirmModalOpen(true);
-    action.current = recall;
+    action.current = call;
   };
 
   const handleConfirm = useCallback(() => {
@@ -91,9 +91,9 @@ const PageLayout: React.FC<PageLayoutProps> = ({
               <Main>{children}</Main>
               {sidebar && <Sidebar>{sidebar}</Sidebar>}
 
-              <Modal centered show={confirmModalOpen} onHide={handleCancel}>
+              <Modal show={confirmModalOpen} onHide={handleCancel}>
                 <Modal.Header closeButton>
-                  <Modal.Title>{confirmMessage.title}</Modal.Title>
+                  <Modal.Title>{confirmMessage.title || "Confirm"}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>{confirmMessage.body}</Modal.Body>
                 <Modal.Footer>
