@@ -5,13 +5,13 @@ import React, {
   useCallback,
   useContext,
 } from "react";
+
 import { Modal, Button } from "react-bootstrap";
 
 import PageLayout from "./PageLayout";
 import BookFormik from "./BookForm";
 import AutoTable, { TableColumn } from "./AutoTable";
 import { Book, User } from "./ourtypes";
-
 import LibrarySearchBar from "./LibrarySearchBar";
 import { toLibrary, toUser } from "./mappers";
 import { AuthContext } from "./AuthContextProvider";
@@ -55,11 +55,9 @@ const LibraryPage: React.FC = () => {
     );
   }, [searchTerm, books]);
 
+  useEffect(() => {}, [user]);
   useEffect(() => {
-    console.log(user);
-  }, [user]);
-  useEffect(() => {
-    fetch(`http://paralibrary.digital/api/libraries/`, {
+    fetch(`http://paralibrary.digital/api/libraries`, {
       credentials: "include",
     })
       .then((res) => {
@@ -70,7 +68,6 @@ const LibraryPage: React.FC = () => {
           const lib = toLibrary(result);
           setBooks(lib.books);
           setUser(lib.user);
-          console.log(user);
         },
         (error) => {
           console.log(error);
@@ -102,6 +99,7 @@ const LibraryPage: React.FC = () => {
     },
     [books]
   );
+
   return (
     <PageLayout header={<h1>My Library</h1>}>
       <LibrarySearchBar

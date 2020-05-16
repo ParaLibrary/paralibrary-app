@@ -45,6 +45,7 @@ export function toBook(obj: any): Book {
   if (!obj.title) {
     throw new Error("Missing property 'title' in book");
   }
+
   if (!obj.author) {
     throw new Error("Missing property 'author' in book");
   }
@@ -89,18 +90,18 @@ export function toLoan(obj: any): Loan {
   if (!book && !obj.book_id) {
     throw new Error("Missing property 'book' and 'book_id' in loan");
   }
-  if (!obj.request_date) {
-    throw new Error("Missing property 'request_date' in loan");
-  }
-  if (!obj.accept_date) {
-    throw new Error("Missing property 'accept_date' in loan");
-  }
-  if (!obj.loan_start_date) {
-    throw new Error("Missing property 'loan_start_date' in loan");
-  }
-  if (!obj.loan_end_date) {
-    throw new Error("Missing property 'loan_end_date' in loan");
-  }
+  // if (!obj.request_date) {
+  //   throw new Error("Missing property 'request_date' in loan");
+  // }
+  // if (!obj.accept_date) {
+  //   throw new Error("Missing property 'accept_date' in loan");
+  // }
+  // if (!obj.loan_start_date) {
+  //   throw new Error("Missing property 'loan_start_date' in loan");
+  // }
+  // if (!obj.loan_end_date) {
+  //   throw new Error("Missing property 'loan_end_date' in loan");
+  // }
   if (!(obj.status as LoanStatus)) {
     throw new Error("Missing property 'status' in loan");
   }
