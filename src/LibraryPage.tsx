@@ -62,10 +62,9 @@ const LibraryPage: React.FC = () => {
 
   useEffect(() => {
 
-    console.log(user);
   }, [user]);
   useEffect(() => {
-    fetch(`http://paralibrary.digital/api/libraries/`, {
+    fetch(`http://paralibrary.digital/api/libraries`, {
       credentials: "include",
     })
       .then((res) => {
@@ -76,7 +75,6 @@ const LibraryPage: React.FC = () => {
           const lib = toLibrary(result);
           setBooks(lib.books);
           setUser(lib.user);
-          console.log(user);
         },
         (error) => {
           console.log(error);
