@@ -45,15 +45,16 @@ export function toBook(obj: any): Book {
   if (!obj.title) {
     throw new Error("Missing property 'title' in book");
   }
-  // if (!obj.author) {
-  //   throw new Error("Missing property 'author' in book");
-  // }
+
+  if (!obj.author) {
+    throw new Error("Missing property 'author' in book");
+  }
   // if (!obj.isbn) {
   //   throw new Error("Missing property 'isbn' in book");
   // }
-  // if (!obj.summary) {
-  //   throw new Error("Missing property 'summary' in book");
-  // }
+  if (!obj.summary) {
+    throw new Error("Missing property 'summary' in book");
+  }
   if (!(obj.visibility as Visibility)) {
     throw new Error("Missing or invalid property 'visibility' in book");
   }

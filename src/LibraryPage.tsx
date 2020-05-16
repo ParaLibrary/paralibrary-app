@@ -1,12 +1,23 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  useContext,
+} from "react";
+
 import { Modal, Button } from "react-bootstrap";
+import { useParams } from "react-router";
 
 import PageLayout from "./PageLayout";
-import LoanStatus from "./LoanStatus";
 import BookFormik from "./BookForm";
-import { Book } from "./ourtypes";
 import AutoTable, { TableColumn } from "./AutoTable";
+import { Book, User } from "./ourtypes";
+import { Table } from "react-bootstrap";
+import styled from "styled-components";
 import LibrarySearchBar from "./LibrarySearchBar";
+import { toLibrary, toUser } from "./mappers";
+import { AuthContext } from "./AuthContextProvider";
 
 interface ButtonGroupProps {
   id: number;
@@ -14,19 +25,22 @@ interface ButtonGroupProps {
 }
 
 const LibraryPage: React.FC = () => {
+  const user_idGet = useContext(AuthContext);
   const emptyBook: Book = {
     id: "",
-    user_id: "", // We will need to set this when user authentification happens
-    title: "",
-    author: "",
+    user_id: user_idGet.credential.userId || "",
     isbn: "",
     summary: "",
+    title: "",
+    author: "",
     visibility: "public",
   };
 
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [books, setBooks] = useState<Book[]>([]);
+  const [user, setUser] = useState<User>();
   const [modalOpen, setModalOpen] = useState(false);
   const [isNewBook, setIsNewBook] = useState(true);
-  const [books, setBooks] = useState<Book[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedBook, setSelectedBook] = useState<Book>(emptyBook);
 
@@ -44,51 +58,50 @@ const LibraryPage: React.FC = () => {
     );
   }, [searchTerm, books]);
 
+  useEffect(() => {}, [user]);
   useEffect(() => {
-    setBooks([
-      {
-        id: "1",
-        user_id: "1",
-        title: "Test book 1",
-        author: "A",
-        isbn: "978-3-16-148410-0",
-        summary:
-          "this is an example of when I am putting in data with no idea of what to write in.",
-        visibility: "public" as const,
-      },
-      {
-        id: "2",
-        user_id: "1",
-        title: "Test book 2",
-        author: "B",
-        isbn: "978-3-16-148410-0",
-        summary:
-          "this is an example of when I am putting in data with no idea of what to write in.",
-        visibility: "public" as const,
-        loan: {
-          id: "1",
-          book_id: "2",
-          status: "pending" as const,
-          owner: {
-            id: "1",
-            name: "Bob",
-            status: null,
-          },
-          requester: {
-            id: "2",
-            name: "Sally",
-            status: "friends",
-          },
-          owner_contact: "",
-          requester_contact: "",
-          accept_date: new Date(),
-          request_date: new Date(),
-          loan_start_date: new Date(),
-          loan_end_date: new Date(),
+    fetch(`http://paralibrary.digital/api/libraries`, {
+      credentials: "include",
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then(
+        (result) => {
+          const lib = toLibrary(result);
+          setBooks(lib.books);
+          setUser(lib.user);
         },
-      },
-    ]);
+        (error) => {
+          console.log(error);
+        }
+      )
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
+        setIsLoaded(true);
+      });
   }, []);
+  const addToDatabase = useCallback(
+    (book: Book) => {
+      let BookString = JSON.stringify(book);
+      fetch("http://paralibrary.digital/api/books", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: BookString,
+      })
+        .then((res) => res.json())
+        .then((res: { id: string }) => {
+          setBooks(books.concat({ ...book, id: res.id }));
+        })
+        .catch(() => false);
+    },
+    [books]
+  );
 
   return (
     <PageLayout header={<h1>My Library</h1>}>
@@ -103,14 +116,20 @@ const LibraryPage: React.FC = () => {
         <Modal.Body>
           <BookFormik
             book={selectedBook}
-            updateBookList={() => null}
-            updateDatabase={() => null}
+            updateDatabase={addToDatabase}
             closeModal={() => setModalOpen(false)}
           />
         </Modal.Body>
       </Modal>
 
-      <Button onClick={() => setModalOpen(true)}>New Book</Button>
+      <Button
+        onClick={() => {
+          setSelectedBook(emptyBook);
+          setModalOpen(true);
+        }}
+      >
+        New Book
+      </Button>
 
       <AutoTable
         data={filteredBooks}
@@ -124,10 +143,9 @@ const LibraryPage: React.FC = () => {
       >
         <TableColumn col="title">Title</TableColumn>
         <TableColumn col="author">Author</TableColumn>
+        <TableColumn col="isbn">ISBN</TableColumn>
         <TableColumn col="summary">Summary</TableColumn>
-        <TableColumn col="loan" component={LoanStatus}>
-          Status
-        </TableColumn>
+        <Button onClick={() => setModalOpen(true)}>Edit</Button>
       </AutoTable>
     </PageLayout>
   );
