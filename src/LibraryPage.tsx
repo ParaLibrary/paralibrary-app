@@ -7,14 +7,11 @@ import React, {
 } from "react";
 
 import { Modal, Button } from "react-bootstrap";
-import { useParams } from "react-router";
 
 import PageLayout from "./PageLayout";
 import BookFormik from "./BookForm";
 import AutoTable, { TableColumn } from "./AutoTable";
 import { Book, User } from "./ourtypes";
-import { Table } from "react-bootstrap";
-import styled from "styled-components";
 import LibrarySearchBar from "./LibrarySearchBar";
 import { toLibrary, toUser } from "./mappers";
 import { AuthContext } from "./AuthContextProvider";
@@ -142,7 +139,6 @@ const LibraryPage: React.FC = () => {
       >
         <TableColumn col="title">Title</TableColumn>
         <TableColumn col="author">Author</TableColumn>
-        <TableColumn col="isbn">ISBN</TableColumn>
         <TableColumn col="summary">Summary</TableColumn>
         <Button onClick={() => setModalOpen(true)}>Edit</Button>
       </AutoTable>
