@@ -1,23 +1,23 @@
 import React, { useState, useContext, useEffect, useCallback } from "react";
-import { useFormik, FormikErrors, Formik } from "formik";
+import { useFormik, FormikErrors } from "formik";
+import styled from "styled-components";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Collapse from "react-bootstrap/Collapse";
+import { HTMLInputElement } from "react-bootstrap";
 
 import PageLayout from "./PageLayout";
 import { AuthContext } from "./AuthContextProvider";
 import { User } from "./ourtypes";
 import { toUser } from "./mappers";
-
-interface SettingsValues {
-  name: string;
-}
+import ConfirmationContext from "./ConfirmationContext";
 
 const SettingsPage: React.FC = () => {
-  const { credential } = useContext(AuthContext);
+  const { credential, logout } = useContext(AuthContext);
   const [user, setUser] = useState<User>({ id: "", name: "", status: null });
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [sig, setSig] = useState("");
 
   useEffect(() => {
     fetch(`http://paralibrary.digital/api/users/${credential.userId}`, {
@@ -74,8 +74,63 @@ const SettingsPage: React.FC = () => {
     enableReinitialize: true,
   });
 
+  const handleSigChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setSig(event.target.value);
+    },
+    []
+  );
+
+  const requestConfirm = useContext(ConfirmationContext);
+
+  const deleteAccount = useCallback(() => {
+    requestConfirm(
+      () => {
+        fetch(`http://paralibrary.digital/api/users/${user.id}`, {
+          method: "Delete",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }).then((res: Response) => {
+          if (res.ok) {
+            logout();
+          }
+        });
+      },
+      {
+        title: "Delete Account",
+        body:
+          "Are you sure you want to delete you entire account? This action is not reversible.",
+      }
+    );
+  }, [user]);
+
   return (
-    <PageLayout header={<h1>My Settings</h1>}>
+    <PageLayout
+      header={<h1>My Settings</h1>}
+      footer={
+        <Form>
+          <h5>Delete Account</h5>
+          <Form.Text>Confirm name to reveal permanent delete option.</Form.Text>
+          <Form.Group as={Form.Row} controlId="signature">
+            <Form.Label column sm={2}>
+              Name:
+            </Form.Label>
+            <Col>
+              <Form.Control type="text" name="sig" onChange={handleSigChange} />
+            </Col>
+            <Col sm={2}>
+              <Collapse in={isLoaded && sig === userFormik.values.name}>
+                <Button variant="danger" onClick={deleteAccount}>
+                  Delete
+                </Button>
+              </Collapse>
+            </Col>
+          </Form.Group>{" "}
+        </Form>
+      }
+    >
       <Form noValidate onSubmit={userFormik.handleSubmit}>
         <Form.Group as={Form.Row} controlId="name">
           <Form.Label column sm={2}>
