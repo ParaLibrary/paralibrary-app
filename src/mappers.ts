@@ -36,22 +36,22 @@ export function toUser(obj: any): User {
 }
 
 export function toBook(obj: any): Book {
-  if (!(obj.id as string)) {
+  if (!obj.id) {
     throw new Error("Missing property 'id' in book");
   }
-  if (!(obj.user_id as string)) {
+  if (!obj.user_id) {
     throw new Error("Missing property 'user_id' in book");
   }
-  if (!(obj.title as string)) {
+  if (!obj.title) {
     throw new Error("Missing property 'title' in book");
   }
-  if (!(obj.author as string)) {
+  if (!obj.author) {
     throw new Error("Missing property 'author' in book");
   }
-  if (!(obj.isbn as string)) {
+  if (obj.isbn === undefined) {
     throw new Error("Missing property 'isbn' in book");
   }
-  if (!(obj.summary as string)) {
+  if (obj.summary === undefined) {
     throw new Error("Missing property 'summary' in book");
   }
   if (!(obj.visibility as Visibility)) {
