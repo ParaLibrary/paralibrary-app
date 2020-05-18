@@ -41,17 +41,18 @@ const SettingsPage: React.FC = () => {
   }, []);
 
   const onSubmit = useCallback((values: User) => {
-    fetch(`http://paralibrary.digital/api/users/${user.id}`, {
+    fetch(`http://paralibrary.digital/api/users/${values.id}`, {
       method: "PUT",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(user),
+      body: JSON.stringify(values),
     })
-      .then((res: Response) => res.json())
-      .then((body: any) => {
-        setUser(toUser(body));
+      .then((res: Response) => {
+        if (res.ok) {
+          setUser(values);
+        }
       })
       .catch((error) => {
         console.log(error);
