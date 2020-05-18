@@ -87,7 +87,7 @@ const SettingsPage: React.FC = () => {
     requestConfirm(
       () => {
         fetch(`http://paralibrary.digital/api/users/${user.id}`, {
-          method: "Delete",
+          method: "DELETE",
           credentials: "include",
           headers: {
             "Content-Type": "application/json",
