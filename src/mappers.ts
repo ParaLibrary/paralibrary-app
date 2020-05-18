@@ -36,25 +36,24 @@ export function toUser(obj: any): User {
 }
 
 export function toBook(obj: any): Book {
-  if (!obj.id) {
+  if (!(obj.id as string)) {
     throw new Error("Missing property 'id' in book");
   }
-  if (!obj.user_id) {
+  if (!(obj.user_id as string)) {
     throw new Error("Missing property 'user_id' in book");
   }
-  if (!obj.title) {
+  if (!(obj.title as string)) {
     throw new Error("Missing property 'title' in book");
   }
-
-  // if (!obj.author) {
-  //   throw new Error("Missing property 'author' in book");
-  // }
-  // if (!obj.isbn) {
-  //   throw new Error("Missing property 'isbn' in book");
-  // }
-  // if (!obj.summary) {
-  //   throw new Error("Missing property 'summary' in book");
-  // }
+  if (!(obj.author as string)) {
+    throw new Error("Missing property 'author' in book");
+  }
+  if (!(obj.isbn as string)) {
+    throw new Error("Missing property 'isbn' in book");
+  }
+  if (!(obj.summary as string)) {
+    throw new Error("Missing property 'summary' in book");
+  }
   if (!(obj.visibility as Visibility)) {
     throw new Error("Missing or invalid property 'visibility' in book");
   }
@@ -90,18 +89,7 @@ export function toLoan(obj: any): Loan {
   if (!book && !obj.book_id) {
     throw new Error("Missing property 'book' and 'book_id' in loan");
   }
-  // if (!obj.request_date) {
-  //   throw new Error("Missing property 'request_date' in loan");
-  // }
-  // if (!obj.accept_date) {
-  //   throw new Error("Missing property 'accept_date' in loan");
-  // }
-  // if (!obj.loan_start_date) {
-  //   throw new Error("Missing property 'loan_start_date' in loan");
-  // }
-  // if (!obj.loan_end_date) {
-  //   throw new Error("Missing property 'loan_end_date' in loan");
-  // }
+
   if (!(obj.status as LoanStatus)) {
     throw new Error("Missing property 'status' in loan");
   }
@@ -112,10 +100,10 @@ export function toLoan(obj: any): Loan {
     requester,
     owner,
     requester_contact: obj.requester_contact,
-    request_date: new Date(obj.request_date),
-    accept_date: new Date(obj.accept_date),
-    loan_start_date: new Date(obj.loan_start_date),
-    loan_end_date: new Date(obj.loan_end_date),
+    request_date: obj.request_date && new Date(obj.request_date),
+    accept_date: obj.accept_date && new Date(obj.accept_date),
+    loan_start_date: obj.loan_start_date && new Date(obj.loan_start_date),
+    loan_end_date: obj.loan_end_date && new Date(obj.loan_end_date),
     status: obj.status,
   };
 }
