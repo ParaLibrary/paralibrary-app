@@ -44,10 +44,10 @@ export function toBook(obj: any): Book {
   if (!obj.user_id) {
     throw new Error("Missing property 'user_id' in book");
   }
-  if (!obj.title) {
+  if (isNullOrUndefined(obj.title)) {
     throw new Error("Missing property 'title' in book");
   }
-  if (!obj.author) {
+  if (isNullOrUndefined(obj.author)) {
     throw new Error("Missing property 'author' in book");
   }
   if (isNullOrUndefined(obj.isbn)) {
