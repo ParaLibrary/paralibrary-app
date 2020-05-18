@@ -8,6 +8,8 @@ import {
   LoanStatus,
 } from "./ourtypes";
 
+import { isNullOrUndefined } from "util";
+
 export function toLibrary(obj: any): Library {
   if (!obj.user) {
     throw new Error("Missing property 'user' in library");
@@ -48,10 +50,10 @@ export function toBook(obj: any): Book {
   if (!obj.author) {
     throw new Error("Missing property 'author' in book");
   }
-  if (obj.isbn === undefined) {
+  if (isNullOrUndefined(obj.isbn)) {
     throw new Error("Missing property 'isbn' in book");
   }
-  if (obj.summary === undefined) {
+  if (isNullOrUndefined(obj.summary)) {
     throw new Error("Missing property 'summary' in book");
   }
   if (!(obj.visibility as Visibility)) {
