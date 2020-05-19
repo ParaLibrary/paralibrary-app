@@ -56,7 +56,7 @@ const FriendLibraryPage: React.FC = () => {
       .finally(() => {
         setIsLoaded(true);
       });
-  }, [id, user]);
+  }, [id]);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [isNewRequest, setIsNewRequest] = useState(true);
