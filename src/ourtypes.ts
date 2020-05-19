@@ -5,10 +5,10 @@ export interface Loan extends LoanRequest {
   requester: User;
   requester_contact: string;
   book?: Book;
-  request_date: Date;
-  accept_date: Date;
-  loan_start_date: Date;
-  loan_end_date: Date;
+  request_date?: Date;
+  accept_date?: Date;
+  loan_start_date?: Date;
+  loan_end_date?: Date;
   status: LoanStatus;
 }
 

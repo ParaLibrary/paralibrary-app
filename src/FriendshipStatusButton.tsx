@@ -29,7 +29,7 @@ const FriendshipRequestButton: React.FC<FRBProps> = ({ friend, onClick }) => {
         onClick({ ...friend, status: "requested" });
       })
       .catch((error) => console.log(error));
-  }, [friend]);
+  }, [friend, onClick]);
 
   function onAcceptClicked() {
     onClick({ ...friend, status: "friends" });

@@ -43,7 +43,7 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
         title: children as string,
         body: message || "Are you sure you want to proceed?",
       }),
-    [requestConfirmation]
+    [requestConfirmation, children, handleClick, message]
   );
 
   return (
@@ -102,7 +102,7 @@ export const UpdateButton: React.FC<UpdateButtonProps> = ({
         title: children as string,
         body: message || "Are you sure you want to proceed?",
       }),
-    [requestConfirmation]
+    [requestConfirmation, children, handleClick, message]
   );
   return (
     <Button
