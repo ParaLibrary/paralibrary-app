@@ -65,6 +65,7 @@ export function toBook(obj: any): Book {
     user_id: obj.user_id,
     title: obj.title,
     author: obj.author,
+    categories: obj.categories || [],
     isbn: obj.isbn,
     summary: obj.summary,
     visibility: obj.visibility,

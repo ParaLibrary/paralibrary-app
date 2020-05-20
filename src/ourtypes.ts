@@ -30,6 +30,7 @@ export interface Book {
   user_id: string;
   title: string;
   author: string;
+  categories: string[];
   isbn: string;
   summary: string;
   visibility: Visibility;

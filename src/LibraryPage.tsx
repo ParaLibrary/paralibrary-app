@@ -27,6 +27,7 @@ const LibraryPage: React.FC = () => {
     id: "",
     user_id: user_idGet.credential.userId || "",
     isbn: "",
+    categories: [],
     summary: "",
     title: "",
     author: "",

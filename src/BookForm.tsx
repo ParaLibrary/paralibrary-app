@@ -1,18 +1,51 @@
-import React from "react";
+import React, { useCallback } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import { Button } from "react-bootstrap";
 import { Formik, FormikProps, FormikErrors } from "formik";
+import CreatableSelect from "react-select/creatable";
 
 import { Book } from "./ourtypes";
 
-const BookForm: React.FC<FormikProps<Book>> = ({
+interface ExtraProps {
+  allCategories: string[];
+}
+
+interface Option {
+  label: string;
+  value: string;
+}
+
+const BookForm: React.FC<FormikProps<Book> & ExtraProps> = ({
   handleSubmit,
   handleChange,
   values,
   touched,
   errors,
+  allCategories,
+  getFieldHelpers,
 }) => {
+  const mapToOptions = useCallback(
+    (categories: string[]): Option[] =>
+      categories.map((value) => {
+        return { label: value, value };
+      }),
+    []
+  );
+
+  const mapToCategories = useCallback(
+    (options: Option[]): string[] => options.map((opt) => opt.value),
+    []
+  );
+
+  const { setValue } = getFieldHelpers("categories");
+  const handleCreatableChange = useCallback(
+    (newValue) => {
+      setValue(mapToCategories(newValue));
+    },
+    [setValue, mapToCategories]
+  );
+
   return (
     <Form noValidate onSubmit={handleSubmit}>
       <Form.Group as={Form.Row} controlId="bookTitle">
@@ -47,6 +80,19 @@ const BookForm: React.FC<FormikProps<Book>> = ({
           <Form.Control.Feedback type="invalid">
             {errors.author}
           </Form.Control.Feedback>
+        </Col>
+      </Form.Group>
+      <Form.Group as={Form.Row} controlId="categories">
+        <Form.Label column sm={2}>
+          Tags:
+        </Form.Label>
+        <Col sm={10}>
+          <CreatableSelect
+            defaultValue={mapToOptions(values.categories)}
+            options={mapToOptions(allCategories)}
+            onChange={handleCreatableChange}
+            isMulti
+          />
         </Col>
       </Form.Group>
       <Form.Group as={Form.Row} controlId="bookISBN">
@@ -138,7 +184,7 @@ const BookFormik: React.FC<BookFormProps> = ({
         updateDatabase(values);
         closeModal();
       }}
-      component={BookForm}
+      render={(props) => <BookForm allCategories={[]} {...props} />}
     ></Formik>
   );
 };
