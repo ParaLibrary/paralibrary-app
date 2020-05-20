@@ -13,21 +13,24 @@ interface PageLayoutProps {
   sidebar?: React.ReactNode;
   error: boolean;
   loaded: boolean;
+  footer?: React.ReactNode;
 }
 
 const Layout = styled.div`
   display: flex;
   flex-flow: column nowrap;
   padding: 16px;
+  height: 100%;
   @media screen and (min-width: 480px) {
     display: grid;
     grid-template-columns: auto 30%;
+    grid-template-rows: min-content auto min-content;
     column-gap: 32px;
     row-gap: 16px;
-    grid-template-rows: auto;
     grid-template-areas:
       "header header"
-      "main sidebar";
+      "main sidebar"
+      "footer sidebar";
   }
 `;
 
@@ -50,9 +53,15 @@ const Sidebar = styled.div`
 // Note: in small viewport the sidebar will
 // appear after main content
 
+const Footer = styled.div`
+  margin-top: auto;
+  grid-area: footer;
+`;
+
 const PageLayout: React.FC<PageLayoutProps> = ({
   header,
   sidebar,
+  footer,
   children,
   error,
   loaded,
@@ -98,7 +107,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                 {loaded ? children : <h3>Loading...</h3>}
               </Main>
               {sidebar && <Sidebar>{sidebar}</Sidebar>}
-
+              {footer && <Footer>{footer}</Footer>}
               <Modal show={confirmModalOpen} onHide={handleCancel}>
                 <Modal.Header closeButton>
                   <Modal.Title>{confirmMessage.title || "Confirm"}</Modal.Title>
