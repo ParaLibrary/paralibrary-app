@@ -5,21 +5,21 @@ import React, {
   useCallback,
   useContext,
 } from "react";
-
 import { Modal, Button } from "react-bootstrap";
+import Select from "react-select";
 
 import PageLayout from "./PageLayout";
 import BookFormik from "./BookForm";
 import AutoTable, { TableColumn } from "./AutoTable";
 import { Book, User } from "./ourtypes";
 import LibrarySearchBar from "./LibrarySearchBar";
-import { toLibrary, toUser } from "./mappers";
+import { toLibrary } from "./mappers";
 import { AuthContext } from "./AuthContextProvider";
 
-interface ButtonGroupProps {
-  id: number;
-  onEdit: (id: number) => {};
-}
+// interface Option {
+//   label: string;
+//   value: string;
+// }
 
 const LibraryPage: React.FC = () => {
   const user_idGet = useContext(AuthContext);
@@ -40,11 +40,25 @@ const LibraryPage: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [isNewBook, setIsNewBook] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [catSelected, setCatSelected] = useState<{
+    label: string;
+    value: string;
+  }>();
   const [selectedBook, setSelectedBook] = useState<Book>(emptyBook);
 
   const categories = useMemo(
     () => Array.from(new Set(books.flatMap((book: Book) => book.categories))),
     [books]
+  );
+
+  const makeOptions = useCallback(
+    (options: string[]) =>
+      options
+        .map((category) => {
+          return { value: category, label: category };
+        })
+        .concat({ label: "Test", value: "test" }),
+    []
   );
 
   function filterResults(searchTerm: string) {
@@ -53,15 +67,16 @@ const LibraryPage: React.FC = () => {
 
   const filteredBooks: Book[] = useMemo(() => {
     const regExp = new RegExp(searchTerm.trim(), "gi");
-    if (searchTerm === "") {
-      return books;
-    }
+    console.log(catSelected);
     return books.filter(
-      (book: Book) => book.title.match(regExp) || book.author.match(regExp)
+      (book: Book) =>
+        (!searchTerm ||
+          book.title.match(regExp) ||
+          book.author.match(regExp)) &&
+        (!catSelected?.value || book.categories.includes(catSelected.value))
     );
-  }, [searchTerm, books]);
+  }, [searchTerm, books, catSelected]);
 
-  useEffect(() => {}, [user]);
   useEffect(() => {
     fetch(`http://paralibrary.digital/api/libraries`, {
       credentials: "include",
@@ -86,6 +101,7 @@ const LibraryPage: React.FC = () => {
         setIsLoaded(true);
       });
   }, []);
+
   const addToDatabase = useCallback(
     (book: Book) => {
       let BookString = JSON.stringify(book);
@@ -111,6 +127,12 @@ const LibraryPage: React.FC = () => {
       <LibrarySearchBar
         onSearchChange={filterResults}
         header="Search Your Library"
+      />
+      <h6>Filter by Tags</h6>
+      <Select
+        options={makeOptions(categories)}
+        onChange={(option: any) => setCatSelected(option)}
+        isClearable
       />
       <Modal show={modalOpen} onHide={() => setModalOpen(false)} centered>
         <Modal.Header closeButton>
