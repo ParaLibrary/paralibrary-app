@@ -158,6 +158,7 @@ const BookForm: React.FC<FormikProps<Book> & ExtraProps> = ({
 
 interface BookFormProps {
   book: Book;
+  categoryOptions: string[];
   updateDatabase: (book: Book) => void;
   closeModal: () => void;
 }
@@ -166,6 +167,7 @@ const BookFormik: React.FC<BookFormProps> = ({
   book,
   updateDatabase,
   closeModal,
+  categoryOptions,
 }) => {
   return (
     <Formik
@@ -184,7 +186,9 @@ const BookFormik: React.FC<BookFormProps> = ({
         updateDatabase(values);
         closeModal();
       }}
-      render={(props) => <BookForm allCategories={[]} {...props} />}
+      render={(props) => (
+        <BookForm allCategories={categoryOptions} {...props} />
+      )}
     ></Formik>
   );
 };

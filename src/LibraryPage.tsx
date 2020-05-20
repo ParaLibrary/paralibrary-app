@@ -42,6 +42,11 @@ const LibraryPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedBook, setSelectedBook] = useState<Book>(emptyBook);
 
+  const categories = useMemo(
+    () => Array.from(new Set(books.flatMap((book: Book) => book.categories))),
+    [books]
+  );
+
   function filterResults(searchTerm: string) {
     setSearchTerm(searchTerm);
   }
@@ -113,6 +118,7 @@ const LibraryPage: React.FC = () => {
         </Modal.Header>
         <Modal.Body>
           <BookFormik
+            categoryOptions={categories}
             book={selectedBook}
             updateDatabase={addToDatabase}
             closeModal={() => setModalOpen(false)}
