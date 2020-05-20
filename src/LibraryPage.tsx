@@ -53,11 +53,9 @@ const LibraryPage: React.FC = () => {
 
   const makeOptions = useCallback(
     (options: string[]) =>
-      options
-        .map((category) => {
-          return { value: category, label: category };
-        })
-        .concat({ label: "Test", value: "test" }),
+      options.map((category) => {
+        return { value: category, label: category };
+      }),
     []
   );
 
