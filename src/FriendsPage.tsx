@@ -9,7 +9,7 @@ import FriendSearchBar from "./FriendSearchBar";
 import UserDisplay from "./UserDisplay";
 
 const FriendsPage: React.FC = () => {
-  const [error, setError] = useState<any>();
+  const [error, setError] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [friends, setFriends] = useState<User[]>([]);
   const [nearbyPeople] = useState<User[]>([]);
@@ -41,11 +41,13 @@ const FriendsPage: React.FC = () => {
           setFriends(result.map(toUser));
         },
         (error) => {
-          setError(error);
+          console.log(error);
+          setError(true);
         }
       )
       .catch((error) => {
-        setError(error);
+        console.log(error);
+        setError(true);
       })
       .finally(() => {
         setIsLoaded(true);
@@ -81,50 +83,42 @@ const FriendsPage: React.FC = () => {
           <button>Invite!</button>
         </AutoTable>
       }
+      error={error}
+      loaded={isLoaded}
     >
-      {!isLoaded ? (
-        "Loading..."
-      ) : error ? (
-        "An error occured."
-      ) : (
-        <>
-          <FriendSearchBar />
-          <AutoTable
-            data={outgoingFriendRequests}
-            title={<h3>Waiting for a response</h3>}
-            noHeaders
-            hideOnEmpty
-          >
-            <TableColumn component={UserDisplay}>Username</TableColumn>
-          </AutoTable>
-          <AutoTable
-            data={incomingFriendRequests}
-            title={<h3>Friend Requests</h3>}
-            noHeaders
-            hideOnEmpty
-          >
-            <TableColumn component={UserDisplay}>Username</TableColumn>
-            <AcceptRejectButtons
-              onAccept={onAcceptFriendship}
-              onReject={onRejectFriendship}
-            />
-          </AutoTable>
-          <AutoTable
-            data={currentFriends}
-            title={<h3>Current Friends</h3>}
-            noHeaders
-            placeholder={
-              <>
-                <span>
-                  Use the search bar above and start adding some friends!
-                </span>
-              </>
-            }
-          >
-            <TableColumn component={UserDisplay}>Username</TableColumn>
-          </AutoTable>
-        </>
-      )}
+      <FriendSearchBar />
+      <AutoTable
+        data={outgoingFriendRequests}
+        title={<h3>Waiting for a response</h3>}
+        noHeaders
+        hideOnEmpty
+      >
+        <TableColumn component={UserDisplay}>Username</TableColumn>
+      </AutoTable>
+      <AutoTable
+        data={incomingFriendRequests}
+        title={<h3>Friend Requests</h3>}
+        noHeaders
+        hideOnEmpty
+      >
+        <TableColumn component={UserDisplay}>Username</TableColumn>
+        <AcceptRejectButtons
+          onAccept={onAcceptFriendship}
+          onReject={onRejectFriendship}
+        />
+      </AutoTable>
+      <AutoTable
+        data={currentFriends}
+        title={<h3>Current Friends</h3>}
+        noHeaders
+        placeholder={
+          <>
+            <span>Use the search bar above and start adding some friends!</span>
+          </>
+        }
+      >
+        <TableColumn component={UserDisplay}>Username</TableColumn>
+      </AutoTable>
     </PageLayout>
   );
 };
