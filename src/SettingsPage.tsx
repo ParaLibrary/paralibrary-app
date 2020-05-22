@@ -14,6 +14,7 @@ import DeleteAccountButton from "./DeleteAccountButton";
 const SettingsPage: React.FC = () => {
   const { credential } = useContext(AuthContext);
   const [user, setUser] = useState<User>({ id: "", name: "", status: null });
+  const [error, setError] = useState(false);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [sig, setSig] = useState("");
 
@@ -28,10 +29,12 @@ const SettingsPage: React.FC = () => {
         },
         (error: any) => {
           console.log(error);
+          setError(true);
         }
       )
       .catch((error) => {
         console.log(error);
+        setError(true);
       })
       .finally(() => {
         setIsLoaded(true);
@@ -82,6 +85,8 @@ const SettingsPage: React.FC = () => {
   return (
     <PageLayout
       header={<h1>My Settings</h1>}
+      error={error}
+      loaded={isLoaded}
       footer={
         <Form>
           <h5>Delete Account</h5>

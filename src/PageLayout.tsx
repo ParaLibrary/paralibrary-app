@@ -4,12 +4,15 @@ import { AuthContext } from "./AuthContextProvider";
 import { Redirect } from "react-router-dom";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
+import ErrorAlert from "./ErrorAlert";
 
 import ConfirmationContext, { Message } from "./ConfirmationContext";
 
 interface PageLayoutProps {
   header?: React.ReactNode;
   sidebar?: React.ReactNode;
+  error: boolean;
+  loaded: boolean;
   footer?: React.ReactNode;
 }
 
@@ -60,6 +63,8 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   sidebar,
   footer,
   children,
+  error,
+  loaded,
 }) => {
   const [confirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
   const [confirmMessage, setConfirmMessage] = useState<Message>({
@@ -97,7 +102,10 @@ const PageLayout: React.FC<PageLayoutProps> = ({
           <ConfirmationContext.Provider value={requestConfirmation}>
             <Layout>
               {header && <Header>{header}</Header>}
-              <Main>{children}</Main>
+              <Main>
+                {error && <ErrorAlert />}
+                {loaded ? children : <h3>Loading...</h3>}
+              </Main>
               {sidebar && <Sidebar>{sidebar}</Sidebar>}
               {footer && <Footer>{footer}</Footer>}
               <Modal show={confirmModalOpen} onHide={handleCancel}>

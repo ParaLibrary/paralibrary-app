@@ -13,7 +13,7 @@ import BookFormik from "./BookForm";
 import AutoTable, { TableColumn } from "./AutoTable";
 import { Book, User } from "./ourtypes";
 import LibrarySearchBar from "./LibrarySearchBar";
-import { toLibrary, toUser } from "./mappers";
+import { toLibrary } from "./mappers";
 import { AuthContext } from "./AuthContextProvider";
 
 interface ButtonGroupProps {
@@ -34,6 +34,7 @@ const LibraryPage: React.FC = () => {
   };
 
   const [isLoaded, setIsLoaded] = useState(false);
+  const [error, setError] = useState(false);
   const [books, setBooks] = useState<Book[]>([]);
   const [user, setUser] = useState<User>();
   const [modalOpen, setModalOpen] = useState(false);
@@ -55,7 +56,6 @@ const LibraryPage: React.FC = () => {
     );
   }, [searchTerm, books]);
 
-  useEffect(() => {}, [user]);
   useEffect(() => {
     fetch(`http://paralibrary.digital/api/libraries`, {
       credentials: "include",
@@ -71,15 +71,18 @@ const LibraryPage: React.FC = () => {
         },
         (error) => {
           console.log(error);
+          setError(true);
         }
       )
       .catch((error) => {
         console.log(error);
+        setError(true);
       })
       .finally(() => {
         setIsLoaded(true);
       });
   }, []);
+
   const addToDatabase = useCallback(
     (book: Book) => {
       let BookString = JSON.stringify(book);
@@ -101,7 +104,7 @@ const LibraryPage: React.FC = () => {
   );
 
   return (
-    <PageLayout header={<h1>My Library</h1>}>
+    <PageLayout header={<h1>My Library</h1>} error={error} loaded={isLoaded}>
       <LibrarySearchBar
         onSearchChange={filterResults}
         header="Search Your Library"
