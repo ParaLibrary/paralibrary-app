@@ -51,3 +51,8 @@ export interface Library {
   user: User;
   books: Book[];
 }
+
+export interface Option {
+  label: string;
+  value: string;
+}

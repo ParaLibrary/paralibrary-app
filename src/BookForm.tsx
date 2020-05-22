@@ -5,15 +5,10 @@ import { Button } from "react-bootstrap";
 import { Formik, FormikProps, FormikErrors } from "formik";
 import CreatableSelect from "react-select/creatable";
 
-import { Book } from "./ourtypes";
+import { Book, Option } from "./ourtypes";
 
 interface ExtraProps {
   allCategories: string[];
-}
-
-interface Option {
-  label: string;
-  value: string;
 }
 
 const BookForm: React.FC<FormikProps<Book> & ExtraProps> = ({

@@ -11,15 +11,10 @@ import Select from "react-select";
 import PageLayout from "./PageLayout";
 import BookFormik from "./BookForm";
 import AutoTable, { TableColumn } from "./AutoTable";
-import { Book, User } from "./ourtypes";
+import { Book, User, Option } from "./ourtypes";
 import LibrarySearchBar from "./LibrarySearchBar";
 import { toLibrary } from "./mappers";
 import { AuthContext } from "./AuthContextProvider";
-
-// interface Option {
-//   label: string;
-//   value: string;
-// }
 
 const LibraryPage: React.FC = () => {
   const user_idGet = useContext(AuthContext);
@@ -40,10 +35,7 @@ const LibraryPage: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [isNewBook, setIsNewBook] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [catSelected, setCatSelected] = useState<{
-    label: string;
-    value: string;
-  }>();
+  const [catSelected, setCatSelected] = useState<Option>();
   const [selectedBook, setSelectedBook] = useState<Book>(emptyBook);
 
   const categories = useMemo(
