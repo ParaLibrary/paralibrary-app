@@ -9,26 +9,26 @@ import {
 } from "./LoanManagementButtons";
 
 interface LMProps {
-  rowitem?: Loan;
+  loan: Loan;
 }
 
 const ActionPanel = styled.div`
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  > :not(:last-child) {
-    margin: 0px 0px 4px 0px;
-  }
-  > button {
-    white-space: nowrap;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  @media screen and (min-width: 480px) {
+    flex-flow: column nowrap;
+    justify-content: center;
+    > :not(:last-child) {
+      margin: 0px 0px 4px 0px;
+    }
+    > button {
+      white-space: nowrap;
+    }
   }
 `;
 
-export const OwnerLoanManager: React.FC<LMProps> = ({ rowitem: loan }) => {
-  if (!loan) {
-    throw new Error("Row lacks valid data");
-  }
-
+export const OwnerLoanManager: React.FC<LMProps> = ({ loan }) => {
   return (
     <ActionPanel>
       {loan.status === "pending" && (
@@ -63,7 +63,7 @@ export const OwnerLoanManager: React.FC<LMProps> = ({ rowitem: loan }) => {
   );
 };
 
-export const RequesterLoanManager: React.FC<LMProps> = ({ rowitem: loan }) => {
+export const RequesterLoanManager: React.FC<LMProps> = ({ loan }) => {
   if (!loan) {
     throw new Error("Row lacks valid data");
   }
