@@ -18,12 +18,12 @@ const PageLayout = styled.div`
   @media screen and (min-width: 480px) {
     flex-flow: row;
   }
-  height: 100vh;
+  height: fit-content;
   flex: 0 1 auto;
 `;
 
 const MainContent = styled.div`
-  flex: 1 1 auto;
+  flex: 0 0 auto;
   height: 100%;
 `;
 
