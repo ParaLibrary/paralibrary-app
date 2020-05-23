@@ -11,6 +11,7 @@ import LoansPage from "./LoansPage";
 import SettingsPage from "./SettingsPage";
 import NavBar from "./NavBar";
 import theme from "./theme";
+import ErrorPage from "./ErrorPage";
 
 const PageLayout = styled.div`
   display: flex;
@@ -50,6 +51,7 @@ const App = () => {
                 <Route path="/friends" component={FriendsPage}></Route>
                 <Route path="/loans" component={LoansPage}></Route>
                 <Route path="/settings" component={SettingsPage}></Route>
+                <Route path="*" component={ErrorPage} />
               </MainContent>
             </PageLayout>
           </Switch>
