@@ -9,6 +9,7 @@ const NavBarLayout = styled.nav`
   position: -webkit-sticky; /* For Safari */
   position: sticky;
   z-index: 1;
+  flex: 0 0 auto;
 
   background-color: white;
   border-bottom: 0.1rem solid #ececec;
