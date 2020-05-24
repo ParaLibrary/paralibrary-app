@@ -10,11 +10,6 @@ const ToastContainer = styled.div`
   z-index: 2;
 `;
 
-const BackContainer = styled.div`
-  position: fixed;
-  z-index: 1;
-`;
-
 const DefaultToast = styled(BootstrapToast)`
   .toast {
     color: red;
@@ -53,12 +48,11 @@ const ToastContextProvider: React.FC = ({ children }) => {
 
   return (
     <ToastContext.Provider value={value}>
-      <BackContainer>{children}</BackContainer>
+      {children}
       <ToastContainer>
         {toasts.map((t, index) => {
           switch (t.type) {
-            case undefined:
-            case "default":
+            case "error":
               return (
                 <ToastComponent
                   key={index}
@@ -66,7 +60,7 @@ const ToastContextProvider: React.FC = ({ children }) => {
                   body={t.body}
                 ></ToastComponent>
               );
-            case "error":
+            default:
               return (
                 <ToastComponent
                   key={index}
