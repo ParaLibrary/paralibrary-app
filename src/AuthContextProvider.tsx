@@ -23,7 +23,7 @@ export const AuthContext = createContext<AuthInterface>({
   logout: () => {},
 });
 
-function AuthContextProvider(props: any) {
+const AuthContextProvider: React.FC = (props: any) => {
   const [authData, setAuthData] = useState(initialCredentials);
   const authKey = "auth";
   const [isSetupComplete, setIsSetupComplete] = useState(false);
@@ -65,6 +65,6 @@ function AuthContextProvider(props: any) {
   ) : (
     <></>
   );
-}
+};
 
 export default AuthContextProvider;

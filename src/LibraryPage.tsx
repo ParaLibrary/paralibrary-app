@@ -15,6 +15,7 @@ import { Book, User } from "./ourtypes";
 import LibrarySearchBar from "./LibrarySearchBar";
 import { toLibrary } from "./mappers";
 import { AuthContext } from "./AuthContextProvider";
+import { useToasts } from "./ToastProvider";
 
 interface ButtonGroupProps {
   id: number;
@@ -41,6 +42,7 @@ const LibraryPage: React.FC = () => {
   const [isNewBook, setIsNewBook] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedBook, setSelectedBook] = useState<Book>(emptyBook);
+  const { addToast } = useToasts();
 
   function filterResults(searchTerm: string) {
     setSearchTerm(searchTerm);
@@ -121,7 +123,6 @@ const LibraryPage: React.FC = () => {
           />
         </Modal.Body>
       </Modal>
-
       <Button
         onClick={() => {
           setSelectedBook(emptyBook);
@@ -129,8 +130,16 @@ const LibraryPage: React.FC = () => {
         }}
       >
         New Book
+      </Button>{" "}
+      <Button
+        variant="warning"
+        onClick={() => {
+          addToast({ header: "Hi", body: "there" });
+          console.log("Clicked");
+        }}
+      >
+        TOAST TOAST TOAST
       </Button>
-
       <AutoTable
         data={filteredBooks}
         placeholder={
