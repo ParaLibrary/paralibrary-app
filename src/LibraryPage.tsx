@@ -149,39 +149,8 @@ const LibraryPage: React.FC = () => {
         }}
       >
         New Book
-      </Button>{" "}
-      <Button
-        variant="secondary"
-        onClick={() => {
-          addToast({ header: "Hi", body: "there" });
-        }}
-      >
-        Default Toast
-      </Button>{" "}
-      <Button
-        variant="danger"
-        onClick={() => {
-          addToast({
-            header: "＼(º □ º l|l)/ Oh no, something bwokey",
-            body: "Sowwy",
-            type: "error",
-          });
-        }}
-      >
-        Error Toast
-      </Button>{" "}
-      <Button
-        variant="primary"
-        onClick={() => {
-          addToast({
-            header: "Success",
-            body: "!",
-            type: "success",
-          });
-        }}
-      >
-        SUCCESS!
       </Button>
+
       <AutoTable
         data={filteredBooks}
         placeholder={

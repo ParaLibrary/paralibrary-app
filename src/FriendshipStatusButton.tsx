@@ -28,9 +28,6 @@ const FriendshipRequestButton: React.FC<FRBProps> = ({ friend, onClick }) => {
       body: JSON.stringify({ ...friend, action: "request" }),
     })
       .then(() => {
-        console.log("OH");
-      })
-      .then(() => {
         onClick({ ...friend, status: "requested" });
         addToast({
           header: "Friend request sent!",
