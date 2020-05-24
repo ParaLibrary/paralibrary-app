@@ -29,16 +29,11 @@ const ToastContextProvider: React.FC = ({ children }) => {
   const [toasts, setToasts] = useState<ToastProps[]>([]);
 
   const addToast = (newToast: ToastProps) => {
-    console.log("Added toast!");
     setToasts([...toasts, newToast]);
   };
 
-  const value: ToastInterface = {
-    add: addToast,
-  };
-
   return (
-    <ToastContext.Provider value={value}>
+    <ToastContext.Provider value={{ add: addToast }}>
       {children}
       <ToastContainer>
         {toasts.map((t, index) => (

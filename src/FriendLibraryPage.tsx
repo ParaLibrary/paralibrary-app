@@ -10,6 +10,7 @@ import LoanFormik from "./LoanForm";
 import { toLibrary } from "./mappers";
 import LibrarySearchBar from "./LibrarySearchBar";
 import FriendshipStatusButton from "./FriendshipStatusButton";
+import { useToasts } from "./ToastProvider";
 
 const FriendLibraryPage: React.FC = () => {
   const { id } = useParams();
@@ -19,6 +20,7 @@ const FriendLibraryPage: React.FC = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [user, setUser] = useState<User>();
   const [searchTerm, setSearchTerm] = useState("");
+  const { addToast } = useToasts();
 
   function filterResults(searchTerm: string) {
     setSearchTerm(searchTerm);

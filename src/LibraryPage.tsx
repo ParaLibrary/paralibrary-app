@@ -169,6 +169,18 @@ const LibraryPage: React.FC = () => {
         }}
       >
         Error Toast
+      </Button>{" "}
+      <Button
+        variant="primary"
+        onClick={() => {
+          addToast({
+            header: "Success",
+            body: "!",
+            type: "success",
+          });
+        }}
+      >
+        SUCCESS!
       </Button>
       <AutoTable
         data={filteredBooks}

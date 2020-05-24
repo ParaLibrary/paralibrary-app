@@ -8,9 +8,9 @@ export interface ToastProps {
   type?: ToastType;
 }
 
-type ToastType = "default" | "error";
+type ToastType = "default" | "error" | "success";
 
-const hideDelay = 4000;
+const hideDelay = 2200;
 
 const ToastComponent = ({ header, body, type }: ToastProps) => {
   const [show, setShow] = useState(true);
@@ -26,6 +26,17 @@ const ToastComponent = ({ header, body, type }: ToastProps) => {
         >
           <InnerToast header={header} body={body} />
         </Error>
+      );
+    case "success":
+      return (
+        <Success
+          onClose={() => setShow(false)}
+          show={show}
+          delay={hideDelay}
+          autohide
+        >
+          <InnerToast header={header} body={body} />
+        </Success>
       );
     default:
       return (
@@ -60,17 +71,33 @@ const Toast = styled(BootstrapToast)`
   max-width: 480px;
 `;
 
-const Error = styled(Toast)`
-  background-color: rgba(245, 125, 125, 0.85);
+const DarkToast = styled(Toast)`
   color: white;
+  background-color: rgba(30, 30, 30, 0.85);
 
   .toast-header {
-    background-color: rgba(245, 125, 125, 0.85);
     color: white;
+    background-color: rgba(30, 30, 30, 0.85);
   }
   .close {
     color: white;
     text-shadow: 0 1px 0 #000;
+  }
+`;
+
+const Error = styled(DarkToast)`
+  background-color: rgba(245, 125, 125, 0.85);
+
+  .toast-header {
+    background-color: rgba(245, 125, 125, 0.85);
+  }
+`;
+
+const Success = styled(DarkToast)`
+  background-color: rgba(100, 200, 100, 0.85);
+
+  .toast-header {
+    background-color: rgba(100, 200, 100, 0.85);
   }
 `;
 
