@@ -36,12 +36,26 @@ const App = () => {
                 <Link to={"/loans"}>Loans</Link>
                 <Link to={"/settings"}>Settings</Link>
               </NavBar>
-              <Route path="/library" exact component={LibraryPage}></Route>
-              <Route path="/library/:id" component={FriendLibraryPage}></Route>
-              <Route path="/friends" component={FriendsPage}></Route>
-              <Route path="/loans" component={LoansPage}></Route>
-              <Route path="/settings" component={SettingsPage}></Route>
-              <Route path="*" component={ErrorPage} />
+              <Switch>
+                <Route path="/library" exact>
+                  <LibraryPage />
+                </Route>
+                <Route path="/library/:id">
+                  <FriendLibraryPage />
+                </Route>
+                <Route path="/friends">
+                  <FriendsPage />
+                </Route>
+                <Route path="/loans">
+                  <LoansPage />
+                </Route>
+                <Route path="/settings">
+                  <SettingsPage />
+                </Route>
+                <Route>
+                  <ErrorPage />
+                </Route>
+              </Switch>
             </PageHolder>
           </Switch>
         </Router>
