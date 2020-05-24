@@ -15,7 +15,6 @@ import { Book, User, Option } from "./ourtypes";
 import LibrarySearchBar from "./LibrarySearchBar";
 import { toLibrary } from "./mappers";
 import { AuthContext } from "./AuthContextProvider";
-import { useToasts } from "./ToastProvider";
 
 const LibraryPage: React.FC = () => {
   const user_idGet = useContext(AuthContext);
@@ -39,7 +38,6 @@ const LibraryPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [catSelected, setCatSelected] = useState<Option>();
   const [selectedBook, setSelectedBook] = useState<Book>(emptyBook);
-  const { addToast } = useToasts();
 
   const categories = useMemo(
     () => Array.from(new Set(books.flatMap((book: Book) => book.categories))),
