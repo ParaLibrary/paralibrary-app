@@ -30,6 +30,7 @@ export interface Book {
   user_id: string;
   title: string;
   author: string;
+  categories: string[];
   isbn: string;
   summary: string;
   visibility: Visibility;
@@ -49,4 +50,9 @@ export type FriendStatus = "requested" | "friends" | "waiting" | null;
 export interface Library {
   user: User;
   books: Book[];
+}
+
+export interface Option {
+  label: string;
+  value: string;
 }

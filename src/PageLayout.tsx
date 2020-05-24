@@ -11,16 +11,17 @@ import ConfirmationContext, { Message } from "./ConfirmationContext";
 interface PageLayoutProps {
   header?: React.ReactNode;
   sidebar?: React.ReactNode;
-  error: boolean;
-  loaded: boolean;
+  error?: boolean;
+  loaded?: boolean;
   footer?: React.ReactNode;
 }
 
 const Layout = styled.div`
+  flex: 1 0 auto;
   display: flex;
   flex-flow: column nowrap;
   padding: 16px;
-  height: 100%;
+
   @media screen and (min-width: 480px) {
     display: grid;
     grid-template-columns: auto 30%;
@@ -103,8 +104,8 @@ const PageLayout: React.FC<PageLayoutProps> = ({
             <Layout>
               {header && <Header>{header}</Header>}
               <Main>
-                {error && <ErrorAlert />}
-                {loaded ? children : <h3>Loading...</h3>}
+                {!!error && <ErrorAlert />}
+                {!!loaded ? children : <h3>Loading...</h3>}
               </Main>
               {sidebar && <Sidebar>{sidebar}</Sidebar>}
               {footer && <Footer>{footer}</Footer>}

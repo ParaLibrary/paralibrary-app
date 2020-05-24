@@ -12,20 +12,15 @@ import SettingsPage from "./SettingsPage";
 import NavBar from "./NavBar";
 import theme from "./theme";
 import ToastContextProvider from "./ToastProvider";
+import ErrorPage from "./ErrorPage";
 
-const PageLayout = styled.div`
+const PageHolder = styled.div`
   display: flex;
   flex-flow: column;
   @media screen and (min-width: 480px) {
     flex-flow: row;
   }
-  height: 100vh;
-  flex: 0 1 auto;
-`;
-
-const MainContent = styled.div`
-  flex: 1 1 auto;
-  height: 100%;
+  height: fit-content;
 `;
 
 const App = () => {
@@ -36,24 +31,34 @@ const App = () => {
           <Router>
             <Switch>
               <Route exact path="/" component={LandingPage}></Route>
-              <PageLayout>
+              <PageHolder>
                 <NavBar>
                   <Link to={"/library"}>My Library</Link>
                   <Link to={"/friends"}>Friends</Link>
                   <Link to={"/loans"}>Loans</Link>
                   <Link to={"/settings"}>Settings</Link>
                 </NavBar>
-                <MainContent>
-                  <Route path="/library" exact component={LibraryPage}></Route>
-                  <Route
-                    path="/library/:id"
-                    component={FriendLibraryPage}
-                  ></Route>
-                  <Route path="/friends" component={FriendsPage}></Route>
-                  <Route path="/loans" component={LoansPage}></Route>
-                  <Route path="/settings" component={SettingsPage}></Route>
-                </MainContent>
-              </PageLayout>
+                <Switch>
+                  <Route path="/library" exact>
+                    <LibraryPage />
+                  </Route>
+                  <Route path="/library/:id">
+                    <FriendLibraryPage />
+                  </Route>
+                  <Route path="/friends">
+                    <FriendsPage />
+                  </Route>
+                  <Route path="/loans">
+                    <LoansPage />
+                  </Route>
+                  <Route path="/settings">
+                    <SettingsPage />
+                  </Route>
+                  <Route>
+                    <ErrorPage />
+                  </Route>
+                </Switch>
+              </PageHolder>
             </Switch>
           </Router>
         </AuthContextProvider>
