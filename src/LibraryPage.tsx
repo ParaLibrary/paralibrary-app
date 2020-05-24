@@ -161,7 +161,11 @@ const LibraryPage: React.FC = () => {
       <Button
         variant="danger"
         onClick={() => {
-          addToast({ header: "ERROR", body: "nooooo!", type: "error" });
+          addToast({
+            header: "＼(º □ º l|l)/ Oh no, something bwokey",
+            body: "Sowwy",
+            type: "error",
+          });
         }}
       >
         Error Toast

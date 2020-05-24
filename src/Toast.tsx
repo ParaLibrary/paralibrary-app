@@ -29,14 +29,14 @@ const ToastComponent = ({ header, body, type }: ToastProps) => {
       );
     default:
       return (
-        <BootstrapToast
+        <Toast
           onClose={() => setShow(false)}
           show={show}
           delay={hideDelay}
           autohide
         >
           <InnerToast header={header} body={body} />
-        </BootstrapToast>
+        </Toast>
       );
   }
 };
@@ -56,7 +56,11 @@ const InnerToast: React.FC<ToastProps> = ({ header, body }) => {
   );
 };
 
-const Error = styled(BootstrapToast)`
+const Toast = styled(BootstrapToast)`
+  max-width: 480px;
+`;
+
+const Error = styled(Toast)`
   background-color: rgba(245, 125, 125, 0.85);
   color: white;
 

@@ -3,11 +3,16 @@ import styled from "styled-components";
 import Toast, { ToastProps } from "./Toast";
 
 const ToastContainer = styled.div`
-  width: 350px;
-  position: absolute;
-  bottom: 0;
-  right: 0;
+  position: fixed;
+  padding: 20px;
+  width: 100%;
   z-index: 2;
+  bottom: 0;
+
+  @media screen and (min-width: 480px) {
+    width: 350px;
+    right: 0;
+  }
 `;
 
 interface ToastInterface {
