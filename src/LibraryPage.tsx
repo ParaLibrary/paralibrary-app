@@ -151,13 +151,20 @@ const LibraryPage: React.FC = () => {
         New Book
       </Button>{" "}
       <Button
-        variant="warning"
+        variant="secondary"
         onClick={() => {
           addToast({ header: "Hi", body: "there" });
-          console.log("Clicked");
         }}
       >
-        TOAST TOAST TOAST
+        Default Toast
+      </Button>{" "}
+      <Button
+        variant="danger"
+        onClick={() => {
+          addToast({ header: "ERROR", body: "nooooo!", type: "error" });
+        }}
+      >
+        Error Toast
       </Button>
       <AutoTable
         data={filteredBooks}
