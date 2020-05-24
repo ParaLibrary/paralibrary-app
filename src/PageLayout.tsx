@@ -17,10 +17,11 @@ interface PageLayoutProps {
 }
 
 const Layout = styled.div`
+  flex: 1 0 auto;
   display: flex;
   flex-flow: column nowrap;
   padding: 16px;
-  height: 100%;
+
   @media screen and (min-width: 480px) {
     display: grid;
     grid-template-columns: auto 30%;
