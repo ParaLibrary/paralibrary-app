@@ -1,17 +1,19 @@
 import React from "react";
-import { Button } from "react-bootstrap";
+import Button, { ButtonProps } from "react-bootstrap/Button";
 import { FriendshipChangeEvent } from "./FriendshipAcceptButton";
 import { User } from "./ourtypes";
 import { useToasts } from "./ToastProvider";
 
-interface RejectButtonProps {
+interface RejectButtonProps extends ButtonProps {
   rowitem?: User;
-  onReject?: (event: FriendshipChangeEvent) => void;
+  onReject?: () => void;
 }
 
 const FriendshipRejectButton: React.FC<RejectButtonProps> = ({
   rowitem: friend,
   onReject,
+  children,
+  size,
 }) => {
   const { addToast } = useToasts();
 
@@ -52,10 +54,10 @@ const FriendshipRejectButton: React.FC<RejectButtonProps> = ({
     <Button
       type="button"
       variant="outline-danger"
-      size="sm"
       onClick={RejectFriendship}
+      size={size}
     >
-      Reject
+      {children}
     </Button>
   );
 };
