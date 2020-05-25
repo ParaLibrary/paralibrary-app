@@ -23,7 +23,14 @@ export interface Role {
 function List<T extends { id: string }>(
   props: ListProps<T> & Role
 ): JSX.Element | null {
-  const { items, placeholder, userRole, title, component } = props;
+  const {
+    items,
+    placeholder,
+    userRole,
+    title,
+    component,
+    ...otherProps
+  } = props;
   const Container = component;
   if (items.length === 0) {
     return !!title && !!placeholder ? (
@@ -38,7 +45,7 @@ function List<T extends { id: string }>(
         <SegTransitionGroup appear exit>
           {items.map((item) => (
             <Fade key={item.id} collapse bottom>
-              <Container {...item} userRole={userRole} />
+              <Container {...item} userRole={userRole} {...otherProps} />
             </Fade>
           ))}
         </SegTransitionGroup>

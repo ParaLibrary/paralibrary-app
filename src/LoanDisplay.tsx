@@ -1,57 +1,13 @@
 import React from "react";
 import styled from "styled-components";
-import Fade from "react-reveal";
-import TransitionGroup from "react-transition-group/TransitionGroup";
 
 import { Loan, User, Book, LoanStatus } from "./ourtypes";
+import { Role } from "./List";
 import { OwnerLoanManager, RequesterLoanManager } from "./LoanManagers";
 import UserDisplay from "./UserDisplay";
 import BookDisplay from "./BookDisplay";
 
-const SegTransitionGroup = styled(TransitionGroup)`
-  > div {
-    margin-bottom: 0.5rem;
-  }
-`;
-
-interface LoanListProps {
-  loans: Loan[];
-  title?: React.ReactElement;
-  placeholder?: React.ReactElement;
-  userRole: "owner" | "requester";
-}
-
-const LoanList: React.FC<LoanListProps> = ({
-  loans,
-  placeholder,
-  userRole,
-  title,
-}) => {
-  if (loans.length === 0) {
-    return !!title && !!placeholder ? (
-      <>
-        {title} {placeholder}
-      </>
-    ) : null;
-  } else {
-    return (
-      <>
-        {title}
-        <SegTransitionGroup appear enter exit>
-          {loans.map((loan) => (
-            <Fade key={loan.id} collapse bottom>
-              <LoanDisplay loan={loan} controller={userRole} />
-            </Fade>
-          ))}
-        </SegTransitionGroup>
-      </>
-    );
-  }
-};
-
-export default LoanList;
-
-const LoanDiv = styled.div<{ late?: boolean }>`
+const LoanDiv = styled.div`
   border: 0.1rem solid #ececec;
   border-radius: 8px;
   box-sizing: border-box;
@@ -71,13 +27,8 @@ const LoanDiv = styled.div<{ late?: boolean }>`
   }
 `;
 
-interface LoanDisplayProps {
-  loan: Loan;
-  controller: "owner" | "requester";
-}
-
-const LoanDisplay: React.FC<LoanDisplayProps> = ({ loan, controller }) => {
-  const { owner, requester, book, status } = loan;
+const LoanDisplay: React.FC<Loan & Role> = (loanAndRole) => {
+  const { owner, requester, book, status, userRole: controller } = loanAndRole;
   return (
     <LoanDiv>
       {controller === "owner" ? (
@@ -86,9 +37,9 @@ const LoanDisplay: React.FC<LoanDisplayProps> = ({ loan, controller }) => {
         <RequesterStatusMessage subject={owner} object={book} status={status} />
       )}
       {controller === "owner" ? (
-        <OwnerLoanManager loan={loan} />
+        <OwnerLoanManager loan={loanAndRole} />
       ) : (
-        <RequesterLoanManager loan={loan} />
+        <RequesterLoanManager loan={loanAndRole} />
       )}
     </LoanDiv>
   );
@@ -187,3 +138,5 @@ const RequesterStatusMessage: React.FC<StatusMessageProps> = ({
     return <p>Error: Undefined Status on loan</p>;
   }
 };
+
+export default LoanDisplay;

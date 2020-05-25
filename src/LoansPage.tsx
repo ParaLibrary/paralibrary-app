@@ -4,7 +4,9 @@ import { Link } from "react-router-dom";
 import { Loan } from "./ourtypes";
 import PageLayout from "./PageLayout";
 import { toLoan } from "./mappers";
-import LoanList from "./LoanList";
+import LoanList from "./LoanDisplay";
+import List from "./List";
+import LoanDisplay from "./LoanDisplay";
 
 interface LoanContext {
   loans: Loan[];
@@ -125,8 +127,8 @@ const LoansPage: React.FC = () => {
       <LoanContext.Provider
         value={{ loans: loanedByMe, setLoans: setLoanedByMe }}
       >
-        <LoanList
-          loans={requestedFromMe}
+        <List
+          items={requestedFromMe}
           title={<h3>Incoming Requests</h3>}
           placeholder={
             <p>
@@ -135,34 +137,37 @@ const LoansPage: React.FC = () => {
             </p>
           }
           userRole="owner"
+          component={LoanDisplay}
         />
       </LoanContext.Provider>
 
       <LoanContext.Provider
         value={{ loans: loanedToMe, setLoans: setLoanedToMe }}
       >
-        <LoanList
-          loans={myRequests}
+        <List
+          items={myRequests}
           title={<h3>My Requests</h3>}
           userRole="requester"
+          component={LoanDisplay}
         />
       </LoanContext.Provider>
 
       <LoanContext.Provider
         value={{ loans: loanedByMe, setLoans: setLoanedByMe }}
       >
-        <LoanList
-          loans={loanedOut}
+        <List
+          items={loanedOut}
           title={<h3>My Loaning</h3>}
           userRole="requester"
+          component={LoanDisplay}
         />
       </LoanContext.Provider>
 
       <LoanContext.Provider
         value={{ loans: loanedToMe, setLoans: setLoanedToMe }}
       >
-        <LoanList
-          loans={myBorrowing}
+        <List
+          items={myBorrowing}
           title={<h3>My Borrowing</h3>}
           userRole="requester"
           placeholder={
@@ -176,6 +181,7 @@ const LoansPage: React.FC = () => {
               <span>No books currently borrowed.</span>
             )
           }
+          component={LoanDisplay}
         />
       </LoanContext.Provider>
     </PageLayout>
