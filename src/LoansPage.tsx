@@ -129,10 +129,10 @@ const LoansPage: React.FC = () => {
           loans={requestedFromMe}
           title={<h3>Incoming Requests</h3>}
           placeholder={
-            <>
+            <p>
               <span>No requests? </span>
               <Link to={"/library"}>Add more books to your library!</Link>
-            </>
+            </p>
           }
           userRole="owner"
         />
@@ -143,7 +143,7 @@ const LoansPage: React.FC = () => {
       >
         <LoanList
           loans={myRequests}
-          title={<h3>Incoming Requests</h3>}
+          title={<h3>My Requests</h3>}
           userRole="requester"
         />
       </LoanContext.Provider>
@@ -167,11 +167,11 @@ const LoansPage: React.FC = () => {
           userRole="requester"
           placeholder={
             myRequests.length === 0 ? (
-              <>
+              <p>
                 <span>Doesn't look like you've borrowed any books.</span>
                 <br />
                 <Link to={"/friends"}>Check out a friend's library!</Link>
-              </>
+              </p>
             ) : (
               <span>No books currently borrowed.</span>
             )
