@@ -18,8 +18,12 @@ const AcceptRejectGroup: React.FC<ButtonGroupProps> = ({
 }) => {
   return (
     <>
-      <FriendshipAcceptButton rowitem={friend} onAccept={onAccept} />
-      <FriendshipRejectButton rowitem={friend} onReject={onReject} />
+      <FriendshipAcceptButton rowitem={friend} onAccept={onAccept}>
+        Accept
+      </FriendshipAcceptButton>
+      <FriendshipRejectButton rowitem={friend} onReject={onReject}>
+        Reject
+      </FriendshipRejectButton>
     </>
   );
 };

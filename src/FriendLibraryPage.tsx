@@ -34,6 +34,10 @@ const FriendLibraryPage: React.FC = () => {
     );
   }, [searchTerm, books]);
 
+  const userStatus = useMemo(() => {
+    return user?.status;
+  }, [user]);
+
   useEffect(() => {
     fetch(`http://paralibrary.digital/api/libraries/${id}`, {
       credentials: "include",
@@ -59,7 +63,7 @@ const FriendLibraryPage: React.FC = () => {
       .finally(() => {
         setIsLoaded(true);
       });
-  }, [id]);
+  }, [id, userStatus]);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [isNewRequest, setIsNewRequest] = useState(true);
