@@ -5,7 +5,7 @@ import React, {
   useMemo,
   useContext,
 } from "react";
-import { useParams } from "react-router";
+import { Redirect, useParams } from "react-router";
 
 import PageLayout from "./PageLayout";
 import { Book, Loan, User } from "./ourtypes";
@@ -126,40 +126,51 @@ const FriendLibraryPage: React.FC = () => {
     });
   }, []);
 
-  return (
-    <PageLayout
-      header={
-        !user ? <h1>User Not Found</h1> : <h1>{user && user.name}'s Library</h1>
-      }
-      error={error}
-      loaded={isLoaded}
-    >
-      {user && <FriendshipStatusButton friend={user} onClick={setUser} />}
-      <LibrarySearchBar
-        onSearchChange={filterResults}
-        header="Search this Library"
-      />
-      <AutoTable
-        data={filteredBooks}
-        title={<h3>Books</h3>}
-        placeholder={
-          books ? (
-            <span>No search results found</span>
+  if (auth.credential.userId === id) {
+    return <Redirect to="/library" />;
+  } else {
+    return (
+      <PageLayout
+        header={
+          !user ? (
+            <h1>User Not Found</h1>
           ) : (
-            <span>
-              Huh, looks like {user && user.name} hasn't added anything to their
-              library.
-            </span>
+            <h1>{user && user.name}'s Library</h1>
           )
         }
+        error={error}
+        loaded={isLoaded}
       >
-        <TableColumn col="title">Title</TableColumn>
-        <TableColumn col="author">Author</TableColumn>
-        <TableColumn col="summary">Description</TableColumn>
-        <LoanRequestButton onRequest={handleRequest} onCancel={handleCancel} />
-      </AutoTable>
-    </PageLayout>
-  );
+        {user && <FriendshipStatusButton friend={user} onClick={setUser} />}
+        <LibrarySearchBar
+          onSearchChange={filterResults}
+          header="Search this Library"
+        />
+        <AutoTable
+          data={filteredBooks}
+          title={<h3>Books</h3>}
+          placeholder={
+            books ? (
+              <span>No search results found</span>
+            ) : (
+              <span>
+                Huh, looks like {user && user.name} hasn't added anything to
+                their library.
+              </span>
+            )
+          }
+        >
+          <TableColumn col="title">Title</TableColumn>
+          <TableColumn col="author">Author</TableColumn>
+          <TableColumn col="summary">Description</TableColumn>
+          <LoanRequestButton
+            onRequest={handleRequest}
+            onCancel={handleCancel}
+          />
+        </AutoTable>
+      </PageLayout>
+    );
+  }
 };
 
 export default FriendLibraryPage;
