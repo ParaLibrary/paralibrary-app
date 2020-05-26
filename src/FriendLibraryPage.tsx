@@ -122,7 +122,7 @@ const FriendLibraryPage: React.FC = () => {
     });
   }, []);
 
-  if (auth.credential.userId?.toString() === id) {
+  if (auth.credential.userId === id) {
     return <Redirect to="/library" />;
   } else {
     return (
