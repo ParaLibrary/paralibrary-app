@@ -1,18 +1,24 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useContext,
+} from "react";
 import { useParams } from "react-router";
-import { Modal } from "react-bootstrap";
 
 import PageLayout from "./PageLayout";
-import { Book, LoanRequest, Loan, User } from "./ourtypes";
+import { Book, Loan, User } from "./ourtypes";
 import AutoTable, { TableColumn } from "./AutoTable";
 import LoanRequestButton from "./LoanRequestButton";
-import LoanFormik from "./LoanForm";
 import { toLibrary } from "./mappers";
 import LibrarySearchBar from "./LibrarySearchBar";
 import FriendshipStatusButton from "./FriendshipStatusButton";
+import { AuthContext } from "./AuthContextProvider";
 
 const FriendLibraryPage: React.FC = () => {
   const { id } = useParams();
+  const auth = useContext(AuthContext);
 
   const [error, setError] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -34,8 +40,12 @@ const FriendLibraryPage: React.FC = () => {
     );
   }, [searchTerm, books]);
 
+  const userStatus = useMemo(() => {
+    return user?.status;
+  }, [user]);
+
   useEffect(() => {
-    fetch(`http://localhost:8080/api/libraries/${id}`, {
+    fetch(`http://paralibrary.digital/api/libraries/${id}`, {
       credentials: "include",
     })
       .then((res) => {
@@ -59,51 +69,55 @@ const FriendLibraryPage: React.FC = () => {
       .finally(() => {
         setIsLoaded(true);
       });
-  }, [id]);
+  }, [id, userStatus]);
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const [isNewRequest, setIsNewRequest] = useState(true);
-  const [selectedLoan, setSelectedLoan] = useState<Loan | LoanRequest>({
-    book_id: "",
-    requester_contact: "",
-    status: "pending",
-  });
-
-  const handleRequest = useCallback((bookID: string) => {
-    setIsNewRequest(true);
-    setSelectedLoan({
-      book_id: bookID,
-      requester_contact: "",
-      status: "pending",
-    });
-    setModalOpen(true);
-  }, []);
-
-  const updateDatabase = useCallback(
-    (loan: LoanRequest) => {
-      fetch("http://localhost:8080/api/loans", {
+  const handleRequest = useCallback(
+    (bookID: string) => {
+      fetch("http://paralibrary.digital/api/loans", {
         method: "POST",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(loan),
+        body: JSON.stringify({
+          book_id: bookID,
+          requester_id: auth.credential.userId,
+          status: "pending",
+        }),
       })
         .then((res) => res.json())
-        .then((res: Loan) => {
+        .then((res) => {
+          const emptyUser: User = {
+            id: "",
+            name: "",
+            status: null,
+            email: "",
+            picture: "",
+          };
+          const owner: User = user || emptyUser;
+          const requester: User = {
+            ...emptyUser,
+            id: auth.credential.userId || "",
+          };
+          const loan: Loan = {
+            id: res.id,
+            status: "pending",
+            owner,
+            requester,
+          };
           setBooks(
-            books.map((book) =>
-              book.id !== loan.book_id ? book : { ...book, loan: res }
-            )
+            books.map((book) => (book.id !== bookID ? book : { ...book, loan }))
           );
         })
-        .catch(() => false);
+        .catch((error) => {
+          console.log(error);
+        });
     },
-    [books]
+    [auth, books, user]
   );
 
   const handleCancel = useCallback(async (loan: Loan) => {
-    fetch(`http://localhost:8080/api/loans/${loan.id}`, {
+    fetch(`http://paralibrary.digital/api/loans/${loan.id}`, {
       method: "DELETE",
       credentials: "include",
       headers: {
@@ -145,20 +159,6 @@ const FriendLibraryPage: React.FC = () => {
         <TableColumn col="summary">Description</TableColumn>
         <LoanRequestButton onRequest={handleRequest} onCancel={handleCancel} />
       </AutoTable>
-      <Modal show={modalOpen} onHide={() => setModalOpen(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>
-            {isNewRequest ? "Request Book" : "Cancel Request"}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <LoanFormik
-            loan={selectedLoan}
-            updateDatabase={updateDatabase}
-            closeModal={() => setModalOpen(false)}
-          />
-        </Modal.Body>
-      </Modal>
     </PageLayout>
   );
 };

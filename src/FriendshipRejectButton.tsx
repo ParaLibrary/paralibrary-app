@@ -1,10 +1,10 @@
 import React from "react";
-import { Button } from "react-bootstrap";
+import Button, { ButtonProps } from "react-bootstrap/Button";
 import { FriendshipChangeEvent } from "./FriendshipAcceptButton";
-
 import { User } from "./ourtypes";
+import { useToasts } from "./ToastProvider";
 
-interface RejectButtonProps {
+interface RejectButtonProps extends ButtonProps {
   rowitem?: User;
   onReject?: (event: FriendshipChangeEvent) => void;
 }
@@ -12,13 +12,17 @@ interface RejectButtonProps {
 const FriendshipRejectButton: React.FC<RejectButtonProps> = ({
   rowitem: friend,
   onReject,
+  children,
+  ...props
 }) => {
+  const { addToast } = useToasts();
+
   function RejectFriendship() {
     if (!friend) {
       throw new Error("Row lacks valid data");
     }
 
-    return fetch(`http://localhost:8080/api/friends/${friend.id}`, {
+    return fetch(`http://paralibrary.digital/api/friends/${friend.id}`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -36,17 +40,24 @@ const FriendshipRejectButton: React.FC<RejectButtonProps> = ({
         };
       })
       .then(onReject)
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        console.error(error);
+        addToast({
+          header: "Action could not be completed",
+          body: "Something went wrong. Please try again in a few moments",
+          type: "error",
+        });
+      });
   }
 
   return (
     <Button
       type="button"
       variant="outline-danger"
-      size="sm"
       onClick={RejectFriendship}
+      {...props}
     >
-      Reject
+      {children}
     </Button>
   );
 };

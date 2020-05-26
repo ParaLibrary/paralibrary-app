@@ -38,6 +38,8 @@ export function toUser(obj: any): User {
     name: obj.name,
     status: obj.status as FriendStatus,
     picture: obj.picture,
+    email: !obj.contact ? "no email provided" : obj.contact,
+    // TODO: update this to be required when backend provides it
   };
 }
 
@@ -89,24 +91,15 @@ export function toLoan(obj: any): Loan {
     throw new Error("Missing property 'requester' in loan");
   }
   const requester = toUser(obj.requester);
-  if (!obj.requester_contact) {
-    throw new Error("Missing property 'requester_contact' in loan");
-  }
-  const book = !!obj.book ? toBook(obj.book) : undefined;
-  if (!book && !obj.book_id) {
-    throw new Error("Missing property 'book' and 'book_id' in loan");
-  }
 
   if (!(obj.status as LoanStatus)) {
     throw new Error("Missing property 'status' in loan");
   }
   return {
     id: obj.id,
-    book,
-    book_id: !!book ? book.id : obj.book_id,
+    book: !!obj.book ? toBook(obj.book) : undefined,
     requester,
     owner,
-    requester_contact: obj.requester_contact,
     request_date: obj.request_date && new Date(obj.request_date),
     accept_date: obj.accept_date && new Date(obj.accept_date),
     loan_start_date: obj.loan_start_date && new Date(obj.loan_start_date),

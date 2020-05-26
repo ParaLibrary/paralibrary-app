@@ -1,9 +1,9 @@
 import React from "react";
+import { User } from "./ourtypes";
 import FriendshipAcceptButton, {
   FriendshipChangeEvent,
 } from "./FriendshipAcceptButton";
 import FriendshipRejectButton from "./FriendshipRejectButton";
-import { User } from "./ourtypes";
 
 interface ButtonGroupProps {
   rowitem?: User;
@@ -18,8 +18,12 @@ const AcceptRejectGroup: React.FC<ButtonGroupProps> = ({
 }) => {
   return (
     <>
-      <FriendshipAcceptButton rowitem={friend} onAccept={onAccept} />
-      <FriendshipRejectButton rowitem={friend} onReject={onReject} />
+      <FriendshipAcceptButton rowitem={friend} onAccept={onAccept}>
+        Accept
+      </FriendshipAcceptButton>
+      <FriendshipRejectButton rowitem={friend} onReject={onReject}>
+        Reject
+      </FriendshipRejectButton>
     </>
   );
 };

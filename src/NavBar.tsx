@@ -57,7 +57,7 @@ const NavBar: React.FC = ({ children }) => {
   const { signOut } = useGoogleLogout(logoutProps);
 
   function logoutSuccessHandler() {
-    return fetch(`http://localhost:8080/api/auth/logout`, {
+    return fetch(`http://paralibrary.digital/api/auth/logout`, {
       credentials: "include",
       method: "POST",
     })

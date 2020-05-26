@@ -25,7 +25,7 @@ const FriendSearchBar = () => {
   function fetchUsers(searchTerm: string) {
     setLoading(true);
 
-    fetch(`http://localhost:8080/api/users/search/${searchTerm}`, {
+    fetch(`http://paralibrary.digital/api/users/search/${searchTerm}`, {
       credentials: "include",
     })
       .then((response) => response.json())

@@ -1,14 +1,14 @@
 import React from "react";
-import { Button } from "react-bootstrap";
-
+import Button, { ButtonProps } from "react-bootstrap/Button";
 import { User } from "./ourtypes";
+import { useToasts } from "./ToastProvider";
 
 export interface FriendshipChangeEvent {
   successful: boolean;
   id: string;
 }
 
-interface AcceptButtonProps {
+interface AcceptButtonProps extends ButtonProps {
   rowitem?: User;
   onAccept?: (event: FriendshipChangeEvent) => void;
 }
@@ -16,13 +16,17 @@ interface AcceptButtonProps {
 const FriendshipAcceptButton: React.FC<AcceptButtonProps> = ({
   rowitem: friend,
   onAccept,
+  children,
+  ...props
 }) => {
+  const { addToast } = useToasts();
+
   function AcceptFriendship() {
     if (!friend) {
       throw new Error("Row lacks valid data");
     }
 
-    return fetch(`http://localhost:8080/api/friends/${friend.id}`, {
+    return fetch(`http://paralibrary.digital/api/friends/${friend.id}`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -34,23 +38,37 @@ const FriendshipAcceptButton: React.FC<AcceptButtonProps> = ({
       }),
     })
       .then((response) => {
+        if (response.ok) {
+          addToast({
+            header: "Friend added!",
+            body: `You are now friends with ${friend.name}`,
+            type: "success",
+          });
+        }
         return {
           successful: response.ok,
           id: friend.id,
         };
       })
       .then(onAccept)
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        console.error(error);
+        addToast({
+          header: "Could not add friend",
+          body: "Something went wrong. Please try again in a few moments",
+          type: "error",
+        });
+      });
   }
 
   return (
     <Button
       type="button"
       variant="primary"
-      size="sm"
       onClick={AcceptFriendship}
+      {...props}
     >
-      Accept
+      {children}
     </Button>
   );
 };

@@ -30,7 +30,7 @@ const LoansPage: React.FC = () => {
   const [loanedByMe, setLoanedByMe] = useState<Loan[]>([]);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/loans/requester", {
+    fetch("http://paralibrary.digital/api/loans/requester", {
       credentials: "include",
     })
       .then((res) => {
@@ -55,7 +55,7 @@ const LoansPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/loans/owner", {
+    fetch("http://paralibrary.digital/api/loans/owner", {
       credentials: "include",
     })
       .then((res) => {

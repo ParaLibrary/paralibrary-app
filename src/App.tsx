@@ -11,6 +11,7 @@ import LoansPage from "./LoansPage";
 import SettingsPage from "./SettingsPage";
 import NavBar from "./NavBar";
 import theme from "./theme";
+import ToastContextProvider from "./ToastProvider";
 import ErrorPage from "./ErrorPage";
 
 const PageHolder = styled.div`
@@ -25,41 +26,43 @@ const PageHolder = styled.div`
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
-      <AuthContextProvider>
-        <Router>
-          <Switch>
-            <Route exact path="/" component={LandingPage}></Route>
-            <PageHolder>
-              <NavBar>
-                <Link to={"/library"}>My Library</Link>
-                <Link to={"/friends"}>Friends</Link>
-                <Link to={"/loans"}>Loans</Link>
-                <Link to={"/settings"}>Settings</Link>
-              </NavBar>
-              <Switch>
-                <Route path="/library" exact>
-                  <LibraryPage />
-                </Route>
-                <Route path="/library/:id">
-                  <FriendLibraryPage />
-                </Route>
-                <Route path="/friends">
-                  <FriendsPage />
-                </Route>
-                <Route path="/loans">
-                  <LoansPage />
-                </Route>
-                <Route path="/settings">
-                  <SettingsPage />
-                </Route>
-                <Route>
-                  <ErrorPage />
-                </Route>
-              </Switch>
-            </PageHolder>
-          </Switch>
-        </Router>
-      </AuthContextProvider>
+      <ToastContextProvider>
+        <AuthContextProvider>
+          <Router>
+            <Switch>
+              <Route exact path="/" component={LandingPage}></Route>
+              <PageHolder>
+                <NavBar>
+                  <Link to={"/library"}>My Library</Link>
+                  <Link to={"/friends"}>Friends</Link>
+                  <Link to={"/loans"}>Loans</Link>
+                  <Link to={"/settings"}>Settings</Link>
+                </NavBar>
+                <Switch>
+                  <Route path="/library" exact>
+                    <LibraryPage />
+                  </Route>
+                  <Route path="/library/:id">
+                    <FriendLibraryPage />
+                  </Route>
+                  <Route path="/friends">
+                    <FriendsPage />
+                  </Route>
+                  <Route path="/loans">
+                    <LoansPage />
+                  </Route>
+                  <Route path="/settings">
+                    <SettingsPage />
+                  </Route>
+                  <Route>
+                    <ErrorPage />
+                  </Route>
+                </Switch>
+              </PageHolder>
+            </Switch>
+          </Router>
+        </AuthContextProvider>
+      </ToastContextProvider>
     </ThemeProvider>
   );
 };
