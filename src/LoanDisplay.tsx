@@ -7,8 +7,8 @@ import { OwnerLoanManager, RequesterLoanManager } from "./LoanManagers";
 import UserDisplay from "./UserDisplay";
 import BookDisplay from "./BookDisplay";
 
-const LoanDiv = styled.div`
-  border: 0.1rem solid #ececec;
+const LoanDiv = styled.div<{ late?: boolean }>`
+  border: 0.1rem solid ${({ late }) => (!!late ? "#dc3545" : "#ececec")};
   border-radius: 8px;
   box-sizing: border-box;
   padding: 16px;
@@ -18,6 +18,8 @@ const LoanDiv = styled.div`
   display: grid;
   grid-template: auto auto / auto;
   gap: 0px 1rem;
+
+  margin-bottom: 1rem;
 
   @media screen and (min-width: 480px) {
     grid-template: auto / auto 100px;
