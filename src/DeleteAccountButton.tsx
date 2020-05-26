@@ -23,7 +23,7 @@ const DeleteAccountButton: React.FC<DABProps> = ({
     requestConfirm(
       () => {
         console.log(user);
-        fetch(`http://paralibrary.digital/api/users/${user.id}`, {
+        fetch(`http://localhost:8080/api/users/${user.id}`, {
           method: "DELETE",
           credentials: "include",
         }).then((res: Response) => {

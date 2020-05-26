@@ -32,7 +32,7 @@ const FriendsPage: React.FC = () => {
   }
 
   useEffect(() => {
-    fetch("http://paralibrary.digital/api/friends", { credentials: "include" })
+    fetch("http://localhost:8080/api/friends", { credentials: "include" })
       .then((res) => {
         return res.json();
       })

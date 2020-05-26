@@ -17,7 +17,7 @@ const PaddedDiv = styled.div`
 
 const FriendshipRequestButton: React.FC<FRBProps> = ({ friend, onClick }) => {
   const requestFriendship = useCallback(() => {
-    fetch(`http://paralibrary.digital/api/friends/${friend.id}`, {
+    fetch(`http://localhost:8080/api/friends/${friend.id}`, {
       method: "POST",
       credentials: "include",
       headers: {

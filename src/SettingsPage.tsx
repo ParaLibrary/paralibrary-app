@@ -24,7 +24,7 @@ const SettingsPage: React.FC = () => {
   const [sig, setSig] = useState("");
 
   useEffect(() => {
-    fetch(`http://paralibrary.digital/api/users/${credential.userId}`, {
+    fetch(`http://localhost:8080/api/users/${credential.userId}`, {
       credentials: "include",
     })
       .then((res: Response) => res.json())
@@ -47,7 +47,7 @@ const SettingsPage: React.FC = () => {
   }, [credential]);
 
   const onSubmit = useCallback((values: User) => {
-    fetch(`http://paralibrary.digital/api/users/${values.id}`, {
+    fetch(`http://localhost:8080/api/users/${values.id}`, {
       method: "PUT",
       credentials: "include",
       headers: {

@@ -69,7 +69,7 @@ const LibraryPage: React.FC = () => {
   }, [searchTerm, books, catSelected]);
 
   useEffect(() => {
-    fetch(`http://paralibrary.digital/api/libraries`, {
+    fetch(`http://localhost:8080/api/libraries`, {
       credentials: "include",
     })
       .then((res) => {
@@ -98,7 +98,7 @@ const LibraryPage: React.FC = () => {
   const addToDatabase = useCallback(
     (book: Book) => {
       let BookString = JSON.stringify(book);
-      fetch("http://paralibrary.digital/api/books", {
+      fetch("http://localhost:8080/api/books", {
         method: "POST",
         credentials: "include",
         headers: {

@@ -86,7 +86,7 @@ const LandingPage: React.FC = () => {
       },
       body: `idtoken=${onlineResponse.tokenId}`,
     };
-    return fetch(`http://paralibrary.digital/api/auth/login`, options)
+    return fetch(`http://localhost:8080/api/auth/login`, options)
       .then(async (response) => {
         if (response.status === 200) {
           let json = await response.json();

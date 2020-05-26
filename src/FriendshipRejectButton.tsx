@@ -18,7 +18,7 @@ const FriendshipRejectButton: React.FC<RejectButtonProps> = ({
       throw new Error("Row lacks valid data");
     }
 
-    return fetch(`http://paralibrary.digital/api/friends/${friend.id}`, {
+    return fetch(`http://localhost:8080/api/friends/${friend.id}`, {
       method: "POST",
       credentials: "include",
       headers: {

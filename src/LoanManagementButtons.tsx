@@ -25,7 +25,7 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
   const requestConfirmation = useContext(ConfirmContext);
 
   const handleClick = useCallback(() => {
-    fetch(`http://paralibrary.digital/api/loans/${thisLoan.id}`, {
+    fetch(`http://localhost:8080/api/loans/${thisLoan.id}`, {
       method: "DELETE",
       credentials: "include",
     })
@@ -78,7 +78,7 @@ export const UpdateButton: React.FC<UpdateButtonProps> = ({
 
   const handleClick = useCallback(() => {
     const newLoan: Loan = { ...thisLoan, status: thisStatus };
-    fetch(`http://paralibrary.digital/api/loans/${thisLoan.id}`, {
+    fetch(`http://localhost:8080/api/loans/${thisLoan.id}`, {
       method: "PUT",
       credentials: "include",
       headers: {

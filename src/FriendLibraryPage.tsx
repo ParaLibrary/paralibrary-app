@@ -35,7 +35,7 @@ const FriendLibraryPage: React.FC = () => {
   }, [searchTerm, books]);
 
   useEffect(() => {
-    fetch(`http://paralibrary.digital/api/libraries/${id}`, {
+    fetch(`http://localhost:8080/api/libraries/${id}`, {
       credentials: "include",
     })
       .then((res) => {
@@ -81,7 +81,7 @@ const FriendLibraryPage: React.FC = () => {
 
   const updateDatabase = useCallback(
     (loan: LoanRequest) => {
-      fetch("http://paralibrary.digital/api/loans", {
+      fetch("http://localhost:8080/api/loans", {
         method: "POST",
         credentials: "include",
         headers: {
@@ -103,7 +103,7 @@ const FriendLibraryPage: React.FC = () => {
   );
 
   const handleCancel = useCallback(async (loan: Loan) => {
-    fetch(`http://paralibrary.digital/api/loans/${loan.id}`, {
+    fetch(`http://localhost:8080/api/loans/${loan.id}`, {
       method: "DELETE",
       credentials: "include",
       headers: {
