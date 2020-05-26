@@ -99,7 +99,6 @@ export function toLoan(obj: any): Loan {
   return {
     id: obj.id,
     book,
-    book_id: !!book ? book.id : obj.book_id,
     requester,
     owner,
     requester_contact: obj.requester_contact,

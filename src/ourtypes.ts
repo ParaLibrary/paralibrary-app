@@ -1,4 +1,4 @@
-export interface Loan extends LoanRequest {
+export interface Loan {
   id: string;
   owner: User;
   owner_contact?: string;
@@ -19,11 +19,6 @@ export type LoanStatus =
   | "returned"
   | "canceled"
   | "declined";
-
-export interface LoanRequest {
-  book_id: string;
-  requester_contact: string;
-}
 
 export interface Book {
   id: string;
