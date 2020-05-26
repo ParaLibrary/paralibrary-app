@@ -13,6 +13,7 @@ const FriendshipRejectButton: React.FC<RejectButtonProps> = ({
   rowitem: friend,
   onReject,
   children,
+  ...props
 }) => {
   const { addToast } = useToasts();
 
@@ -53,8 +54,8 @@ const FriendshipRejectButton: React.FC<RejectButtonProps> = ({
     <Button
       type="button"
       variant="outline-danger"
-      size="sm"
       onClick={RejectFriendship}
+      {...props}
     >
       {children}
     </Button>

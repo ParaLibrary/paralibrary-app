@@ -1,9 +1,9 @@
 import React from "react";
+import { User } from "./ourtypes";
 import FriendshipAcceptButton, {
   FriendshipChangeEvent,
 } from "./FriendshipAcceptButton";
 import FriendshipRejectButton from "./FriendshipRejectButton";
-import { User } from "./ourtypes";
 
 interface ButtonGroupProps {
   rowitem?: User;

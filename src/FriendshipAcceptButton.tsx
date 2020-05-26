@@ -17,6 +17,7 @@ const FriendshipAcceptButton: React.FC<AcceptButtonProps> = ({
   rowitem: friend,
   onAccept,
   children,
+  ...props
 }) => {
   const { addToast } = useToasts();
 
@@ -64,8 +65,8 @@ const FriendshipAcceptButton: React.FC<AcceptButtonProps> = ({
     <Button
       type="button"
       variant="primary"
-      size="sm"
       onClick={AcceptFriendship}
+      {...props}
     >
       {children}
     </Button>
