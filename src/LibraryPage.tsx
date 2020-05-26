@@ -125,6 +125,7 @@ const LibraryPage: React.FC = () => {
       },
       body: BookString,
     })
+      //The following code is used to update the page and display the edited data but currently makes the table no longer find results. Refreshing the page finds the results again
       .then(() => {
         console.log(books);
         let newBooks = books.map((b) => {
@@ -138,31 +139,6 @@ const LibraryPage: React.FC = () => {
         setBooks(newBooks);
       })
       .catch((err) => console.error(err));
-  }, []);
-
-  const putBook = useCallback(
-    (book: Book) => {
-      let BookString = JSON.stringify(book);
-      fetch("http://paralibrary.digital/api/books", {
-        method: "PUT",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: BookString,
-      }).catch(() => false);
-    },
-    [books]
-  );
-  const handleCancel = useCallback(async (book: Book) => {
-    fetch(`http://paralibrary.digital/api/books/${book.id}`, {
-      method: "DELETE",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(books),
-    });
   }, []);
 
   return (
