@@ -36,6 +36,7 @@ export interface User {
   id: string;
   name: string;
   status: FriendStatus;
+  picture: string;
   email: string;
 }
 

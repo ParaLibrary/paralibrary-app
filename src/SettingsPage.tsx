@@ -18,6 +18,7 @@ const SettingsPage: React.FC = () => {
     id: "",
     name: "",
     status: null,
+    picture: "",
     email: "",
   });
   const [error, setError] = useState(false);

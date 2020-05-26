@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { User } from "./ourtypes";
 import SearchStyleWrapper from "./SearchBarStyle";
+import UserDisplay from "./UserDisplay";
 import AutoSuggest, {
   InputProps,
   OnSuggestionSelected,
@@ -53,7 +54,7 @@ const FriendSearchBar = () => {
   }
 
   function renderSuggestion(user: User) {
-    return <span>{user.name}</span>;
+    return <UserDisplay data={user} height={30} />;
   }
 
   const inputProps: InputProps<User> = {

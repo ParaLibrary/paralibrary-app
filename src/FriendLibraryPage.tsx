@@ -92,6 +92,7 @@ const FriendLibraryPage: React.FC = () => {
             name: "",
             status: null,
             email: "",
+            picture: "",
           };
           const owner: User = user || emptyUser;
           const requester: User = {
