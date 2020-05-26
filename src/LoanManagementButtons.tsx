@@ -4,6 +4,7 @@ import Button, { ButtonProps } from "react-bootstrap/Button";
 import { LoanContext } from "./LoansPage";
 import { Loan, LoanStatus } from "./ourtypes";
 import ConfirmContext from "./ConfirmationContext";
+import { useToasts } from "./ToastProvider";
 
 type ButtonVariant = ButtonProps["variant"];
 
@@ -23,6 +24,7 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
 }) => {
   const { loans, setLoans } = useContext(LoanContext);
   const requestConfirmation = useContext(ConfirmContext);
+  const { addToast } = useToasts();
 
   const handleClick = useCallback(() => {
     fetch(`http://paralibrary.digital/api/loans/${thisLoan.id}`, {
@@ -32,9 +34,18 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
       .then((res) => {
         if (res.ok) {
           setLoans(loans.filter((loan) => loan.id !== thisLoan.id));
+        } else {
+          throw Error();
         }
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        console.log(error);
+        addToast({
+          header: "Could not delete loan",
+          body: "Something went wrong. Please try again in a few moments",
+          type: "error",
+        });
+      });
   }, [loans, thisLoan, setLoans]);
 
   const gatedHandle = useCallback(
@@ -75,6 +86,7 @@ export const UpdateButton: React.FC<UpdateButtonProps> = ({
 }) => {
   const { loans, setLoans } = useContext(LoanContext);
   const requestConfirmation = useContext(ConfirmContext);
+  const { addToast } = useToasts();
 
   const handleClick = useCallback(() => {
     const newLoan: Loan = { ...thisLoan, status: thisStatus };
@@ -91,9 +103,18 @@ export const UpdateButton: React.FC<UpdateButtonProps> = ({
           setLoans(
             loans.map((loan) => (loan.id !== thisLoan.id ? loan : newLoan))
           );
+        } else {
+          throw Error();
         }
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        console.log(error);
+        addToast({
+          header: "Could not delete loan",
+          body: "Something went wrong. Please try again in a few moments",
+          type: "error",
+        });
+      });
   }, [loans, thisLoan, setLoans, thisStatus]);
 
   const gatedHandle = useCallback(

@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect, Dispatch, SetStateAction } from "react";
+import React, { useCallback, Dispatch, SetStateAction } from "react";
 import Button from "react-bootstrap/Button";
 import AcceptRejectButtons from "./FriendshipAcceptRejectGroup";
 import styled from "styled-components";
+import { useToasts } from "./ToastProvider";
 
 import { User } from "./ourtypes";
 
@@ -16,6 +17,7 @@ const PaddedDiv = styled.div`
 `;
 
 const FriendshipRequestButton: React.FC<FRBProps> = ({ friend, onClick }) => {
+  const { addToast } = useToasts();
   const requestFriendship = useCallback(() => {
     fetch(`http://paralibrary.digital/api/friends/${friend.id}`, {
       method: "POST",
@@ -27,9 +29,20 @@ const FriendshipRequestButton: React.FC<FRBProps> = ({ friend, onClick }) => {
     })
       .then(() => {
         onClick({ ...friend, status: "requested" });
+        addToast({
+          header: "Friend request sent!",
+          body: "This user will appear in your friends list if they accept",
+        });
       })
-      .catch((error) => console.log(error));
-  }, [friend, onClick]);
+      .catch((error) => {
+        console.error("error: " + error);
+        addToast({
+          header: "Error sending friend request",
+          body: "Could not reach the server. Please try again in a few moments",
+          type: "error",
+        });
+      });
+  }, [friend, onClick, addToast]);
 
   function onAcceptClicked() {
     onClick({ ...friend, status: "friends" });

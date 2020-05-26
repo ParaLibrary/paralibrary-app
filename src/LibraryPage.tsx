@@ -140,7 +140,6 @@ const LibraryPage: React.FC = () => {
           />
         </Modal.Body>
       </Modal>
-
       <Button
         onClick={() => {
           setSelectedBook(emptyBook);

@@ -10,6 +10,7 @@ import { AuthContext } from "./AuthContextProvider";
 import { User } from "./ourtypes";
 import { toUser } from "./mappers";
 import DeleteAccountButton from "./DeleteAccountButton";
+import { useToasts } from "./ToastProvider";
 
 const SettingsPage: React.FC = () => {
   const { credential } = useContext(AuthContext);
@@ -17,6 +18,7 @@ const SettingsPage: React.FC = () => {
   const [error, setError] = useState(false);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [sig, setSig] = useState("");
+  const { addToast } = useToasts();
 
   useEffect(() => {
     fetch(`http://paralibrary.digital/api/users/${credential.userId}`, {
@@ -41,24 +43,39 @@ const SettingsPage: React.FC = () => {
       });
   }, [credential]);
 
-  const onSubmit = useCallback((values: User) => {
-    fetch(`http://paralibrary.digital/api/users/${values.id}`, {
-      method: "PUT",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(values),
-    })
-      .then((res: Response) => {
-        if (res.ok) {
-          setUser(values);
-        }
+  const onSubmit = useCallback(
+    (values: User) => {
+      fetch(`http://paralibrary.digital/api/users/${values.id}`, {
+        method: "PUT",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
       })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+        .then((res: Response) => {
+          if (res.ok) {
+            setUser(values);
+            addToast({
+              header: "Profile Updated!",
+              body: "Settings saved",
+              type: "success",
+            });
+          } else {
+            throw Error();
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          addToast({
+            header: "Could not update profile",
+            body: "Something went wrong. Please try again in a few moments",
+            type: "error",
+          });
+        });
+    },
+    [addToast]
+  );
 
   const validate = useCallback((values: User) => {
     let errors: FormikErrors<User> = {};

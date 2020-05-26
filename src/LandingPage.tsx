@@ -7,6 +7,7 @@ import {
   GoogleLoginResponseOffline,
 } from "react-google-login";
 import { AuthContext } from "./AuthContextProvider";
+import { useToasts } from "./ToastProvider";
 
 const LandingLayout = styled.div`
   display: grid;
@@ -68,6 +69,7 @@ const SignIn = styled.div`
 
 const LandingPage: React.FC = () => {
   const auth = useContext(AuthContext);
+  const { addToast } = useToasts();
 
   function loginSuccessHandler(
     googleResponse: GoogleLoginResponse | GoogleLoginResponseOffline
@@ -91,15 +93,32 @@ const LandingPage: React.FC = () => {
         if (response.status === 200) {
           let json = await response.json();
           auth.login({ authenticated: true, userId: json.userId }, json.maxAge);
+        } else {
+          addToast({
+            header: "Sign in failed",
+            body: "Server rejected login attempt",
+            type: "error",
+          });
         }
       })
       .catch((error) => {
         console.error(error);
+        addToast({
+          header: "Sign in failed",
+          body:
+            "Server could not be reached. Please try again in a few moments",
+          type: "error",
+        });
       });
   }
 
   const loginFailureHandler = (error: GoogleLoginResponse) => {
     console.log(error);
+    addToast({
+      header: "Sign in failed",
+      body: "Could not verify Google account",
+      type: "error",
+    });
   };
 
   return (

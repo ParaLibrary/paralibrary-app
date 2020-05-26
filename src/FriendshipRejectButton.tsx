@@ -1,8 +1,8 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import { FriendshipChangeEvent } from "./FriendshipAcceptButton";
-
 import { User } from "./ourtypes";
+import { useToasts } from "./ToastProvider";
 
 interface RejectButtonProps {
   rowitem?: User;
@@ -13,6 +13,8 @@ const FriendshipRejectButton: React.FC<RejectButtonProps> = ({
   rowitem: friend,
   onReject,
 }) => {
+  const { addToast } = useToasts();
+
   function RejectFriendship() {
     if (!friend) {
       throw new Error("Row lacks valid data");
@@ -36,7 +38,14 @@ const FriendshipRejectButton: React.FC<RejectButtonProps> = ({
         };
       })
       .then(onReject)
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        console.error(error);
+        addToast({
+          header: "Action could not be completed",
+          body: "Something went wrong. Please try again in a few moments",
+          type: "error",
+        });
+      });
   }
 
   return (
