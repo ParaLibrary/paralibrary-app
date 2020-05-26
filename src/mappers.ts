@@ -30,10 +30,14 @@ export function toUser(obj: any): User {
   if (!obj.name) {
     throw new Error("Missing property 'name' in user");
   }
+  if (isNullOrUndefined(obj.picture)) {
+    throw new Error("Missing property 'picture' in user");
+  }
   return {
     id: obj.id,
     name: obj.name,
     status: obj.status as FriendStatus,
+    picture: obj.picture,
   };
 }
 

@@ -43,6 +43,7 @@ export interface User {
   id: string;
   name: string;
   status: FriendStatus;
+  picture: string;
 }
 
 export type FriendStatus = "requested" | "friends" | "waiting" | null;
