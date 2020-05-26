@@ -15,6 +15,7 @@ import { Book, User, Option } from "./ourtypes";
 import LibrarySearchBar from "./LibrarySearchBar";
 import { toLibrary } from "./mappers";
 import { AuthContext } from "./AuthContextProvider";
+import BookEditButton from "./libraryEditButton";
 
 const LibraryPage: React.FC = () => {
   const user_idGet = useContext(AuthContext);
@@ -59,7 +60,6 @@ const LibraryPage: React.FC = () => {
 
   const filteredBooks: Book[] = useMemo(() => {
     const regExp = new RegExp(searchTerm.trim(), "gi");
-    console.log(catSelected);
     return books.filter(
       (book: Book) =>
         (!searchTerm ||
@@ -125,18 +125,16 @@ const LibraryPage: React.FC = () => {
       },
       body: BookString,
     })
-      //The following code is used to update the page and display the edited data but currently makes the table no longer find results. Refreshing the page finds the results again
-      .then(() => {
-        console.log(books);
-        let newBooks = books.map((b) => {
-          console.log(b);
-          if (b.id === book.id) {
-            return book;
-          }
-          return b;
-        });
-        console.log(newBooks);
-        setBooks(newBooks);
+      .then((res) => {
+        if (res.ok) {
+          let newBooks = books.map((b) => {
+            if (b.id === book.id) {
+              return book;
+            }
+            return b;
+          });
+          setBooks(newBooks);
+        }
       })
       .catch((err) => console.error(err));
   }, []);
@@ -202,19 +200,5 @@ const LibraryPage: React.FC = () => {
     </PageLayout>
   );
 };
-interface editBookProps {
-  rowitem?: Book;
-  onEdit: (book: Book | undefined) => void;
-}
-const BookEditButton: React.FC<editBookProps> = ({ rowitem, onEdit }) => {
-  return (
-    <Button
-      onClick={() => {
-        onEdit(rowitem);
-      }}
-    >
-      Edit
-    </Button>
-  );
-};
+
 export default LibraryPage;
