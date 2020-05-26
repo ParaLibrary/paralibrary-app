@@ -83,18 +83,22 @@ const FriendLibraryPage: React.FC = () => {
       })
         .then((res) => res.json())
         .then((res) => {
-          const owner: User = user || { id: "", name: "", status: null };
-          const requester: User = {
-            id: auth.credential.userId || "",
+          const emptyUser: User = {
+            id: "",
             name: "",
             status: null,
+            email: "",
+          };
+          const owner: User = user || emptyUser;
+          const requester: User = {
+            ...emptyUser,
+            id: auth.credential.userId || "",
           };
           const loan: Loan = {
             id: res.id,
             status: "pending",
             owner,
             requester,
-            requester_contact: "",
           };
           setBooks(
             books.map((book) => (book.id !== bookID ? book : { ...book, loan }))

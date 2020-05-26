@@ -116,22 +116,12 @@ export const UpdateButton: React.FC<UpdateButtonProps> = ({
 };
 
 interface ContactButtonProps {
-  loan: Loan;
-  userType: "owner" | "requester";
+  contact: string;
 }
 
-export const ContactButton: React.FC<ContactButtonProps> = ({
-  loan,
-  userType,
-}) => {
+export const ContactButton: React.FC<ContactButtonProps> = ({ contact }) => {
   return (
-    <Button
-      size="sm"
-      variant="info"
-      href={`mailto:${
-        userType === "owner" ? loan.owner_contact : loan.requester_contact
-      }`}
-    >
+    <Button size="sm" variant="info" href={`mailto:${contact}`}>
       Contact
     </Button>
   );

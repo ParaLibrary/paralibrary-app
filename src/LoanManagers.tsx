@@ -47,7 +47,7 @@ export const OwnerLoanManager: React.FC<LMProps> = ({ rowitem: loan }) => {
         </DeleteButton>
       )}
       {loan.status === "accepted" && (
-        <ContactButton loan={loan} userType="requester" />
+        <ContactButton contact={loan.requester.email} />
       )}
       {loan.status === "loaned" && (
         <UpdateButton
@@ -70,8 +70,8 @@ export const RequesterLoanManager: React.FC<LMProps> = ({ rowitem: loan }) => {
 
   return (
     <ActionPanel>
-      {loan.status === "accepted" && !!loan.owner_contact && (
-        <ContactButton loan={loan} userType="owner" />
+      {loan.status === "accepted" && (
+        <ContactButton contact={loan.owner.email} />
       )}
       {loan.status === "accepted" && (
         <UpdateButton loan={loan} status="loaned">
