@@ -106,6 +106,9 @@ const FriendLibraryPage: React.FC = () => {
                   }
             )
           );
+        })
+        .catch((error) => {
+          console.log(error);
         });
     },
     [auth, books, user]
