@@ -37,7 +37,12 @@ export const OwnerLoanManager: React.FC<LMProps> = ({ rowitem: loan }) => {
         </UpdateButton>
       )}
       {loan.status === "pending" && (
-        <DeleteButton variant="outline-danger" loan={loan}>
+        <DeleteButton
+          variant="outline-danger"
+          loan={loan}
+          gated
+          message="Are you sure you want to decline this request?"
+        >
           Decline
         </DeleteButton>
       )}
@@ -45,7 +50,12 @@ export const OwnerLoanManager: React.FC<LMProps> = ({ rowitem: loan }) => {
         <ContactButton loan={loan} userType="requester" />
       )}
       {loan.status === "loaned" && (
-        <UpdateButton loan={loan} status="loaned">
+        <UpdateButton
+          loan={loan}
+          status="returned"
+          gated
+          message="Do you have this book in your possession?"
+        >
           Book returned
         </UpdateButton>
       )}
@@ -69,7 +79,12 @@ export const RequesterLoanManager: React.FC<LMProps> = ({ rowitem: loan }) => {
         </UpdateButton>
       )}
       {(loan.status === "pending" || loan.status === "accepted") && (
-        <DeleteButton variant="outline-danger" loan={loan}>
+        <DeleteButton
+          variant="outline-danger"
+          loan={loan}
+          gated
+          message="Are you sure you want to cancel this request?"
+        >
           Cancel
         </DeleteButton>
         // Maybe eventually this will become a transition to the declined state

@@ -5,21 +5,16 @@ import React, {
   useCallback,
   useContext,
 } from "react";
-
 import { Modal, Button } from "react-bootstrap";
+import Select from "react-select";
 
 import PageLayout from "./PageLayout";
 import BookFormik from "./BookForm";
 import AutoTable, { TableColumn } from "./AutoTable";
-import { Book, User } from "./ourtypes";
+import { Book, User, Option } from "./ourtypes";
 import LibrarySearchBar from "./LibrarySearchBar";
-import { toLibrary, toUser } from "./mappers";
+import { toLibrary } from "./mappers";
 import { AuthContext } from "./AuthContextProvider";
-
-interface ButtonGroupProps {
-  id: number;
-  onEdit: (id: number) => {};
-}
 
 const LibraryPage: React.FC = () => {
   const user_idGet = useContext(AuthContext);
@@ -27,6 +22,7 @@ const LibraryPage: React.FC = () => {
     id: "",
     user_id: user_idGet.credential.userId || "",
     isbn: "",
+    categories: [],
     summary: "",
     title: "",
     author: "",
@@ -34,13 +30,28 @@ const LibraryPage: React.FC = () => {
   };
 
   const [isLoaded, setIsLoaded] = useState(false);
+  const [error, setError] = useState(false);
   const [books, setBooks] = useState<Book[]>([]);
   const [user, setUser] = useState<User>();
   const [modalOpen, setModalOpen] = useState(false);
   const [isNewBook, setIsNewBook] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [catSelected, setCatSelected] = useState<Option>();
   const [selectedBook, setSelectedBook] = useState<Book>(emptyBook);
   const [editModalClose, editBook] = useState(false);
+
+  const categories = useMemo(
+    () => Array.from(new Set(books.flatMap((book: Book) => book.categories))),
+    [books]
+  );
+
+  const makeOptions = useCallback(
+    (options: string[]) =>
+      options.map((category) => {
+        return { value: category, label: category };
+      }),
+    []
+  );
 
   function filterResults(searchTerm: string) {
     setSearchTerm(searchTerm);
@@ -48,15 +59,16 @@ const LibraryPage: React.FC = () => {
 
   const filteredBooks: Book[] = useMemo(() => {
     const regExp = new RegExp(searchTerm.trim(), "gi");
-    if (searchTerm === "") {
-      return books;
-    }
+    console.log(catSelected);
     return books.filter(
-      (book: Book) => book.title.match(regExp) || book.author.match(regExp)
+      (book: Book) =>
+        (!searchTerm ||
+          book.title.match(regExp) ||
+          book.author.match(regExp)) &&
+        (!catSelected?.value || book.categories.includes(catSelected.value))
     );
-  }, [searchTerm, books]);
+  }, [searchTerm, books, catSelected]);
 
-  useEffect(() => {}, [user]);
   useEffect(() => {
     fetch(`http://paralibrary.digital/api/libraries`, {
       credentials: "include",
@@ -72,15 +84,18 @@ const LibraryPage: React.FC = () => {
         },
         (error) => {
           console.log(error);
+          setError(true);
         }
       )
       .catch((error) => {
         console.log(error);
+        setError(true);
       })
       .finally(() => {
         setIsLoaded(true);
       });
   }, []);
+
   const addToDatabase = useCallback(
     (book: Book) => {
       let BookString = JSON.stringify(book);
@@ -151,10 +166,16 @@ const LibraryPage: React.FC = () => {
   }, []);
 
   return (
-    <PageLayout header={<h1>My Library</h1>}>
+    <PageLayout header={<h1>My Library</h1>} error={error} loaded={isLoaded}>
       <LibrarySearchBar
         onSearchChange={filterResults}
         header="Search Your Library"
+      />
+      <h6>Filter by Tags</h6>
+      <Select
+        options={makeOptions(categories)}
+        onChange={(option: any) => setCatSelected(option)}
+        isClearable
       />
       <Modal show={modalOpen} onHide={() => setModalOpen(false)} centered>
         <Modal.Header closeButton>
@@ -162,13 +183,13 @@ const LibraryPage: React.FC = () => {
         </Modal.Header>
         <Modal.Body>
           <BookFormik
+            categoryOptions={categories}
             book={selectedBook}
             updateDatabase={isNewBook ? addToDatabase : editBookDatabase}
             closeModal={() => setModalOpen(false)}
           />
         </Modal.Body>
       </Modal>
-
       <Button
         onClick={() => {
           setSelectedBook(emptyBook);

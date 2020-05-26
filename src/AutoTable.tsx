@@ -3,7 +3,7 @@ import { Table } from "react-bootstrap";
 import styled from "styled-components";
 
 interface TableColumnProps {
-  col: string;
+  col?: string;
   component?: any;
 }
 
@@ -46,6 +46,13 @@ const TableRow = <T,>(props: RowProps<T>) => {
             );
           }
           return <Cell>{data[col]}</Cell>;
+        }
+        if (Wrapper) {
+          return (
+            <Cell>
+              <Wrapper data={data} />
+            </Cell>
+          );
         }
         return <Cell>{cloneElement(child, { rowitem: data })}</Cell>;
       })}

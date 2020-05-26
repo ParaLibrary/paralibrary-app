@@ -9,10 +9,12 @@ import LoanRequestButton from "./LoanRequestButton";
 import LoanFormik from "./LoanForm";
 import { toLibrary } from "./mappers";
 import LibrarySearchBar from "./LibrarySearchBar";
+import FriendshipStatusButton from "./FriendshipStatusButton";
 
 const FriendLibraryPage: React.FC = () => {
   const { id } = useParams();
 
+  const [error, setError] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [books, setBooks] = useState<Book[]>([]);
   const [user, setUser] = useState<User>();
@@ -45,12 +47,14 @@ const FriendLibraryPage: React.FC = () => {
           setBooks(lib.books);
           setUser(lib.user);
         },
-        (error) => {
-          console.log(error);
+        (e) => {
+          console.log(e);
+          setError(true);
         }
       )
-      .catch((error) => {
-        console.log(error);
+      .catch((e) => {
+        console.log(e);
+        setError(true);
       })
       .finally(() => {
         setIsLoaded(true);
@@ -109,14 +113,15 @@ const FriendLibraryPage: React.FC = () => {
     });
   }, []);
 
-  return !isLoaded ? (
-    <PageLayout header={<h1>Loading...</h1>} />
-  ) : (
+  return (
     <PageLayout
       header={
         !user ? <h1>User Not Found</h1> : <h1>{user && user.name}'s Library</h1>
       }
+      error={error}
+      loaded={isLoaded}
     >
+      {user && <FriendshipStatusButton friend={user} onClick={setUser} />}
       <LibrarySearchBar
         onSearchChange={filterResults}
         header="Search this Library"

@@ -5,25 +5,38 @@ import { useGoogleLogout, UseGoogleLogoutProps } from "react-google-login";
 import { AuthContext } from "./AuthContextProvider";
 
 const NavBarLayout = styled.nav`
+  top: 0;
+  position: -webkit-sticky; /* For Safari */
+  position: sticky;
+  z-index: 1;
+  flex: 0 0 auto;
+
+  background-color: white;
+  border-bottom: 0.1rem solid #ececec;
+
   display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-evenly;
-  align-items: center;
+  flex-flow: row wrap;
+  justify-content: start;
+  align-items: baseline;
 
   height: fit-content;
   width: auto;
   padding: 16px;
+
+  > :not(:last-child) {
+    margin-right: 16px;
+  }
+
   @media screen and (min-width: 480px) {
-    height: 100%;
+    border: none;
+    height: 100vh;
     align-items: flex-start;
     flex-flow: column nowrap;
     justify-content: start;
-  }
-`;
-
-const LinkWrapper = styled.div`
-  @media screen and (min-width: 480px) {
-    padding-bottom: 16px;
+    > :not(:last-child) {
+      margin-right: 0px;
+      margin-bottom: 16px;
+    }
   }
 `;
 
@@ -64,9 +77,7 @@ const NavBar: React.FC = ({ children }) => {
 
   return (
     <NavBarLayout>
-      {React.Children.map(children, (child) => (
-        <LinkWrapper>{child}</LinkWrapper>
-      ))}
+      {children}
       <LogoutButton onClick={signOut} variant="outline-secondary" size="sm">
         Logout
       </LogoutButton>
