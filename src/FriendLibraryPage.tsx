@@ -121,10 +121,10 @@ const FriendLibraryPage: React.FC = () => {
       body: JSON.stringify(loan),
     });
   }, []);
-  console.log(auth.credential.userId);
+
   if (auth.credential.userId?.toString() === id) {
     return <Redirect to="/library" />;
-  } else
+  } else {
     return (
       <PageLayout
         header={
@@ -166,6 +166,7 @@ const FriendLibraryPage: React.FC = () => {
         </AutoTable>
       </PageLayout>
     );
+  }
 };
 
 export default FriendLibraryPage;
