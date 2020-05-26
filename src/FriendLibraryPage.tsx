@@ -97,14 +97,7 @@ const FriendLibraryPage: React.FC = () => {
             requester_contact: "",
           };
           setBooks(
-            books.map((book) =>
-              book.id !== bookID
-                ? book
-                : {
-                    ...book,
-                    loan,
-                  }
-            )
+            books.map((book) => (book.id !== bookID ? book : { ...book, loan }))
           );
         })
         .catch((error) => {
