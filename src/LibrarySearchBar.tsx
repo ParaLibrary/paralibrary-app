@@ -3,6 +3,7 @@ import { Book } from "./ourtypes";
 import SearchStyleWrapper from "./SearchBarStyle";
 import styled from "styled-components";
 import AutoSuggest, { InputProps } from "react-autosuggest";
+import escapeRegexp from "escape-string-regexp";
 
 const NoDropdownSearch = styled(SearchStyleWrapper)`
   .react-autosuggest__suggestions-container--open {
@@ -36,7 +37,7 @@ const LibrarySearchBar: React.FC<LibrarySearchProps> = ({
     value: value,
     onChange: (event, { newValue, method }) => {
       setValue(newValue);
-      onSearchChange(newValue);
+      onSearchChange(escapeRegexp(newValue));
     },
   };
 
