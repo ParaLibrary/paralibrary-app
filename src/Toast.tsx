@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import BootstrapToast from "react-bootstrap/Toast";
 
@@ -15,13 +15,6 @@ const hideDelay = 2200;
 
 const ToastComponent = ({ header, body, type, time }: ToastProps) => {
   const [show, setShow] = useState(true);
-
-  useEffect(() => {
-    console.log(header);
-    console.log(body);
-    console.log(type);
-    console.log(time);
-  }, [time]);
 
   switch (type) {
     case "error":
