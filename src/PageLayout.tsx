@@ -23,6 +23,7 @@ const Layout = styled.div`
   padding: 16px;
 
   @media screen and (min-width: 480px) {
+    flex: 1 0;
     display: grid;
     grid-template-columns: auto 30%;
     grid-template-rows: min-content auto min-content;
