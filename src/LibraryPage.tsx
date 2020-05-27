@@ -15,6 +15,7 @@ import { Book, User, Option } from "./ourtypes";
 import LibrarySearchBar from "./LibrarySearchBar";
 import { toLibrary } from "./mappers";
 import { AuthContext } from "./AuthContextProvider";
+import BookEditButton from "./libraryEditButton";
 
 const LibraryPage: React.FC = () => {
   const user_idGet = useContext(AuthContext);
@@ -38,6 +39,7 @@ const LibraryPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [catSelected, setCatSelected] = useState<Option>();
   const [selectedBook, setSelectedBook] = useState<Book>(emptyBook);
+  const [editModalClose, editBook] = useState(false);
 
   const categories = useMemo(
     () => Array.from(new Set(books.flatMap((book: Book) => book.categories))),
@@ -58,7 +60,6 @@ const LibraryPage: React.FC = () => {
 
   const filteredBooks: Book[] = useMemo(() => {
     const regExp = new RegExp(searchTerm.trim(), "gi");
-    console.log(catSelected);
     return books.filter(
       (book: Book) =>
         (!searchTerm ||
@@ -115,6 +116,33 @@ const LibraryPage: React.FC = () => {
     [books]
   );
 
+  const editBookDatabase = useCallback(
+    (book: Book) => {
+      let BookString = JSON.stringify(book);
+      fetch(`http://paralibrary.digital/api/books/${book.id}`, {
+        method: "PUT",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: BookString,
+      })
+        .then((res) => {
+          if (res.ok) {
+            let newBooks = books.map((b) => {
+              if (b.id === book.id) {
+                return book;
+              }
+              return b;
+            });
+            setBooks(newBooks);
+          }
+        })
+        .catch((err) => console.error(err));
+    },
+    [books]
+  );
+
   return (
     <PageLayout header={<h1>My Library</h1>} error={error} loaded={isLoaded}>
       <LibrarySearchBar
@@ -135,7 +163,7 @@ const LibraryPage: React.FC = () => {
           <BookFormik
             categoryOptions={categories}
             book={selectedBook}
-            updateDatabase={addToDatabase}
+            updateDatabase={isNewBook ? addToDatabase : editBookDatabase}
             closeModal={() => setModalOpen(false)}
           />
         </Modal.Body>
@@ -144,6 +172,7 @@ const LibraryPage: React.FC = () => {
         onClick={() => {
           setSelectedBook(emptyBook);
           setModalOpen(true);
+          setIsNewBook(true);
         }}
       >
         New Book
@@ -162,7 +191,15 @@ const LibraryPage: React.FC = () => {
         <TableColumn col="title">Title</TableColumn>
         <TableColumn col="author">Author</TableColumn>
         <TableColumn col="summary">Summary</TableColumn>
-        <Button onClick={() => setModalOpen(true)}>Edit</Button>
+        <BookEditButton
+          onEdit={(b) => {
+            setIsNewBook(false);
+            setModalOpen(true);
+            if (b) {
+              setSelectedBook(b);
+            }
+          }}
+        ></BookEditButton>
       </AutoTable>
     </PageLayout>
   );
