@@ -151,12 +151,13 @@ const FriendLibraryPage: React.FC = () => {
           data={filteredBooks}
           title={<h3>Books</h3>}
           placeholder={
-            books ? (
+            books.length ? (
               <span>No search results found</span>
             ) : (
               <span>
-                Huh, looks like {user && user.name} hasn't added anything to
-                their library.
+                Huh, looks like {user ? user.name : "this user"} hasn't added
+                anything to their library, or their privacy settings don't allow
+                you to see this library.
               </span>
             )
           }
