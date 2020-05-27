@@ -12,7 +12,7 @@ export interface Theme {
 // Not sure why DefaultTheme is a namespace here...
 // didn't appear in any examples online so it might
 // be part of reason the theme isn't usable
-const theme: DefaultTheme.DefaultTheme = {
+const theme: DefaultTheme = {
   marginHuge: "24px",
   marginLarge: "16px",
   marginMedium: "12px",

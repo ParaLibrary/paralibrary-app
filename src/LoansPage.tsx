@@ -3,12 +3,10 @@ import { Link } from "react-router-dom";
 
 import { Loan } from "./ourtypes";
 import PageLayout from "./PageLayout";
-import AutoTable, { TableColumn } from "./AutoTable";
-import BookDisplay from "./BookDisplay";
-import UserDisplay from "./UserDisplay";
 import { toLoan } from "./mappers";
-import { OwnerLoanManager, RequesterLoanManager } from "./LoanManagers";
-import StatusSpan from "./StatusSpan";
+import LoanList from "./LoanDisplay";
+import List from "./List";
+import LoanDisplay from "./LoanDisplay";
 
 interface LoanContext {
   loans: Loan[];
@@ -129,97 +127,62 @@ const LoansPage: React.FC = () => {
       <LoanContext.Provider
         value={{ loans: loanedByMe, setLoans: setLoanedByMe }}
       >
-        <AutoTable
-          data={requestedFromMe}
+        <List
+          items={requestedFromMe}
           title={<h3>Incoming Requests</h3>}
-          noHeaders
           placeholder={
-            <>
+            <p>
               <span>No requests? </span>
               <Link to={"/library"}>Add more books to your library!</Link>
-            </>
+            </p>
           }
-        >
-          <TableColumn col={"requester"} component={UserDisplay}>
-            Requester ID
-          </TableColumn>
-          <StatusSpan
-            pending="wants to borrow"
-            accepted="is waiting to pick up"
-          />
-          <TableColumn col={"book"} component={BookDisplay}>
-            Book ID
-          </TableColumn>
-          <OwnerLoanManager />
-        </AutoTable>
+          userRole="owner"
+          component={LoanDisplay}
+        />
       </LoanContext.Provider>
 
       <LoanContext.Provider
         value={{ loans: loanedToMe, setLoans: setLoanedToMe }}
       >
-        <AutoTable data={myRequests} title={<h3>My Requests</h3>} noHeaders>
-          <StatusSpan pending="Requested" accepted="Request for" />
-          <TableColumn col={"book"} component={BookDisplay}>
-            Book ID
-          </TableColumn>
-          <StatusSpan pending="from" accepted="granted by" />
-          <TableColumn col={"owner"} component={UserDisplay}>
-            Requester ID
-          </TableColumn>
-          <RequesterLoanManager />
-        </AutoTable>
+        <List
+          items={myRequests}
+          title={<h3>My Requests</h3>}
+          userRole="requester"
+          component={LoanDisplay}
+        />
       </LoanContext.Provider>
 
       <LoanContext.Provider
         value={{ loans: loanedByMe, setLoans: setLoanedByMe }}
       >
-        <AutoTable
-          data={loanedOut}
+        <List
+          items={loanedOut}
           title={<h3>My Loaning</h3>}
-          hideOnEmpty
-          noHeaders
-        >
-          <TableColumn col={"requester"} component={UserDisplay}>
-            Owner ID
-          </TableColumn>
-          <StatusSpan loaned="borrowed" returned="returned" />
-          <TableColumn col={"book"} component={BookDisplay}>
-            Book ID
-          </TableColumn>
-
-          <OwnerLoanManager />
-        </AutoTable>
+          userRole="requester"
+          component={LoanDisplay}
+        />
       </LoanContext.Provider>
 
       <LoanContext.Provider
         value={{ loans: loanedToMe, setLoans: setLoanedToMe }}
       >
-        <AutoTable
-          data={myBorrowing}
+        <List
+          items={myBorrowing}
           title={<h3>My Borrowing</h3>}
-          noHeaders
+          userRole="requester"
           placeholder={
             myRequests.length === 0 ? (
-              <>
+              <p>
                 <span>Doesn't look like you've borrowed any books.</span>
                 <br />
                 <Link to={"/friends"}>Check out a friend's library!</Link>
-              </>
+              </p>
             ) : (
               <span>No books currently borrowed.</span>
             )
           }
-        >
-          <StatusSpan loaned="You've borrowed" returned="You've returned" />
-          <TableColumn col={"book"} component={BookDisplay}>
-            Book ID
-          </TableColumn>
-          <StatusSpan loaned="from" returned="to" />
-          <TableColumn col={"owner"} component={UserDisplay}>
-            Requester ID
-          </TableColumn>
-          <RequesterLoanManager />
-        </AutoTable>
+          component={LoanDisplay}
+        />
       </LoanContext.Provider>
     </PageLayout>
   );
