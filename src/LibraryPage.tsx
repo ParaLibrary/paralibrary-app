@@ -115,29 +115,32 @@ const LibraryPage: React.FC = () => {
     },
     [books]
   );
-  const editBookDatabase = useCallback((book: Book) => {
-    let BookString = JSON.stringify(book);
-    fetch(`http://paralibrary.digital/api/books/${book.id}`, {
-      method: "PUT",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: BookString,
-    })
-      .then((res) => {
-        if (res.ok) {
-          let newBooks = books.map((b) => {
-            if (b.id === book.id) {
-              return book;
-            }
-            return b;
-          });
-          setBooks(newBooks);
-        }
+  const editBookDatabase = useCallback(
+    (book: Book) => {
+      let BookString = JSON.stringify(book);
+      fetch(`http://paralibrary.digital/api/books/${book.id}`, {
+        method: "PUT",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: BookString,
       })
-      .catch((err) => console.error(err));
-  }, []);
+        .then((res) => {
+          if (res.ok) {
+            let newBooks = books.map((b) => {
+              if (b.id === book.id) {
+                return book;
+              }
+              return b;
+            });
+            setBooks(newBooks);
+          }
+        })
+        .catch((err) => console.error(err));
+    },
+    [books]
+  );
 
   return (
     <PageLayout header={<h1>My Library</h1>} error={error} loaded={isLoaded}>
