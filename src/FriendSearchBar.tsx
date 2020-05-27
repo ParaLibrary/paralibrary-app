@@ -23,6 +23,10 @@ const FriendSearchBar = () => {
   };
 
   function fetchUsers(searchTerm: string) {
+    if (!searchTerm.match(/^\w/)) {
+      return;
+    }
+
     setLoading(true);
 
     fetch(`http://paralibrary.digital/api/users/search/${searchTerm}`, {

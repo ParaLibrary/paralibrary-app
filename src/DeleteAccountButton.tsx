@@ -51,7 +51,7 @@ const DeleteAccountButton: React.FC<DABProps> = ({
           "Are you sure you want to delete you entire account? This action is not reversible.",
       }
     );
-  }, [user, requestConfirm, logout]);
+  }, [user, requestConfirm, logout, addToast]);
 
   return (
     <Collapse in={isLoaded && signature === user.name}>
