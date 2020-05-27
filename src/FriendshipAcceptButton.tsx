@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "react-bootstrap";
+import Button, { ButtonProps } from "react-bootstrap/Button";
 import { User } from "./ourtypes";
 import { useToasts } from "./ToastProvider";
 
@@ -8,7 +8,7 @@ export interface FriendshipChangeEvent {
   id: string;
 }
 
-interface AcceptButtonProps {
+interface AcceptButtonProps extends ButtonProps {
   rowitem?: User;
   onAccept?: (event: FriendshipChangeEvent) => void;
 }
@@ -16,6 +16,8 @@ interface AcceptButtonProps {
 const FriendshipAcceptButton: React.FC<AcceptButtonProps> = ({
   rowitem: friend,
   onAccept,
+  children,
+  ...props
 }) => {
   const { addToast } = useToasts();
 
@@ -63,10 +65,10 @@ const FriendshipAcceptButton: React.FC<AcceptButtonProps> = ({
     <Button
       type="button"
       variant="primary"
-      size="sm"
       onClick={AcceptFriendship}
+      {...props}
     >
-      Accept
+      {children}
     </Button>
   );
 };

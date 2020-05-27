@@ -1,6 +1,7 @@
 import React, { useCallback, Dispatch, SetStateAction } from "react";
 import Button from "react-bootstrap/Button";
 import AcceptRejectButtons from "./FriendshipAcceptRejectGroup";
+import RejectButton from "./FriendshipRejectButton";
 import styled from "styled-components";
 import { useToasts } from "./ToastProvider";
 
@@ -58,9 +59,14 @@ const FriendshipRequestButton: React.FC<FRBProps> = ({ friend, onClick }) => {
         return <Button onClick={requestFriendship}>Send friend request</Button>;
       case "friends":
         return (
-          <Button variant="success" disabled>
-            Friends
-          </Button>
+          <>
+            <Button variant="success" disabled>
+              Friends
+            </Button>{" "}
+            <RejectButton rowitem={friend} onReject={onRejectClicked} size="sm">
+              Remove Friend
+            </RejectButton>
+          </>
         );
       case "requested":
         return (
