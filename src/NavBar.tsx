@@ -17,7 +17,6 @@ const NavBar: React.FC = ({ children }) => {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
   function updateScreenWidth() {
-    console.log("updated");
     setScreenWidth(window.innerWidth);
   }
 
