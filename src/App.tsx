@@ -23,6 +23,21 @@ const PageHolder = styled.div`
   height: fit-content;
 `;
 
+const NavLink = styled(Link)`
+  padding: 10px;
+  border-radius: 3px;
+
+  :hover {
+    transition-duration: 0.2s;
+    box-shadow: 0 0 0pt 1pt rgba(78, 162, 245, 0.7);
+    text-decoration: none;
+  }
+
+  @media screen and (min-width: 480px) {
+    width: 100%;
+  }
+`;
+
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
@@ -33,10 +48,10 @@ const App = () => {
               <Route exact path="/" component={LandingPage}></Route>
               <PageHolder>
                 <NavBar>
-                  <Link to={"/library"}>My Library</Link>
-                  <Link to={"/friends"}>Friends</Link>
-                  <Link to={"/loans"}>Loans</Link>
-                  <Link to={"/settings"}>Settings</Link>
+                  <NavLink to={"/library"}>My Library</NavLink>
+                  <NavLink to={"/friends"}>Friends</NavLink>
+                  <NavLink to={"/loans"}>Loans</NavLink>
+                  <NavLink to={"/settings"}>Settings</NavLink>
                 </NavBar>
                 <Switch>
                   <Route path="/library" exact>
