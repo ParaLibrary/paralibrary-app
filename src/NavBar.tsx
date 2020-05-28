@@ -64,12 +64,16 @@ const NavBar: React.FC = ({ children }) => {
         </Hamburger>
       </HamburgerWrapper>
       <MobileNavBar>
-        <MobileLogo src="/images/logo-text-black.png" />
+        <a href="/library">
+          <MobileLogo src="/images/logo-text-black.png" href="/library" />
+        </a>
       </MobileNavBar>
     </>
   ) : (
     <NavBarLayout>
-      <Logo src="/images/logo-icon-black.png"></Logo>
+      <a href="/library">
+        <Logo src="/images/logo-icon-black.png" />
+      </a>
       {children}
       <LogoutButton onClick={signOut} variant="outline-secondary" size="sm">
         Logout

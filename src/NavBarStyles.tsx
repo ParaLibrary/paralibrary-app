@@ -121,6 +121,7 @@ export const Logo = styled(Image)`
   width: 100%;
   padding: 10px;
   margin-bottom: 30px;
+  margin-top: 40px;
 `;
 
 export const MobileLogo = styled(Image)`
