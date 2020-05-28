@@ -15,7 +15,6 @@
     "@types/react-autosuggest": "^9.3.13",
     "@types/react-burger-menu": "^2.6.1",
     "@types/react-dom": "^16.9.0",
-    "@types/react-hamburger-menu": "^0.0.3",
     "@types/react-select": "^3.0.13",
     "@types/react-transition-group": "^4.4.0",
     "@types/styled-components": "^5.1.0",
