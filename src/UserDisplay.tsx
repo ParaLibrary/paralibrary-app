@@ -25,7 +25,7 @@ const UserLabel = styled.span`
 `;
 
 const UserImage = styled(Image)`
-  display: inline-block;
+  display: block;
   object-fit: contain;
   height: 100%;
   max-height: 96px;

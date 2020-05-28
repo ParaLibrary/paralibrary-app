@@ -1,51 +1,28 @@
-import React, { useContext } from "react";
-import { Button } from "react-bootstrap";
-import styled from "styled-components";
+import React, { useContext, useState, useEffect } from "react";
 import { useGoogleLogout, UseGoogleLogoutProps } from "react-google-login";
 import { AuthContext } from "./AuthContextProvider";
-
-const NavBarLayout = styled.nav`
-  top: 0;
-  position: -webkit-sticky; /* For Safari */
-  position: sticky;
-  z-index: 1;
-  flex: 0 0 auto;
-
-  background-color: white;
-  border-bottom: 0.1rem solid #ececec;
-
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: start;
-  align-items: baseline;
-
-  height: fit-content;
-  width: auto;
-  padding: 16px;
-
-  > :not(:last-child) {
-    margin-right: 16px;
-  }
-
-  @media screen and (min-width: 480px) {
-    border: none;
-    height: 100vh;
-    align-items: flex-start;
-    flex-flow: column nowrap;
-    justify-content: start;
-    > :not(:last-child) {
-      margin-right: 0px;
-      margin-bottom: 16px;
-    }
-  }
-`;
-
-const LogoutButton = styled(Button)`
-  margin-top: auto;
-`;
+import { slide as Hamburger } from "react-burger-menu";
+import debounce from "lodash.debounce";
+import {
+  HamburgerWrapper,
+  MobileLogo,
+  MobileNavBar,
+  NavBarLayout,
+  LogoutButton,
+  Logo,
+} from "./NavBarStyles";
 
 const NavBar: React.FC = ({ children }) => {
   const auth = useContext(AuthContext);
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+
+  function updateScreenWidth() {
+    setScreenWidth(window.innerWidth);
+  }
+
+  useEffect(() => {
+    window.addEventListener("resize", debounce(updateScreenWidth, 200));
+  }, []);
 
   const logoutProps: UseGoogleLogoutProps = {
     clientId:
@@ -75,8 +52,28 @@ const NavBar: React.FC = ({ children }) => {
     console.error("Logout failure");
   }
 
-  return (
+  return screenWidth < 480 ? (
+    <>
+      <HamburgerWrapper>
+        <Hamburger width={200}>
+          <Logo src="/images/logo-icon-black.png"></Logo>
+          {children}
+          <LogoutButton onClick={signOut} variant="outline-secondary" size="sm">
+            Logout
+          </LogoutButton>
+        </Hamburger>
+      </HamburgerWrapper>
+      <MobileNavBar>
+        <a href="/library">
+          <MobileLogo src="/images/logo-text-black.png" href="/library" />
+        </a>
+      </MobileNavBar>
+    </>
+  ) : (
     <NavBarLayout>
+      <a href="/library">
+        <Logo src="/images/logo-icon-black.png" />
+      </a>
       {children}
       <LogoutButton onClick={signOut} variant="outline-secondary" size="sm">
         Logout
