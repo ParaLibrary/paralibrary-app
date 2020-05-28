@@ -37,12 +37,7 @@ const ToastContextProvider: React.FC = ({ children }) => {
       {children}
       <ToastContainer>
         {toasts.map((t, index) => (
-          <Toast
-            key={index}
-            header={t.header}
-            body={t.body}
-            type={t.type}
-          ></Toast>
+          <Toast key={index} {...t}></Toast>
         ))}
       </ToastContainer>
     </ToastContext.Provider>

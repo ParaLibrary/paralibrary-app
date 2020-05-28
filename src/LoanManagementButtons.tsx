@@ -141,8 +141,22 @@ interface ContactButtonProps {
 }
 
 export const ContactButton: React.FC<ContactButtonProps> = ({ contact }) => {
+  const { addToast } = useToasts();
+
   return (
-    <Button size="sm" variant="info" href={`mailto:${contact}`}>
+    <Button
+      size="sm"
+      variant="info"
+      href={`mailto:${contact}`}
+      onClick={() => {
+        addToast({
+          header: "External Email App Launched!",
+          body: `If nothing appeared, you may have to set your default email application in your system settings. Otherwise, you can email this user directly at: ${contact}`,
+          type: "success",
+          time: 10000,
+        });
+      }}
+    >
       Contact
     </Button>
   );

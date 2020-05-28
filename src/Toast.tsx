@@ -6,13 +6,14 @@ export interface ToastProps {
   header: string;
   body: string;
   type?: ToastType;
+  time?: number;
 }
 
 type ToastType = "default" | "error" | "success";
 
 const hideDelay = 2200;
 
-const ToastComponent = ({ header, body, type }: ToastProps) => {
+const ToastComponent = ({ header, body, type, time }: ToastProps) => {
   const [show, setShow] = useState(true);
 
   switch (type) {
@@ -21,7 +22,7 @@ const ToastComponent = ({ header, body, type }: ToastProps) => {
         <Error
           onClose={() => setShow(false)}
           show={show}
-          delay={hideDelay}
+          delay={time ?? hideDelay}
           autohide
         >
           <InnerToast header={header} body={body} />
@@ -32,7 +33,7 @@ const ToastComponent = ({ header, body, type }: ToastProps) => {
         <Success
           onClose={() => setShow(false)}
           show={show}
-          delay={hideDelay}
+          delay={time ?? hideDelay}
           autohide
         >
           <InnerToast header={header} body={body} />
@@ -43,7 +44,7 @@ const ToastComponent = ({ header, body, type }: ToastProps) => {
         <Toast
           onClose={() => setShow(false)}
           show={show}
-          delay={hideDelay}
+          delay={time ?? hideDelay}
           autohide
         >
           <InnerToast header={header} body={body} />
@@ -94,10 +95,10 @@ const Error = styled(DarkToast)`
 `;
 
 const Success = styled(DarkToast)`
-  background-color: rgba(100, 200, 100, 0.85);
+  background-color: rgba(32, 150, 63, 0.85);
 
   .toast-header {
-    background-color: rgba(100, 200, 100, 0.85);
+    background-color: rgba(32, 150, 63, 0.85);
   }
 `;
 
