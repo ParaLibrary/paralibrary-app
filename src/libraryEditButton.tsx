@@ -6,7 +6,7 @@ interface EditBookProps {
   onEdit: (book: Book | undefined) => void;
 }
 
-const bookEditButton: React.FC<EditBookProps> = ({ rowitem, onEdit }) => {
+const BookEditButton: React.FC<EditBookProps> = ({ rowitem, onEdit }) => {
   return (
     <Button
       onClick={() => {
@@ -17,4 +17,4 @@ const bookEditButton: React.FC<EditBookProps> = ({ rowitem, onEdit }) => {
     </Button>
   );
 };
-export default bookEditButton;
+export default BookEditButton;
