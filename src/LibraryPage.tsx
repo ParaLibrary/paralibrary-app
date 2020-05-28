@@ -181,7 +181,7 @@ const LibraryPage: React.FC = () => {
       <AutoTable
         data={filteredBooks}
         placeholder={
-          books ? (
+          books.length ? (
             <span>No search results found</span>
           ) : (
             <span>Press the Add Book button to get started!</span>

@@ -46,7 +46,7 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
           type: "error",
         });
       });
-  }, [loans, thisLoan, setLoans]);
+  }, [loans, thisLoan, setLoans, addToast]);
 
   const gatedHandle = useCallback(
     () =>
@@ -115,7 +115,7 @@ export const UpdateButton: React.FC<UpdateButtonProps> = ({
           type: "error",
         });
       });
-  }, [loans, thisLoan, setLoans, thisStatus]);
+  }, [loans, thisLoan, setLoans, thisStatus, addToast]);
 
   const gatedHandle = useCallback(
     () =>
