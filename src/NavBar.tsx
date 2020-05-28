@@ -56,7 +56,13 @@ const NavBar: React.FC = ({ children }) => {
   return screenWidth < 480 ? (
     <>
       <HamburgerWrapper>
-        <Hamburger width={200}>{children}</Hamburger>
+        <Hamburger width={200}>
+          <Logo src="/images/logo-icon-black.png"></Logo>
+          {children}
+          <LogoutButton onClick={signOut} variant="outline-secondary" size="sm">
+            Logout
+          </LogoutButton>
+        </Hamburger>
       </HamburgerWrapper>
       <MobileNavBar>
         <MobileLogo src="/images/logo-text-black.png" />

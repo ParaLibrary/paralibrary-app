@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import { Button, Image } from "react-bootstrap";
 
@@ -19,16 +18,11 @@ export const NavBarLayout = styled.nav`
   align-items: flex-start;
 
   height: 100vh;
-  min-width: 130px;
+  width: 150px;
   margin-right: 40px;
 
   padding-left: 16px;
   padding-right: 16px;
-
-  > :not(:last-child) {
-    margin-right: 0px;
-    margin-bottom: 16px;
-  }
 `;
 
 export const MobileNavBar = styled.nav`
@@ -99,6 +93,9 @@ export const HamburgerWrapper = styled.span`
     padding: 0.8em;
   }
 
+  .bm-item-list > *:last-child {
+  }
+
   /* Individual item */
   .bm-item {
     padding: 10pt;
@@ -123,8 +120,7 @@ export const Logo = styled(Image)`
   object-fit: contain;
   width: 100%;
   padding: 10px;
-  max-height: 96px;
-  max-width: 96px;
+  margin-bottom: 30px;
 `;
 
 export const MobileLogo = styled(Image)`
@@ -138,5 +134,6 @@ export const MobileLogo = styled(Image)`
 `;
 
 export const LogoutButton = styled(Button)`
-  margin-top: auto;
+  position: absolute;
+  bottom: 16px;
 `;
