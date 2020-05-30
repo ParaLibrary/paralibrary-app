@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useCallback } from "react";
-import { useFormik, FormikErrors } from "formik";
+import { useFormik, FormikErrors, Field } from "formik";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
@@ -60,6 +60,7 @@ const SettingsPage: React.FC = () => {
         body: JSON.stringify(values),
       })
         .then((res: Response) => {
+          console.log(values);
           if (res.ok) {
             setUser(values);
             addToast({
@@ -86,7 +87,10 @@ const SettingsPage: React.FC = () => {
   const validate = useCallback((values: User) => {
     let errors: FormikErrors<User> = {};
     if (!values.name) {
-      errors.name = "Must have a name.";
+      errors.name = "Must have a name";
+    }
+    if (values.email.length > 0 && !/\S+@\S+\.\S+/.test(values.email)) {
+      errors.email = "Please enter a valid email";
     }
     return errors;
   }, []);
@@ -112,50 +116,55 @@ const SettingsPage: React.FC = () => {
       loaded={isLoaded}
       footer={
         <Form>
-          <h5>Delete Account</h5>
+          <h3>Delete Account</h3>
           <Form.Text>Type name to reveal permanent delete option.</Form.Text>
           <Form.Group as={Form.Row} controlId="signature">
             <Form.Label column sm={2}>
               Name:
             </Form.Label>
-            <Col>
-              <Form.Control type="text" name="sig" onChange={handleSigChange} />
-            </Col>
-            <Col sm={4}>
+            <Form.Control type="text" name="sig" onChange={handleSigChange} />
+            <Form.Row>
               <DeleteAccountButton
                 user={user}
                 signature={sig}
                 isLoaded={isLoaded}
               />
-            </Col>
+            </Form.Row>
           </Form.Group>
         </Form>
       }
     >
       <Form noValidate onSubmit={userFormik.handleSubmit}>
+        <h3>Account Details</h3>
         <Form.Group as={Form.Row} controlId="name">
-          <Form.Label column sm={2}>
-            Name:
-          </Form.Label>
-          <Col>
-            <Form.Control
-              type="text"
-              name="name"
-              value={userFormik.values.name}
-              onChange={userFormik.handleChange}
-              isInvalid={userFormik.touched.name && !!userFormik.errors.name}
-            />
-            <Form.Control.Feedback type="invalid">
-              {userFormik.errors.name}
-            </Form.Control.Feedback>
-          </Col>
+          <Form.Label>Name:</Form.Label>
+          <Form.Control
+            type="text"
+            name="name"
+            value={userFormik.values.name}
+            onChange={userFormik.handleChange}
+            isInvalid={userFormik.touched.name && !!userFormik.errors.name}
+          />
+          <Form.Control.Feedback type="invalid">
+            {userFormik.errors.name}
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group as={Form.Row} controlId="email">
+          <Form.Label>Public Contact Email:</Form.Label>
+          <Form.Control
+            type="email"
+            name="email"
+            value={userFormik.values.email}
+            onChange={userFormik.handleChange}
+            isInvalid={userFormik.touched.email && !!userFormik.errors.email}
+          />
+          <Form.Control.Feedback type="invalid">
+            {userFormik.errors.email}
+          </Form.Control.Feedback>
         </Form.Group>
         <Collapse in={userFormik.dirty}>
           <Form.Row>
-            <Col />
-            <Col sm={2}>
-              <Button type="submit">Save</Button>
-            </Col>
+            <Button type="submit">Save</Button>
           </Form.Row>
         </Collapse>
       </Form>
