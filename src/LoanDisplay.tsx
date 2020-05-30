@@ -8,6 +8,7 @@ import UserDisplay from "./UserDisplay";
 import BookDisplay from "./BookDisplay";
 
 const LoanDiv = styled.div<{ late?: boolean }>`
+  background: white;
   border: 0.1rem solid ${({ late }) => (!!late ? "#dc3545" : "#ececec")};
   border-radius: 8px;
   box-sizing: border-box;

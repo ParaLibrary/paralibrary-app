@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React from "react";
 import styled from "styled-components";
 
 import { Book, Loan } from "./ourtypes";
@@ -19,18 +19,11 @@ const BookCard: React.FC<Book & Role & Actions> = (bookAndRole) => {
     author,
     categories,
     summary,
-    visibility,
-    loan,
     userRole,
     onEdit: handleEdit,
     onRequest: handleRequest,
     onCancel: handleCancel,
   } = bookAndRole;
-  const [openSummary, setOpenSummary] = useState<boolean>(false);
-  const toggleSummary = useCallback(() => {
-    setOpenSummary(!openSummary);
-  }, [openSummary]);
-
   return (
     <BookDiv>
       <Main>
@@ -79,6 +72,7 @@ const BookCard: React.FC<Book & Role & Actions> = (bookAndRole) => {
 };
 
 const BookDiv = styled.div`
+  background: white;
   border: 0.1rem solid #ececec;
   border-radius: 8px;
   box-sizing: border-box;
@@ -105,9 +99,6 @@ const ActionPanel = styled.div`
   align-items: stretch;
   > :not(:last-child) {
     margin: 0px 0px 4px 0px;
-  }
-  > button {
-    white-space: nowrap;
   }
 `;
 

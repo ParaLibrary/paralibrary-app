@@ -10,12 +10,10 @@ import Select from "react-select";
 
 import PageLayout from "./PageLayout";
 import BookFormik from "./BookForm";
-import AutoTable, { TableColumn } from "./AutoTable";
-import { Book, User, Option } from "./ourtypes";
+import { Book, Option } from "./ourtypes";
 import LibrarySearchBar from "./LibrarySearchBar";
 import { toLibrary } from "./mappers";
 import { AuthContext } from "./AuthContextProvider";
-import BookEditButton from "./libraryEditButton";
 import List from "./List";
 import BookCard from "./BookCard";
 
@@ -35,13 +33,11 @@ const LibraryPage: React.FC = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(false);
   const [books, setBooks] = useState<Book[]>([]);
-  const [user, setUser] = useState<User>();
   const [modalOpen, setModalOpen] = useState(false);
   const [isNewBook, setIsNewBook] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [catSelected, setCatSelected] = useState<Option>();
   const [selectedBook, setSelectedBook] = useState<Book>(emptyBook);
-  const [editModalClose, editBook] = useState(false);
 
   const categories = useMemo(
     () => Array.from(new Set(books.flatMap((book: Book) => book.categories))),
@@ -82,7 +78,6 @@ const LibraryPage: React.FC = () => {
         (result) => {
           const lib = toLibrary(result);
           setBooks(lib.books);
-          setUser(lib.user);
         },
         (error) => {
           console.log(error);
@@ -181,6 +176,7 @@ const LibraryPage: React.FC = () => {
       </Button>
 
       <List
+        title={<h3>Books</h3>}
         items={filteredBooks}
         component={BookCard}
         onEdit={(book: Book) => {

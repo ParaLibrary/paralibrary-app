@@ -34,26 +34,34 @@ const LoanRequestButton: React.FC<LRBProps> = ({
     existingLoan.status === "returned" ||
     (existingLoan.status === "pending" && existingLoan.requester.id !== userID)
   ) {
-    return <Button onClick={() => requestLoan(book.id)}>Request Book</Button>;
+    return (
+      <Button size="sm" onClick={() => requestLoan(book.id)}>
+        Request Book
+      </Button>
+    );
   } else if (
     existingLoan.status === "pending" ||
     (existingLoan.status === "accepted" && existingLoan.requester.id === userID)
   ) {
     return (
-      <Button variant="outline-danger" onClick={() => cancelLoan(existingLoan)}>
+      <Button
+        size="sm"
+        variant="outline-danger"
+        onClick={() => cancelLoan(existingLoan)}
+      >
         Cancel?
       </Button>
     );
   } else {
     if (existingLoan.requester.id === auth.credential.userId) {
       return (
-        <Button variant="success" onClick={handleNavigate}>
+        <Button size="sm" variant="success" onClick={handleNavigate}>
           Loaned Out
         </Button>
       );
     } else {
       return (
-        <Button variant="info" disabled>
+        <Button size="sm" variant="info" disabled>
           Loaned Out
         </Button>
       );
