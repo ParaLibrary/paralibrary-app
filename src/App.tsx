@@ -13,6 +13,7 @@ import NavBar from "./NavBar";
 import theme from "./theme";
 import ToastContextProvider from "./ToastProvider";
 import ErrorPage from "./ErrorPage";
+import AboutPage from "./AboutPage";
 
 const PageHolder = styled.div`
   display: flex;
@@ -52,6 +53,7 @@ const App = () => {
                   <NavLink to={"/friends"}>Friends</NavLink>
                   <NavLink to={"/loans"}>Loans</NavLink>
                   <NavLink to={"/settings"}>Settings</NavLink>
+                  <NavLink to={"/about"}>About</NavLink>
                 </NavBar>
                 <Switch>
                   <Route path="/library" exact>
@@ -68,6 +70,9 @@ const App = () => {
                   </Route>
                   <Route path="/settings">
                     <SettingsPage />
+                  </Route>
+                  <Route path="/about">
+                    <AboutPage />
                   </Route>
                   <Route>
                     <ErrorPage />
