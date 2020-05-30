@@ -144,6 +144,7 @@ const SettingsPage: React.FC = () => {
             value={userFormik.values.name}
             onChange={userFormik.handleChange}
             isInvalid={userFormik.touched.name && !!userFormik.errors.name}
+            placeholder="Enter your name"
           />
           <Form.Control.Feedback type="invalid">
             {userFormik.errors.name}
@@ -157,6 +158,7 @@ const SettingsPage: React.FC = () => {
             value={userFormik.values.email}
             onChange={userFormik.handleChange}
             isInvalid={userFormik.touched.email && !!userFormik.errors.email}
+            placeholder="Enter the email address you want other users to see"
           />
           <Form.Control.Feedback type="invalid">
             {userFormik.errors.email}
