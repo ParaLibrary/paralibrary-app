@@ -7,12 +7,12 @@ import PageLayout from "./PageLayout";
 const CreatorLayout = styled.div`
   margin-top: 16px;
   display: flex;
-  flex: column nowrap;
+  flex-flow: column nowrap;
+
   @media screen and (min-width: ${({ theme }) => theme.mediumViewport}) {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto auto;
-    gap: 16px 16px;
   }
 `;
 
@@ -47,6 +47,13 @@ const AboutPage: React.FC = () => {
           Likes heavy-tailed random walks on the beach and chaos theory. Two of
           his favorite authors are Neil Stephenson and David Foster Wallace.
         </Creator>
+        <Creator
+          image="https://media-exp1.licdn.com/dms/image/C5603AQF8sQgmRldLBg/profile-displayphoto-shrink_200_200/0?e=1596067200&v=beta&t=AvvUfA18zgUKG3EBA4ZKzKHUNxQy5q57K4o5kR4DGNc"
+          name="Trent Hashimoto"
+        >
+          Loves exploring the Greater Seattle Area's food and scenery.
+          Definitely enjoys reading books for fun.
+        </Creator>
       </CreatorLayout>
     </PageLayout>
   );
@@ -59,23 +66,31 @@ interface CreatorProps {
 
 const CreatorImage = styled(Image)`
   display: inline;
-  float: right;
-  max-height: 64px;
-  max-width: 64px;
-  margin-left: 8px;
+  float: left;
+  width: 30%;
+  max-height: 100px;
+  max-width: 100px;
+  min-width: 32px;
+  margin-right: 8px;
 `;
 
 const InlineHeader = styled.h5`
   display: inline;
 `;
 
+const CreatorCard = styled.div`
+  border-radius: 3px;
+  padding: 10px;
+  margin: 10px;
+`;
+
 const Creator: React.FC<CreatorProps> = ({ image, name, children }) => {
   return (
-    <div>
+    <CreatorCard>
       {image && <CreatorImage src={image} rounded />}
       <InlineHeader>{name}</InlineHeader> <br />
       {children}
-    </div>
+    </CreatorCard>
   );
 };
 
