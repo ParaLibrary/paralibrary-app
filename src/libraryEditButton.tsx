@@ -9,6 +9,7 @@ interface EditBookProps {
 const bookEditButton: React.FC<EditBookProps> = ({ rowitem, onEdit }) => {
   return (
     <Button
+      size="sm"
       onClick={() => {
         onEdit(rowitem);
       }}

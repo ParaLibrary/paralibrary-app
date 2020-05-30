@@ -9,11 +9,11 @@ const SegTransitionGroup = styled(TransitionGroup)`
   }
 `;
 
-interface ListProps<T, E> {
+interface ListProps<T> {
   items: T[];
   title?: React.ReactElement;
   placeholder?: React.ReactElement;
-  component: React.FC<T & Role & E>;
+  component: React.FC<T & Role & any>;
 }
 
 export interface Role {
@@ -25,7 +25,7 @@ interface ExtraProps {
 }
 
 function List<T extends { id: string }>(
-  props: ListProps<T, ExtraProps> & Role & ExtraProps
+  props: ListProps<T> & Role & ExtraProps
 ): JSX.Element | null {
   const {
     items,

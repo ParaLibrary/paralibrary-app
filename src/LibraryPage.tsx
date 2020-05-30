@@ -16,6 +16,8 @@ import LibrarySearchBar from "./LibrarySearchBar";
 import { toLibrary } from "./mappers";
 import { AuthContext } from "./AuthContextProvider";
 import BookEditButton from "./libraryEditButton";
+import List from "./List";
+import BookCard from "./BookCard";
 
 const LibraryPage: React.FC = () => {
   const user_idGet = useContext(AuthContext);
@@ -177,6 +179,26 @@ const LibraryPage: React.FC = () => {
       >
         New Book
       </Button>
+
+      <List
+        items={filteredBooks}
+        component={BookCard}
+        onEdit={(book: Book) => {
+          setIsNewBook(false);
+          setModalOpen(true);
+          if (book) {
+            setSelectedBook(book);
+          }
+        }}
+        userRole="owner"
+        placeholder={
+          books.length ? (
+            <span>No search results found</span>
+          ) : (
+            <span>Press the Add Book button to get started!</span>
+          )
+        }
+      />
 
       <AutoTable
         data={filteredBooks}
