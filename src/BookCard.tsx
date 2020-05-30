@@ -27,10 +27,10 @@ const BookCard: React.FC<Book & Role & Actions> = (bookAndRole) => {
   return (
     <BookDiv>
       <Main>
-        <MBM>
+        <NBM>
           <h4>{title}</h4>
           <h6>{author}</h6>
-        </MBM>
+        </NBM>
         {userRole === "owner" ? (
           <ActionPanel>
             <LoanStatus />
@@ -62,7 +62,7 @@ const BookCard: React.FC<Book & Role & Actions> = (bookAndRole) => {
           </div>
           <TagList>
             {categories.map((cat: string) => (
-              <Tag>{cat}</Tag>
+              <Tag key={cat}>{cat}</Tag>
             ))}
           </TagList>
         </>
@@ -102,7 +102,7 @@ const ActionPanel = styled.div`
   }
 `;
 
-const MBM = styled.div`
+const NBM = styled.div`
   > :last-child {
     margin-bottom: 0px;
   }
