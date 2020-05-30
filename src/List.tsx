@@ -1,9 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import Fade from "react-reveal";
-import TransitionGroup from "react-transition-group/TransitionGroup";
 
-const SegTransitionGroup = styled(TransitionGroup)`
+const Segementer = styled.div`
   > div {
     margin-bottom: 0.5rem;
   }
@@ -46,13 +45,13 @@ function List<T extends { id: string }>(
     return (
       <>
         {title}
-        <SegTransitionGroup appear exit>
+        <Segementer>
           {items.map((item) => (
             <Fade key={item.id} collapse right>
               <Container {...item} userRole={userRole} {...otherProps} />
             </Fade>
           ))}
-        </SegTransitionGroup>
+        </Segementer>
       </>
     );
   }

@@ -1,15 +1,16 @@
 import React, { useState, useCallback } from "react";
 import styled from "styled-components";
-import Collapse from "react-bootstrap/Collapse";
-import Button from "react-bootstrap/Button";
 
-import { Book } from "./ourtypes";
+import { Book, Loan } from "./ourtypes";
 import { Role } from "./List";
 import EditBookButton from "./libraryEditButton";
+import LoanStatus from "./LoanStatus";
+import LoanRequestButton from "./LoanRequestButton";
 
 interface Actions {
   onEdit: (book: Book | undefined) => void;
-  requestButton: React.ReactNode;
+  onRequest: (bookID: string) => void;
+  onCancel: (loan: Loan) => void;
 }
 
 const BookCard: React.FC<Book & Role & Actions> = (bookAndRole) => {
@@ -22,8 +23,10 @@ const BookCard: React.FC<Book & Role & Actions> = (bookAndRole) => {
     loan,
     userRole,
     onEdit: handleEdit,
+    onRequest: handleRequest,
+    onCancel: handleCancel,
   } = bookAndRole;
-  const [openSummary, setOpenSummary] = useState(false);
+  const [openSummary, setOpenSummary] = useState<boolean>(false);
   const toggleSummary = useCallback(() => {
     setOpenSummary(!openSummary);
   }, [openSummary]);
@@ -31,35 +34,44 @@ const BookCard: React.FC<Book & Role & Actions> = (bookAndRole) => {
   return (
     <BookDiv>
       <Main>
-        <h3>{title}</h3>
-        <h5>{author}</h5>
+        <MBM>
+          <h4>{title}</h4>
+          <h6>{author}</h6>
+        </MBM>
         {userRole === "owner" ? (
           <ActionPanel>
+            <LoanStatus />
             <EditBookButton onEdit={handleEdit} rowitem={bookAndRole} />
           </ActionPanel>
         ) : (
-          <ActionPanel>owner</ActionPanel>
+          <ActionPanel>
+            <LoanRequestButton
+              rowitem={bookAndRole}
+              onRequest={handleRequest}
+              onCancel={handleCancel}
+            />
+          </ActionPanel>
         )}
       </Main>
+
+      {summary && (
+        <>
+          <div>
+            <Line />
+          </div>
+          <p>{summary}</p>
+        </>
+      )}
       {categories.length > 0 && (
         <>
-          <hr />
+          <div>
+            <Line />
+          </div>
           <TagList>
             {categories.map((cat: string) => (
               <Tag>{cat}</Tag>
             ))}
           </TagList>
-        </>
-      )}
-      {summary && (
-        <>
-          <Button onClick={toggleSummary}>VVV</Button>
-          <Collapse in={openSummary}>
-            <>
-              <hr />
-              <p>{summary}</p>
-            </>
-          </Collapse>
         </>
       )}
     </BookDiv>
@@ -74,23 +86,22 @@ const BookDiv = styled.div`
   max-width: 640px;
   display: flex;
   flex-flow: column nowrap;
+  > p {
+    margin-bottom: 0px;
+  }
 `;
 
 const Main = styled.div`
   display: grid;
   grid-auto-flow: column;
-  grid-template-columns: auto max(25%, 120px);
-  grid-template-areas:
-    "title actions"
-    "subtitle actions";
-  gap: 0px 1rem;
+  grid-template-columns: auto max(25%, 90px);
+  gap: 0px 16px;
 `;
 
 const ActionPanel = styled.div`
   display: flex;
   flex-flow: column nowrap;
-  justify-content: center;
-  justify-content: space-between;
+  justify-content: start;
   align-items: stretch;
   > :not(:last-child) {
     margin: 0px 0px 4px 0px;
@@ -100,12 +111,29 @@ const ActionPanel = styled.div`
   }
 `;
 
+const MBM = styled.div`
+  > :last-child {
+    margin-bottom: 0px;
+  }
+`;
+
 const TagList = styled.div`
   display: flex;
   flex-flow: row wrap;
   align-items: baseline;
 `;
 
-const Tag = styled.span``;
+const Tag = styled.span`
+  background-color: hsl(0, 0%, 90%);
+  border-radius: 2px;
+  box-sizing: border-box;
+  padding: 2px 8px 2px 8px;
+  margin-right: 12px;
+`;
+
+const Line = styled.hr`
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+`;
 
 export default BookCard;

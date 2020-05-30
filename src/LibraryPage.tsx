@@ -199,30 +199,6 @@ const LibraryPage: React.FC = () => {
           )
         }
       />
-
-      <AutoTable
-        data={filteredBooks}
-        placeholder={
-          books.length ? (
-            <span>No search results found</span>
-          ) : (
-            <span>Press the Add Book button to get started!</span>
-          )
-        }
-      >
-        <TableColumn col="title">Title</TableColumn>
-        <TableColumn col="author">Author</TableColumn>
-        <TableColumn col="summary">Summary</TableColumn>
-        <BookEditButton
-          onEdit={(b) => {
-            setIsNewBook(false);
-            setModalOpen(true);
-            if (b) {
-              setSelectedBook(b);
-            }
-          }}
-        ></BookEditButton>
-      </AutoTable>
     </PageLayout>
   );
 };
