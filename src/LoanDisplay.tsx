@@ -21,7 +21,7 @@ const LoanDiv = styled.div<{ late?: boolean }>`
 
   margin-bottom: 1rem;
 
-  @media screen and (min-width: 480px) {
+  @media screen and (min-width: ${({ theme }) => theme.smallViewport}) {
     grid-template: auto / auto 100px;
     > p {
       margin: 0px;

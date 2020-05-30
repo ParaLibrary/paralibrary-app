@@ -8,10 +8,10 @@ const CreatorLayout = styled.div`
   margin-top: 16px;
   display: flex;
   flex: column nowrap;
-  @media screen and (min-width: 840px) {
+  @media screen and (min-width: ${({ theme }) => theme.mediumViewport}) {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: auto auto;
     gap: 16px 16px;
   }
 `;
@@ -42,7 +42,7 @@ const AboutPage: React.FC = () => {
       <CreatorLayout>
         <Creator
           image="https://media-exp1.licdn.com/dms/image/C5603AQEgj13O5X-KLg/profile-displayphoto-shrink_400_400/0?e=1596067200&v=beta&t=79sYd3cVEEzjKF_LFNmRfbeVDAQgYOC3c3qy8UQU49U"
-          name={"Tait Weicht"}
+          name="Tait Weicht"
         >
           Likes heavy-tailed random walks on the beach and chaos theory. Two of
           his favorite authors are Neil Stephenson and David Foster Wallace.

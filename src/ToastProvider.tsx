@@ -9,7 +9,7 @@ const ToastContainer = styled.div`
   z-index: 2;
   bottom: 0;
 
-  @media screen and (min-width: 480px) {
+  @media screen and (min-width: ${({ theme }) => theme.smallViewport}) {
     width: 350px;
     right: 0;
   }

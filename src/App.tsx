@@ -18,7 +18,7 @@ import AboutPage from "./AboutPage";
 const PageHolder = styled.div`
   display: flex;
   flex-flow: column;
-  @media screen and (min-width: 480px) {
+  @media screen and (min-width: ${({ theme }) => theme.smallViewport}) {
     flex-flow: row;
   }
   height: fit-content;
@@ -34,7 +34,7 @@ const NavLink = styled(Link)`
     text-decoration: none;
   }
 
-  @media screen and (min-width: 480px) {
+  @media screen and (min-width: ${({ theme }) => theme.smallViewport}) {
     width: 100%;
   }
 `;
