@@ -117,6 +117,7 @@ const LoansPage: React.FC = () => {
     // May need to revise this once we loan management flow
     [loanedByMe]
   );
+  console.log(loanedOut);
 
   return (
     <PageLayout
@@ -158,7 +159,7 @@ const LoansPage: React.FC = () => {
         <List
           items={loanedOut}
           title={<h3>My Loaning</h3>}
-          userRole="requester"
+          userRole="owner"
           component={LoanDisplay}
         />
       </LoanContext.Provider>
