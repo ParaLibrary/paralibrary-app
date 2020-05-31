@@ -1,24 +1,21 @@
-import React, { useCallback, Dispatch, SetStateAction } from "react";
+import React, { useCallback } from "react";
 import Button from "react-bootstrap/Button";
-import AcceptRejectButtons from "./FriendshipAcceptRejectGroup";
-import RejectButton from "./FriendshipRejectButton";
-import styled from "styled-components";
+import { FriendRejectButton, FriendAcceptReject } from "./FriendshipButtons";
 import { useToasts } from "./ToastProvider";
 
 import { User } from "./ourtypes";
 
 interface FRBProps {
   friend: User;
-  onClick: Dispatch<SetStateAction<User | undefined>>;
 }
 
-const PaddedDiv = styled.div`
-  padding-top: 10px;
-  padding-bottom: 30px;
-`;
-
-const FriendshipRequestButton: React.FC<FRBProps> = ({ friend, onClick }) => {
+const FriendStatusButton: React.FC<FRBProps> = ({ friend }) => {
   const { addToast } = useToasts();
+
+  if (!friend) {
+    throw Error("Friend is not a valid user object");
+  }
+
   const requestFriendship = useCallback(() => {
     fetch(`http://paralibrary.digital/api/friends/${friend.id}`, {
       method: "POST",
@@ -29,7 +26,6 @@ const FriendshipRequestButton: React.FC<FRBProps> = ({ friend, onClick }) => {
       body: JSON.stringify({ ...friend, action: "request" }),
     })
       .then(() => {
-        onClick({ ...friend, status: "requested" });
         addToast({
           header: "Friend request sent!",
           body: "This user will appear in your friends list if they accept",
@@ -43,15 +39,7 @@ const FriendshipRequestButton: React.FC<FRBProps> = ({ friend, onClick }) => {
           type: "error",
         });
       });
-  }, [friend, onClick, addToast]);
-
-  function onAcceptClicked() {
-    onClick({ ...friend, status: "friends" });
-  }
-
-  function onRejectClicked() {
-    onClick({ ...friend, status: null });
-  }
+  }, [friend, addToast]);
 
   function actionButton(friend: User) {
     switch (friend.status) {
@@ -63,9 +51,9 @@ const FriendshipRequestButton: React.FC<FRBProps> = ({ friend, onClick }) => {
             <Button variant="success" disabled>
               Friends
             </Button>{" "}
-            <RejectButton rowitem={friend} onReject={onRejectClicked} size="sm">
+            <FriendRejectButton friend={friend} size="sm">
               Remove Friend
-            </RejectButton>
+            </FriendRejectButton>
           </>
         );
       case "requested":
@@ -75,20 +63,11 @@ const FriendshipRequestButton: React.FC<FRBProps> = ({ friend, onClick }) => {
           </Button>
         );
       case "waiting":
-        return (
-          <div>
-            <div>{friend.name} wants to be friends with you!</div>
-            <AcceptRejectButtons
-              rowitem={friend}
-              onAccept={onAcceptClicked}
-              onReject={onRejectClicked}
-            />
-          </div>
-        );
+        return <FriendAcceptReject friend={friend} />;
     }
   }
 
-  return <PaddedDiv>{actionButton(friend)}</PaddedDiv>;
+  return <>{actionButton(friend)}</>;
 };
 
-export default FriendshipRequestButton;
+export default FriendStatusButton;

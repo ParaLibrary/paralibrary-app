@@ -11,7 +11,7 @@ import PageLayout from "./PageLayout";
 import { Book, Loan, User } from "./ourtypes";
 import { toLibrary } from "./mappers";
 import LibrarySearchBar from "./LibrarySearchBar";
-import FriendshipStatusButton from "./FriendshipStatusButton";
+import FriendshipStatusButton from "./FriendManagers";
 import { AuthContext } from "./AuthContextProvider";
 import BookCard from "./BookCard";
 import List from "./List";
@@ -142,7 +142,7 @@ const FriendLibraryPage: React.FC = () => {
         error={error}
         loaded={isLoaded}
       >
-        {user && <FriendshipStatusButton friend={user} onClick={setUser} />}
+        {user && <FriendshipStatusButton friend={user} />}
         <LibrarySearchBar
           onSearchChange={filterResults}
           header="Search this Library"

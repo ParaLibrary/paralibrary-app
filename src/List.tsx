@@ -1,5 +1,6 @@
 import React from "react";
 import Fade from "react-reveal";
+import styled from "styled-components";
 
 const Segementer = styled.div`
   > div {
