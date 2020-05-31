@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "styled-components";
 import Fade from "react-reveal";
 
 const Segementer = styled.div`
@@ -7,6 +6,7 @@ const Segementer = styled.div`
     margin-bottom: 0.5rem;
   }
 `;
+
 
 interface ListProps<T> {
   items: T[];
@@ -52,6 +52,7 @@ function List<T extends { id: string }>(
             </Fade>
           ))}
         </Segementer>
+
       </>
     );
   }
