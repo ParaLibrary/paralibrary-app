@@ -127,7 +127,12 @@ const LibraryPage: React.FC = () => {
       })
         .then((res) => {
           if (res.ok) {
-            setDelete(books.filter((books) => books.id !== book.id));
+            setBooks(books.filter((books) => books.id !== book.id));
+            addToast({
+              header: "Book Deleted",
+              body: "Book successfully deleted.",
+              type: "success",
+            });
           } else {
             throw Error();
           }
