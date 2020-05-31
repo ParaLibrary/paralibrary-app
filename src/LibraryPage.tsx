@@ -10,12 +10,12 @@ import Select from "react-select";
 
 import PageLayout from "./PageLayout";
 import BookFormik from "./BookForm";
-import AutoTable, { TableColumn } from "./AutoTable";
-import { Book, User, Option } from "./ourtypes";
+import { Book, Option } from "./ourtypes";
 import LibrarySearchBar from "./LibrarySearchBar";
 import { toLibrary } from "./mappers";
 import { AuthContext } from "./AuthContextProvider";
-import BookEditButton from "./libraryEditButton";
+import List from "./List";
+import BookCard from "./BookCard";
 
 const LibraryPage: React.FC = () => {
   const user_idGet = useContext(AuthContext);
@@ -33,13 +33,11 @@ const LibraryPage: React.FC = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(false);
   const [books, setBooks] = useState<Book[]>([]);
-  const [user, setUser] = useState<User>();
   const [modalOpen, setModalOpen] = useState(false);
   const [isNewBook, setIsNewBook] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [catSelected, setCatSelected] = useState<Option>();
   const [selectedBook, setSelectedBook] = useState<Book>(emptyBook);
-  const [editModalClose, editBook] = useState(false);
 
   const categories = useMemo(
     () => Array.from(new Set(books.flatMap((book: Book) => book.categories))),
@@ -80,7 +78,6 @@ const LibraryPage: React.FC = () => {
         (result) => {
           const lib = toLibrary(result);
           setBooks(lib.books);
-          setUser(lib.user);
         },
         (error) => {
           console.log(error);
@@ -178,8 +175,18 @@ const LibraryPage: React.FC = () => {
         New Book
       </Button>
 
-      <AutoTable
-        data={filteredBooks}
+      <List
+        title={<h3>Books</h3>}
+        items={filteredBooks}
+        component={BookCard}
+        onEdit={(book: Book) => {
+          setIsNewBook(false);
+          setModalOpen(true);
+          if (book) {
+            setSelectedBook(book);
+          }
+        }}
+        userRole="owner"
         placeholder={
           books.length ? (
             <span>No search results found</span>
@@ -187,20 +194,7 @@ const LibraryPage: React.FC = () => {
             <span>Press the Add Book button to get started!</span>
           )
         }
-      >
-        <TableColumn col="title">Title</TableColumn>
-        <TableColumn col="author">Author</TableColumn>
-        <TableColumn col="summary">Summary</TableColumn>
-        <BookEditButton
-          onEdit={(b) => {
-            setIsNewBook(false);
-            setModalOpen(true);
-            if (b) {
-              setSelectedBook(b);
-            }
-          }}
-        ></BookEditButton>
-      </AutoTable>
+      />
     </PageLayout>
   );
 };

@@ -1,11 +1,17 @@
 import React from "react";
 import Fade from "react-reveal";
 
-interface ListProps<T, E> {
+const Segementer = styled.div`
+  > div {
+    margin-bottom: 0.5rem;
+  }
+`;
+
+interface ListProps<T> {
   items: T[];
   title?: React.ReactElement;
   placeholder?: React.ReactElement;
-  component: React.FC<T & Role & E>;
+  component: React.FC<T & Role & any>;
 }
 
 export interface Role {
@@ -17,7 +23,7 @@ interface ExtraProps {
 }
 
 function List<T extends { id: string }>(
-  props: ListProps<T, ExtraProps> & Role & ExtraProps
+  props: ListProps<T> & Role & ExtraProps
 ): JSX.Element | null {
   const {
     items,
@@ -38,11 +44,13 @@ function List<T extends { id: string }>(
     return (
       <>
         {title}
-        {items.map((item) => (
-          <Fade key={item.id} collapse right>
-            <Container {...item} userRole={userRole} {...otherProps} />
-          </Fade>
-        ))}
+        <Segementer>
+          {items.map((item) => (
+            <Fade key={item.id} collapse right>
+              <Container {...item} userRole={userRole} {...otherProps} />
+            </Fade>
+          ))}
+        </Segementer>
       </>
     );
   }
