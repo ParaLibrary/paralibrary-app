@@ -155,6 +155,7 @@ const FriendLibraryPage: React.FC = () => {
           userRole="requester"
           onRequest={handleRequest}
           onCancel={handleCancel}
+          friendStatus={userStatus}
           placeholder={
             books.length ? (
               <span>No search results found</span>

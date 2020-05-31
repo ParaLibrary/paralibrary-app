@@ -7,13 +7,14 @@ import EditBookButton from "./libraryEditButton";
 import LoanStatus from "./LoanStatus";
 import LoanRequestButton from "./LoanRequestButton";
 
-interface Actions {
+interface Extras {
+  friendStatus: string | undefined;
   onEdit: (book: Book | undefined) => void;
   onRequest: (bookID: string) => void;
   onCancel: (loan: Loan) => void;
 }
 
-const BookCard: React.FC<Book & Role & Actions> = (bookAndRole) => {
+const BookCard: React.FC<Book & Role & Extras> = (bookAndRole) => {
   const {
     title,
     author,
@@ -23,6 +24,7 @@ const BookCard: React.FC<Book & Role & Actions> = (bookAndRole) => {
     onEdit: handleEdit,
     onRequest: handleRequest,
     onCancel: handleCancel,
+    friendStatus,
   } = bookAndRole;
   return (
     <BookDiv>
@@ -37,12 +39,16 @@ const BookCard: React.FC<Book & Role & Actions> = (bookAndRole) => {
             <EditBookButton onEdit={handleEdit} rowitem={bookAndRole} />
           </ActionPanel>
         ) : (
-          <ActionPanel>
-            <LoanRequestButton
-              rowitem={bookAndRole}
-              onRequest={handleRequest}
-              onCancel={handleCancel}
-            />
+          <ActionPanel hideActionsOnSmall={friendStatus !== "friends"}>
+            {friendStatus === "friends" ? (
+              <LoanRequestButton
+                rowitem={bookAndRole}
+                onRequest={handleRequest}
+                onCancel={handleCancel}
+              />
+            ) : (
+              <span>Become friends to request a loan!</span>
+            )}
           </ActionPanel>
         )}
       </Main>
@@ -85,15 +91,21 @@ const BookDiv = styled.div`
   }
 `;
 
-const Main = styled.div`
+const Main = styled.div<{ hideActionsOnSmall?: boolean }>`
   display: grid;
   grid-auto-flow: column;
   grid-template-columns: auto max(25%, 90px);
+  @media screen and (min-width: 480px) {
+    display: auto;
+  }
   gap: 0px 16px;
 `;
 
-const ActionPanel = styled.div`
-  display: flex;
+const ActionPanel = styled.div<{ hideActionsOnSmall?: boolean }>`
+  display: ${({ hideActionsOnSmall: hide }) => (!hide ? "flex" : "none")};
+  @media screen and (min-width: 480px) {
+    display: flex;
+  }
   flex-flow: column nowrap;
   justify-content: start;
   align-items: stretch;
