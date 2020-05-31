@@ -5,6 +5,7 @@ import { slide as Hamburger } from "react-burger-menu";
 import debounce from "lodash.debounce";
 import {
   HamburgerWrapper,
+  MobileTextLogo,
   MobileLogo,
   MobileNavBar,
   NavBarLayout,
@@ -56,7 +57,7 @@ const NavBar: React.FC = ({ children }) => {
     <>
       <HamburgerWrapper>
         <Hamburger width={200}>
-          <Logo src="/images/logo-icon-black.png"></Logo>
+          <MobileLogo src="/images/logo-icon-black.png" />
           {children}
           <LogoutButton onClick={signOut} variant="outline-secondary" size="sm">
             Logout
@@ -64,9 +65,7 @@ const NavBar: React.FC = ({ children }) => {
         </Hamburger>
       </HamburgerWrapper>
       <MobileNavBar>
-        <a href="/library">
-          <MobileLogo src="/images/logo-text-black.png" href="/library" />
-        </a>
+        <MobileTextLogo src="/images/logo-text-black.png" href="/library" />
       </MobileNavBar>
     </>
   ) : (
