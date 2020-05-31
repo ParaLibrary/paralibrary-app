@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { User, Loan } from "./ourtypes";
+import { User } from "./ourtypes";
 import { Role } from "./List";
 import UserDisplay from "./UserDisplay";
 import FriendStatusButton from "./FriendManagers";
@@ -9,7 +9,7 @@ import FriendStatusButton from "./FriendManagers";
 interface Extras {}
 
 const UserCard: React.FC<User & Role & Extras> = (userAndRole) => {
-  const { id, name, status, email, picture, userRole } = userAndRole;
+  const { id, name, status, email, picture } = userAndRole;
   const friend = { id, name, status, email, picture };
   return (
     <UserDiv>

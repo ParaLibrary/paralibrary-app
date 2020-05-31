@@ -44,21 +44,25 @@ const FriendStatusButton: React.FC<FRBProps> = ({ friend }) => {
   function actionButton(friend: User) {
     switch (friend.status) {
       case null:
-        return <Button onClick={requestFriendship}>Send friend request</Button>;
+        return (
+          <Button size="sm" onClick={requestFriendship}>
+            Send friend request
+          </Button>
+        );
       case "friends":
         return (
           <>
             <Button variant="success" disabled>
               Friends
             </Button>{" "}
-            <FriendRejectButton friend={friend} size="sm">
+            <FriendRejectButton friend={friend}>
               Remove Friend
             </FriendRejectButton>
           </>
         );
       case "requested":
         return (
-          <Button variant="info" disabled>
+          <Button size="sm" variant="info" disabled>
             Requested
           </Button>
         );

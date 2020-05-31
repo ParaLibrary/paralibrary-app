@@ -2,11 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { User } from "./ourtypes";
 import { toUser } from "./mappers";
 import PageLayout from "./PageLayout";
-import AutoTable, { TableColumn } from "./AutoTable";
 import FriendSearchBar from "./FriendSearchBar";
-import UserDisplay from "./UserDisplay";
-import FriendStatusButton from "./FriendManagers";
-import { FriendAcceptReject } from "./FriendshipButtons";
 import List from "./List";
 import UserCard from "./UserCard";
 import UserListContext from "./UserListContext";
@@ -62,10 +58,10 @@ const FriendsPage: React.FC = () => {
       });
   }, []);
 
-  const incomingFriendRequests: User[] = useMemo(() => {
-    console.log(friends);
-    return friends.filter((friend: User) => friend.status === "waiting");
-  }, [friends]);
+  const incomingFriendRequests: User[] = useMemo(
+    () => friends.filter((friend: User) => friend.status === "waiting"),
+    [friends]
+  );
 
   const currentFriends: User[] = useMemo(
     () => friends.filter((friend: User) => friend.status === "friends"),
@@ -81,14 +77,13 @@ const FriendsPage: React.FC = () => {
     <PageLayout
       header={<h1>My Friends</h1>}
       sidebar={
-        <AutoTable
-          data={friendSuggestions}
+        <List
           title={<h3>People you may know</h3>}
-          noHeaders
-          placeholder={"No suggestions right now! Check back later"}
-        >
-          <TableColumn component={UserDisplay}>Username</TableColumn>
-        </AutoTable>
+          component={UserCard}
+          items={friendSuggestions}
+          userRole="owner"
+          placeholder={<span>No suggestions right now! Check back later</span>}
+        ></List>
       }
       error={error}
       loaded={isLoaded}
@@ -115,13 +110,8 @@ const FriendsPage: React.FC = () => {
           component={UserCard}
           items={currentFriends}
           userRole="owner"
-          noHeaders
           placeholder={
-            <>
-              <span>
-                Use the search bar above and start adding some friends!
-              </span>
-            </>
+            <span>Use the search bar above and start adding some friends!</span>
           }
         />
       </UserListContext.Provider>
