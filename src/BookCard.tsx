@@ -95,7 +95,7 @@ const Main = styled.div<{ hideActionsOnSmall?: boolean }>`
   display: grid;
   grid-auto-flow: column;
   grid-template-columns: auto max(25%, 90px);
-  @media screen and (min-width: 480px) {
+  @media screen and (min-width: ${({ theme }) => theme.smallViewport}) {
     display: auto;
   }
   gap: 0px 16px;
@@ -103,7 +103,7 @@ const Main = styled.div<{ hideActionsOnSmall?: boolean }>`
 
 const ActionPanel = styled.div<{ hideActionsOnSmall?: boolean }>`
   display: ${({ hideActionsOnSmall: hide }) => (!hide ? "flex" : "none")};
-  @media screen and (min-width: 480px) {
+  @media screen and (min-width: ${({ theme }) => theme.smallViewport}) {
     display: flex;
   }
   flex-flow: column nowrap;
