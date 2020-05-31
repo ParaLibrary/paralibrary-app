@@ -31,7 +31,7 @@ const FriendStatusButton: React.FC<FRBProps> = ({ friend }) => {
             <Button variant="success" disabled>
               Friends
             </Button>{" "}
-            <FriendRejectButton friend={friend}>
+            <FriendRejectButton friend={friend} gated>
               Remove Friend
             </FriendRejectButton>
           </>
