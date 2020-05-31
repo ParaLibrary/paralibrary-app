@@ -56,7 +56,7 @@ const FriendsPage: React.FC = () => {
         console.log(error);
         setError(true);
       });
-  }, []);
+  }, [friends]);
 
   const incomingFriendRequests: User[] = useMemo(
     () => friends.filter((friend: User) => friend.status === "waiting"),
@@ -77,13 +77,19 @@ const FriendsPage: React.FC = () => {
     <PageLayout
       header={<h1>My Friends</h1>}
       sidebar={
-        <List
-          title={<h3>People you may know</h3>}
-          component={UserCard}
-          items={friendSuggestions}
-          userRole="owner"
-          placeholder={<span>No suggestions right now! Check back later</span>}
-        ></List>
+        <UserListContext.Provider
+          value={{ users: friendSuggestions, setUsers: setFriendSuggestions }}
+        >
+          <List
+            title={<h3>People you may know</h3>}
+            component={UserCard}
+            items={friendSuggestions}
+            userRole="owner"
+            placeholder={
+              <span>No suggestions right now! Check back later</span>
+            }
+          ></List>
+        </UserListContext.Provider>
       }
       error={error}
       loaded={isLoaded}

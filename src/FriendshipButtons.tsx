@@ -56,7 +56,7 @@ export const FriendAcceptButton: React.FC<FriendButtonProps> = ({
 
   return (
     <Button variant="primary" onClick={acceptFriendship} size="sm" {...props}>
-      {children}
+      {children ?? "Accept"}
     </Button>
   );
 };
@@ -109,7 +109,7 @@ export const FriendRejectButton: React.FC<FriendButtonProps> = ({
       size="sm"
       {...props}
     >
-      {children}
+      {children ?? "Reject"}
     </Button>
   );
 };
@@ -125,6 +125,7 @@ export const FriendAcceptReject: React.FC<FriendButtonProps> = ({ friend }) => {
 
 export const FriendRequestButton: React.FC<FriendButtonProps> = ({
   friend,
+  children,
 }) => {
   const { addToast } = useToasts();
   const { users, setUsers } = useUserList();
@@ -142,7 +143,7 @@ export const FriendRequestButton: React.FC<FriendButtonProps> = ({
         if (response.ok) {
           setUsers(
             users.map((user) =>
-              user.id !== friend.id ? user : { ...friend, status: "waiting" }
+              user.id !== friend.id ? user : { ...friend, status: "requested" }
             )
           );
           addToast({
@@ -165,7 +166,7 @@ export const FriendRequestButton: React.FC<FriendButtonProps> = ({
 
   return (
     <Button size="sm" onClick={requestFriendship}>
-      Send friend request
+      {children ?? "Send friend request"}
     </Button>
   );
 };
