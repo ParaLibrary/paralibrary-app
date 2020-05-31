@@ -16,7 +16,7 @@ const ActionPanel = styled.div`
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
-  @media screen and (min-width: 480px) {
+  @media screen and (min-width: ${({ theme }) => theme.smallViewport}) {
     flex-flow: column nowrap;
     justify-content: center;
     > :not(:last-child) {

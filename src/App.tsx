@@ -13,11 +13,12 @@ import NavBar from "./NavBar";
 import theme from "./theme";
 import ToastContextProvider from "./ToastProvider";
 import ErrorPage from "./ErrorPage";
+import AboutPage from "./AboutPage";
 
 const PageHolder = styled.div`
   display: flex;
   flex-flow: column;
-  @media screen and (min-width: 480px) {
+  @media screen and (min-width: ${({ theme }) => theme.smallViewport}) {
     flex-flow: row;
   }
   height: fit-content;
@@ -33,7 +34,7 @@ const NavLink = styled(Link)`
     text-decoration: none;
   }
 
-  @media screen and (min-width: 480px) {
+  @media screen and (min-width: ${({ theme }) => theme.smallViewport}) {
     width: 100%;
   }
 `;
@@ -52,6 +53,7 @@ const App = () => {
                   <NavLink to={"/friends"}>Friends</NavLink>
                   <NavLink to={"/loans"}>Loans</NavLink>
                   <NavLink to={"/settings"}>Settings</NavLink>
+                  <NavLink to={"/about"}>About</NavLink>
                 </NavBar>
                 <Switch>
                   <Route path="/library" exact>
@@ -68,6 +70,9 @@ const App = () => {
                   </Route>
                   <Route path="/settings">
                     <SettingsPage />
+                  </Route>
+                  <Route path="/about">
+                    <AboutPage />
                   </Route>
                   <Route>
                     <ErrorPage />
