@@ -33,13 +33,15 @@ export function toUser(obj: any): User {
   if (isNullOrUndefined(obj.picture)) {
     throw new Error("Missing property 'picture' in user");
   }
+  if (isNullOrUndefined(obj.email)) {
+    throw new Error("Missing property 'email' in user");
+  }
   return {
     id: obj.id,
     name: obj.name,
     status: obj.status as FriendStatus,
     picture: obj.picture,
-    email: !obj.contact ? "no email provided" : obj.contact,
-    // TODO: update this to be required when backend provides it
+    email: obj.email,
   };
 }
 

@@ -1,13 +1,5 @@
 import React from "react";
-import styled from "styled-components";
 import Fade from "react-reveal";
-import TransitionGroup from "react-transition-group/TransitionGroup";
-
-const SegTransitionGroup = styled(TransitionGroup)`
-  > div {
-    margin-bottom: 0.5rem;
-  }
-`;
 
 interface ListProps<T, E> {
   items: T[];
@@ -46,13 +38,11 @@ function List<T extends { id: string }>(
     return (
       <>
         {title}
-        <SegTransitionGroup appear exit>
-          {items.map((item) => (
-            <Fade key={item.id} collapse right>
-              <Container {...item} userRole={userRole} {...otherProps} />
-            </Fade>
-          ))}
-        </SegTransitionGroup>
+        {items.map((item) => (
+          <Fade key={item.id} collapse right>
+            <Container {...item} userRole={userRole} {...otherProps} />
+          </Fade>
+        ))}
       </>
     );
   }
