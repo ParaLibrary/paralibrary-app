@@ -15,6 +15,7 @@ import FriendshipStatusButton from "./FriendManagers";
 import { AuthContext } from "./AuthContextProvider";
 import BookCard from "./BookCard";
 import List from "./List";
+import { SingleUserProvider } from "./UserListContext";
 
 const FriendLibraryPage: React.FC = () => {
   const { id } = useParams();
@@ -142,7 +143,11 @@ const FriendLibraryPage: React.FC = () => {
         error={error}
         loaded={isLoaded}
       >
-        {user && <FriendshipStatusButton friend={user} />}
+        {user && (
+          <SingleUserProvider user={user} setUser={setUser}>
+            <FriendshipStatusButton friend={user} />
+          </SingleUserProvider>
+        )}
         <LibrarySearchBar
           onSearchChange={filterResults}
           header="Search this Library"
