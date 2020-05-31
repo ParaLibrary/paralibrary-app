@@ -16,6 +16,8 @@ import LibrarySearchBar from "./LibrarySearchBar";
 import { toLibrary } from "./mappers";
 import { AuthContext } from "./AuthContextProvider";
 import BookEditButton from "./libraryEditButton";
+import LibraryDeleteButton from "./LibraryDeleteButton";
+import { useToasts } from "./ToastProvider";
 
 const LibraryPage: React.FC = () => {
   const user_idGet = useContext(AuthContext);
@@ -39,7 +41,8 @@ const LibraryPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [catSelected, setCatSelected] = useState<Option>();
   const [selectedBook, setSelectedBook] = useState<Book>(emptyBook);
-  const [editModalClose, editBook] = useState(false);
+  const { addToast } = useToasts();
+  const [deleteLibraryBook, setDelete] = useState<Book[]>();
 
   const categories = useMemo(
     () => Array.from(new Set(books.flatMap((book: Book) => book.categories))),
@@ -114,6 +117,31 @@ const LibraryPage: React.FC = () => {
         .catch(() => false);
     },
     [books]
+  );
+  const deleteBook = useCallback(
+    (book: Book) => {
+      let BookString = JSON.stringify(book);
+      fetch(`http://paralibrary.digital/api/books/${book.id}`, {
+        method: "DELETE",
+        credentials: "include",
+      })
+        .then((res) => {
+          if (res.ok) {
+            setDelete(books.filter((books) => books.id !== book.id));
+          } else {
+            throw Error();
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          addToast({
+            header: "Could not delete loan",
+            body: "Something went wrong. Please try again in a few moments",
+            type: "error",
+          });
+        });
+    },
+    [books, setDelete, addToast]
   );
 
   const editBookDatabase = useCallback(
@@ -200,6 +228,13 @@ const LibraryPage: React.FC = () => {
             }
           }}
         ></BookEditButton>
+        <LibraryDeleteButton
+          onDelete={(b) => {
+            if (b) {
+              deleteBook(b);
+            }
+          }}
+        ></LibraryDeleteButton>
       </AutoTable>
     </PageLayout>
   );
