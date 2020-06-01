@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { Loan } from "./ourtypes";
 import PageLayout from "./PageLayout";
 import { toLoan } from "./mappers";
-import LoanList from "./LoanDisplay";
 import List from "./List";
 import LoanDisplay from "./LoanDisplay";
 

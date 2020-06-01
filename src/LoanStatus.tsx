@@ -10,27 +10,27 @@ const NoWrapButton = styled(Button)`
 `;
 
 interface LoanStatusProps {
-  data?: Loan;
+  loan?: Loan;
 }
 
-const LoanStatus: React.FC<LoanStatusProps> = ({ data }) => {
+const LoanStatus: React.FC<LoanStatusProps> = ({ loan }) => {
   const history = useHistory();
   const handleClick = useCallback(() => {
     history.push("/loans");
   }, [history]);
-  if (!data || data.status === "returned") {
+  if (!loan || loan.status === "returned") {
     return (
       <NoWrapButton block size="sm" variant="dark" disabled>
         In Library
       </NoWrapButton>
     );
-  } else if (data.status === "pending") {
+  } else if (loan.status === "pending") {
     return (
       <NoWrapButton block size="sm" variant="primary" onClick={handleClick}>
         Requested
       </NoWrapButton>
     );
-  } else if (data.status === "accepted") {
+  } else if (loan.status === "accepted") {
     return (
       <NoWrapButton block size="sm" variant="warning" onClick={handleClick}>
         Outgoing

@@ -8,6 +8,7 @@ import UserDisplay from "./UserDisplay";
 import BookDisplay from "./BookDisplay";
 
 const LoanDiv = styled.div<{ late?: boolean }>`
+  background: white;
   border: 0.1rem solid ${({ late }) => (!!late ? "#dc3545" : "#ececec")};
   border-radius: 8px;
   box-sizing: border-box;
@@ -22,7 +23,7 @@ const LoanDiv = styled.div<{ late?: boolean }>`
   margin-bottom: 1rem;
 
   @media screen and (min-width: ${({ theme }) => theme.smallViewport}) {
-    grid-template: auto / auto 100px;
+    grid-template: auto / auto max(33%, 120px);
     > p {
       margin: 0px;
     }

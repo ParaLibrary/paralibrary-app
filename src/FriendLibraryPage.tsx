@@ -9,12 +9,12 @@ import { Redirect, useParams } from "react-router";
 
 import PageLayout from "./PageLayout";
 import { Book, Loan, User } from "./ourtypes";
-import AutoTable, { TableColumn } from "./AutoTable";
-import LoanRequestButton from "./LoanRequestButton";
 import { toLibrary } from "./mappers";
 import LibrarySearchBar from "./LibrarySearchBar";
 import FriendshipStatusButton from "./FriendshipStatusButton";
 import { AuthContext } from "./AuthContextProvider";
+import BookCard from "./BookCard";
+import List from "./List";
 
 const FriendLibraryPage: React.FC = () => {
   const { id } = useParams();
@@ -151,9 +151,15 @@ const FriendLibraryPage: React.FC = () => {
           onSearchChange={filterResults}
           header="Search this Library"
         />
-        <AutoTable
-          data={filteredBooks}
+
+        <List
           title={<h3>Books</h3>}
+          items={filteredBooks}
+          component={BookCard}
+          userRole="requester"
+          onRequest={handleRequest}
+          onCancel={handleCancel}
+          friendStatus={userStatus}
           placeholder={
             books.length ? (
               <span>No search results found</span>
@@ -165,15 +171,7 @@ const FriendLibraryPage: React.FC = () => {
               </span>
             )
           }
-        >
-          <TableColumn col="title">Title</TableColumn>
-          <TableColumn col="author">Author</TableColumn>
-          <TableColumn col="summary">Description</TableColumn>
-          <LoanRequestButton
-            onRequest={handleRequest}
-            onCancel={handleCancel}
-          />
-        </AutoTable>
+        />
       </PageLayout>
     );
   }
