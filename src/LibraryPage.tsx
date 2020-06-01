@@ -16,6 +16,7 @@ import { toLibrary } from "./mappers";
 import { AuthContext } from "./AuthContextProvider";
 import List from "./List";
 import BookCard from "./BookCard";
+import LibraryToolbar from "./LibraryToolbar";
 
 const LibraryPage: React.FC = () => {
   const user_idGet = useContext(AuthContext);
@@ -146,6 +147,12 @@ const LibraryPage: React.FC = () => {
         onSearchChange={filterResults}
         header="Search Your Library"
       />
+      <LibraryToolbar
+        setCategory={setCatSelected}
+        options={categories}
+        onSearchChange={filterResults}
+      />
+      <hr></hr>
       <h6>Filter by Tags</h6>
       <Select
         options={makeOptions(categories)}
