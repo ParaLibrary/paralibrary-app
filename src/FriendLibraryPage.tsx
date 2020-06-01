@@ -10,10 +10,11 @@ import { Redirect, useParams } from "react-router";
 import PageLayout from "./PageLayout";
 import { Book, Loan, User } from "./ourtypes";
 import { toLibrary } from "./mappers";
-import FriendshipStatusButton from "./FriendshipStatusButton";
+import FriendshipStatusButton from "./FriendManagers";
 import { AuthContext } from "./AuthContextProvider";
 import BookCard from "./BookCard";
 import List from "./List";
+import { SingleUserProvider } from "./UserListContext";
 import LibraryToolbar from "./LibraryToolbar";
 
 const FriendLibraryPage: React.FC = () => {
@@ -156,7 +157,12 @@ const FriendLibraryPage: React.FC = () => {
         error={error}
         loaded={isLoaded}
       >
-        {user && <FriendshipStatusButton friend={user} onClick={setUser} />}
+        {user && (
+          <SingleUserProvider user={user} setUser={setUser}>
+            <FriendshipStatusButton friend={user} />
+          </SingleUserProvider>
+        )}
+        <hr />
         <LibraryToolbar
           onCategoryChange={setCategoryFilter}
           options={categories}
