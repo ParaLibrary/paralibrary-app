@@ -69,12 +69,12 @@ const LibraryToolBar: React.FC<ToolBarProps> = ({
             <option key={option}>{option}</option>
           ))}
         </Form.Control>
-        <InputGroup.Append>
-          <Button onClick={handleAddBook}>
-            <BookIcon />
-            <PlusIcon />
-          </Button>
-        </InputGroup.Append>
+      </InputGroup>
+      <InputGroup>
+        <Button onClick={handleAddBook}>
+          <BookIcon />
+          <PlusIcon />
+        </Button>
       </InputGroup>
     </ToolBar>
   );
