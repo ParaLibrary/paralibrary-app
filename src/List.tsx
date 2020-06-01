@@ -1,12 +1,12 @@
 import React from "react";
 import Fade from "react-reveal";
+import styled from "styled-components";
 
 const Segementer = styled.div`
   > div {
     margin-bottom: 0.5rem;
   }
 `;
-
 
 interface ListProps<T> {
   items: T[];
@@ -52,7 +52,6 @@ function List<T extends { id: string }>(
             </Fade>
           ))}
         </Segementer>
-
       </>
     );
   }
