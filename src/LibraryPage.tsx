@@ -71,7 +71,7 @@ const LibraryPage: React.FC = () => {
       .then(
         (result) => {
           const lib = toLibrary(result);
-          setBooks(lib.books);
+          setBooks(lib.books.reverse());
         },
         (error) => {
           console.log(error);
@@ -100,7 +100,7 @@ const LibraryPage: React.FC = () => {
       })
         .then((res) => res.json())
         .then((res: { id: string }) => {
-          setBooks(books.concat({ ...book, id: res.id }));
+          setBooks([{ ...book, id: res.id }].concat(books));
         })
         .catch(() => false);
     },
