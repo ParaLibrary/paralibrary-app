@@ -54,6 +54,14 @@ const AboutPage: React.FC = () => {
           Loves exploring the Greater Seattle Area's food and scenery.
           Definitely enjoys reading books for fun.
         </Creator>
+        <Creator
+          image="https://media-exp1.licdn.com/dms/image/C4D03AQFEfy-ffnnnqQ/profile-displayphoto-shrink_100_100/0?e=1596672000&v=beta&t=0mlZBzBIJu2ADaotNcDQ1MOM1QjAckdYAwot_ouRN-s"
+          name="Ben Jenkins"
+        >
+          Enjoys spending time outdoors in the great Pacific Northwest. His
+          favorite author is Carl Jung, despite the fact that he can barely
+          understand anything Jung writes about.
+        </Creator>
       </CreatorLayout>
     </PageLayout>
   );

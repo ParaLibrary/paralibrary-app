@@ -134,10 +134,14 @@ const FriendLibraryPage: React.FC = () => {
     return (
       <PageLayout
         header={
-          !user ? (
+          !isLoaded ? (
+            <h1>Loading...</h1>
+          ) : !user ? (
             <h1>User Not Found</h1>
           ) : (
-            <h1>{user && user.name}'s Library</h1>
+            <>
+              <h1>{user && user.name}'s Library</h1>
+            </>
           )
         }
         error={error}

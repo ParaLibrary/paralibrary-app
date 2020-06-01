@@ -3,15 +3,16 @@ import styled from "styled-components";
 import Toast, { ToastProps } from "./Toast";
 
 const ToastContainer = styled.div`
-  position: fixed;
   padding: 20px;
-  width: 100%;
   z-index: 2;
   bottom: 0;
+  left: 0;
+  right: 0;
 
   @media screen and (min-width: ${({ theme }) => theme.smallViewport}) {
+    position: fixed;
+    left: auto;
     width: 350px;
-    right: 0;
   }
 `;
 

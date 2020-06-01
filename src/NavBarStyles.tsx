@@ -27,7 +27,7 @@ export const NavBarLayout = styled.nav`
 
 export const MobileNavBar = styled.nav`
   top: 0;
-  height: 50px;
+  height: 35pt;
   position: -webkit-sticky; /* For Safari */
   position: sticky;
   z-index: 1;
@@ -42,10 +42,10 @@ export const HamburgerWrapper = styled.span`
   /* Position and sizing of burger button */
   .bm-burger-button {
     position: fixed;
-    width: 36px;
-    height: 30px;
-    left: 10px;
-    top: 10px;
+    width: 25pt;
+    height: 18pt;
+    left: 8pt;
+    top: 8pt;
   }
 
   /* Color/shape of burger icon bars */
@@ -125,6 +125,13 @@ export const Logo = styled(Image)`
 `;
 
 export const MobileLogo = styled(Image)`
+  display: inline-block;
+  object-fit: contain;
+  width: 100%;
+  padding: 5pt;
+`;
+
+export const MobileTextLogo = styled(Image)`
   display: block;
   object-fit: contain;
   height: 100%;
@@ -136,5 +143,5 @@ export const MobileLogo = styled(Image)`
 
 export const LogoutButton = styled(Button)`
   position: absolute;
-  bottom: 16px;
+  bottom: 8pt;
 `;
