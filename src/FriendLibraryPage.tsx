@@ -10,12 +10,12 @@ import { Redirect, useParams } from "react-router";
 import PageLayout from "./PageLayout";
 import { Book, Loan, User } from "./ourtypes";
 import { toLibrary } from "./mappers";
-import LibrarySearchBar from "./LibrarySearchBar";
 import FriendshipStatusButton from "./FriendManagers";
 import { AuthContext } from "./AuthContextProvider";
 import BookCard from "./BookCard";
 import List from "./List";
 import { SingleUserProvider } from "./UserListContext";
+import LibraryToolbar from "./LibraryToolbar";
 
 const FriendLibraryPage: React.FC = () => {
   const { id } = useParams();
@@ -26,6 +26,15 @@ const FriendLibraryPage: React.FC = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [user, setUser] = useState<User>();
   const [searchTerm, setSearchTerm] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState<string>();
+
+  const categories = useMemo(
+    () =>
+      Array.from(
+        new Set(books.flatMap((book: Book) => book.categories))
+      ).sort(),
+    [books]
+  );
 
   function filterResults(searchTerm: string) {
     setSearchTerm(searchTerm);
@@ -33,13 +42,14 @@ const FriendLibraryPage: React.FC = () => {
 
   const filteredBooks: Book[] = useMemo(() => {
     const regExp = new RegExp(searchTerm.trim(), "gi");
-    if (searchTerm === "") {
-      return books;
-    }
     return books.filter(
-      (book: Book) => book.title.match(regExp) || book.author.match(regExp)
+      (book: Book) =>
+        (!searchTerm ||
+          book.title.match(regExp) ||
+          book.author.match(regExp)) &&
+        (!categoryFilter || book.categories.includes(categoryFilter))
     );
-  }, [searchTerm, books]);
+  }, [searchTerm, books, categoryFilter]);
 
   const userStatus = useMemo(() => {
     return user?.status;
@@ -152,9 +162,11 @@ const FriendLibraryPage: React.FC = () => {
             <FriendshipStatusButton friend={user} />
           </SingleUserProvider>
         )}
-        <LibrarySearchBar
+        <hr />
+        <LibraryToolbar
+          onCategoryChange={setCategoryFilter}
+          options={categories}
           onSearchChange={filterResults}
-          header="Search this Library"
         />
 
         <List
