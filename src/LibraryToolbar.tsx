@@ -10,6 +10,13 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import styled from "styled-components";
 
+const ToolBar = styled.div`
+  margin-bottom: 16px;
+  > :not(:last-child) {
+    margin-bottom: 8px;
+  }
+`;
+
 interface ToolBarProps {
   onSearchChange: (searchTerm: string) => void;
   options: string[];
@@ -25,9 +32,9 @@ const LibraryToolBar: React.FC<ToolBarProps> = ({
 }) => {
   const handleSelect = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      console.log(event.currentTarget.value);
+      onCategoryChange(event.currentTarget.value);
     },
-    []
+    [onCategoryChange]
   );
   const handleSearch = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,7 +44,7 @@ const LibraryToolBar: React.FC<ToolBarProps> = ({
   );
 
   return (
-    <div>
+    <ToolBar>
       <InputGroup>
         <InputGroup.Prepend>
           <InputGroup.Text>
@@ -69,7 +76,7 @@ const LibraryToolBar: React.FC<ToolBarProps> = ({
           </Button>
         </InputGroup.Append>
       </InputGroup>
-    </div>
+    </ToolBar>
   );
 };
 

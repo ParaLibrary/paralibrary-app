@@ -5,7 +5,7 @@ import React, {
   useCallback,
   useContext,
 } from "react";
-import { Modal, Button } from "react-bootstrap";
+import Modal from "react-bootstrap/Modal";
 
 import PageLayout from "./PageLayout";
 import BookFormik from "./BookForm";
@@ -39,7 +39,10 @@ const LibraryPage: React.FC = () => {
   const [selectedBook, setSelectedBook] = useState<Book>(emptyBook);
 
   const categories = useMemo(
-    () => Array.from(new Set(books.flatMap((book: Book) => book.categories))),
+    () =>
+      Array.from(
+        new Set(books.flatMap((book: Book) => book.categories))
+      ).sort(),
     [books]
   );
 
@@ -145,28 +148,6 @@ const LibraryPage: React.FC = () => {
         onSearchChange={filterResults}
         onAddBook={openNewBook}
       />
-      <Modal show={modalOpen} onHide={() => setModalOpen(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>{isNewBook ? "Add Book" : "Edit Book"}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <BookFormik
-            categoryOptions={categories}
-            book={selectedBook}
-            updateDatabase={isNewBook ? addToDatabase : editBookDatabase}
-            closeModal={() => setModalOpen(false)}
-          />
-        </Modal.Body>
-      </Modal>
-      <Button
-        onClick={() => {
-          setSelectedBook(emptyBook);
-          setModalOpen(true);
-          setIsNewBook(true);
-        }}
-      >
-        New Book
-      </Button>
 
       <List
         title={<h3>Books</h3>}
@@ -188,6 +169,20 @@ const LibraryPage: React.FC = () => {
           )
         }
       />
+
+      <Modal show={modalOpen} onHide={() => setModalOpen(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>{isNewBook ? "Add Book" : "Edit Book"}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <BookFormik
+            categoryOptions={categories}
+            book={selectedBook}
+            updateDatabase={isNewBook ? addToDatabase : editBookDatabase}
+            closeModal={() => setModalOpen(false)}
+          />
+        </Modal.Body>
+      </Modal>
     </PageLayout>
   );
 };
