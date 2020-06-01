@@ -21,7 +21,7 @@ interface ToolBarProps {
   onSearchChange: (searchTerm: string) => void;
   options: string[];
   onCategoryChange: (option: string) => void;
-  onAddBook: () => void;
+  onAddBook?: () => void;
 }
 
 const LibraryToolBar: React.FC<ToolBarProps> = ({
@@ -70,12 +70,14 @@ const LibraryToolBar: React.FC<ToolBarProps> = ({
           ))}
         </Form.Control>
       </InputGroup>
-      <InputGroup>
-        <Button onClick={handleAddBook}>
-          <BookIcon />
-          <PlusIcon />
-        </Button>
-      </InputGroup>
+      {handleAddBook && (
+        <InputGroup>
+          <Button onClick={handleAddBook}>
+            <BookIcon />
+            <PlusIcon />
+          </Button>
+        </InputGroup>
+      )}
     </ToolBar>
   );
 };
