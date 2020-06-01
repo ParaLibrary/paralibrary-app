@@ -6,12 +6,10 @@ import React, {
   useContext,
 } from "react";
 import { Modal, Button } from "react-bootstrap";
-import Select from "react-select";
 
 import PageLayout from "./PageLayout";
 import BookFormik from "./BookForm";
-import { Book, Option } from "./ourtypes";
-import LibrarySearchBar from "./LibrarySearchBar";
+import { Book } from "./ourtypes";
 import { toLibrary } from "./mappers";
 import { AuthContext } from "./AuthContextProvider";
 import List from "./List";
@@ -37,20 +35,12 @@ const LibraryPage: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [isNewBook, setIsNewBook] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [catSelected, setCatSelected] = useState<Option>();
+  const [categoryFilter, setCategoryFilter] = useState<string>();
   const [selectedBook, setSelectedBook] = useState<Book>(emptyBook);
 
   const categories = useMemo(
     () => Array.from(new Set(books.flatMap((book: Book) => book.categories))),
     [books]
-  );
-
-  const makeOptions = useCallback(
-    (options: string[]) =>
-      options.map((category) => {
-        return { value: category, label: category };
-      }),
-    []
   );
 
   function filterResults(searchTerm: string) {
@@ -64,9 +54,9 @@ const LibraryPage: React.FC = () => {
         (!searchTerm ||
           book.title.match(regExp) ||
           book.author.match(regExp)) &&
-        (!catSelected?.value || book.categories.includes(catSelected.value))
+        (!categoryFilter || book.categories.includes(categoryFilter))
     );
-  }, [searchTerm, books, catSelected]);
+  }, [searchTerm, books, categoryFilter]);
 
   useEffect(() => {
     fetch(`http://paralibrary.digital/api/libraries`, {
@@ -141,23 +131,19 @@ const LibraryPage: React.FC = () => {
     [books]
   );
 
+  const openNewBook = useCallback(() => {
+    setSelectedBook(emptyBook);
+    setModalOpen(true);
+    setIsNewBook(true);
+  }, [emptyBook]);
+
   return (
     <PageLayout header={<h1>My Library</h1>} error={error} loaded={isLoaded}>
-      <LibrarySearchBar
-        onSearchChange={filterResults}
-        header="Search Your Library"
-      />
       <LibraryToolbar
-        setCategory={setCatSelected}
+        onCategoryChange={setCategoryFilter}
         options={categories}
         onSearchChange={filterResults}
-      />
-      <hr></hr>
-      <h6>Filter by Tags</h6>
-      <Select
-        options={makeOptions(categories)}
-        onChange={(option: any) => setCatSelected(option)}
-        isClearable
+        onAddBook={openNewBook}
       />
       <Modal show={modalOpen} onHide={() => setModalOpen(false)} centered>
         <Modal.Header closeButton>
