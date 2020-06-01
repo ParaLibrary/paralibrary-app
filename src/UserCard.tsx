@@ -6,20 +6,16 @@ import { Role } from "./List";
 import UserDisplay from "./UserDisplay";
 import FriendStatusButton from "./FriendManagers";
 
-interface Extras {}
-
-const UserCard: React.FC<User & Role & Extras> = (userAndRole) => {
-  const { id, name, status, email, picture } = userAndRole;
-  const friend = { id, name, status, email, picture };
+const UserCard: React.FC<User & Role> = (userAndRole) => {
   return (
     <UserDiv>
       <Main>
         <NBM>
-          <UserDisplay data={friend} />
+          <UserDisplay data={userAndRole} />
         </NBM>
-        {friend.status !== "friends" && (
+        {userAndRole.status !== "friends" && (
           <ActionPanel>
-            <FriendStatusButton friend={friend} />
+            <FriendStatusButton friend={userAndRole} />
           </ActionPanel>
         )}
       </Main>

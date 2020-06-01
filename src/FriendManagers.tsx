@@ -2,7 +2,7 @@ import React from "react";
 import Button from "react-bootstrap/Button";
 import {
   FriendRejectButton,
-  FriendAcceptReject,
+  FriendAcceptButton,
   FriendRequestButton,
 } from "./FriendshipButtons";
 
@@ -13,10 +13,6 @@ interface FRBProps {
 }
 
 const FriendStatusButton: React.FC<FRBProps> = ({ friend }) => {
-  if (!friend) {
-    throw Error("Friend is not a valid user object");
-  }
-
   function actionButton(friend: User) {
     switch (friend.status) {
       case null:
@@ -43,7 +39,12 @@ const FriendStatusButton: React.FC<FRBProps> = ({ friend }) => {
           </Button>
         );
       case "waiting":
-        return <FriendAcceptReject friend={friend} />;
+        return (
+          <>
+            <FriendAcceptButton friend={friend} />{" "}
+            <FriendRejectButton friend={friend} />
+          </>
+        );
     }
   }
 

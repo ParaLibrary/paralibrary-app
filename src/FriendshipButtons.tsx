@@ -129,15 +129,6 @@ export const FriendRejectButton: React.FC<
   );
 };
 
-export const FriendAcceptReject: React.FC<FriendButtonProps> = ({ friend }) => {
-  return (
-    <>
-      <FriendAcceptButton friend={friend}>Accept</FriendAcceptButton>
-      <FriendRejectButton friend={friend}>Reject</FriendRejectButton>
-    </>
-  );
-};
-
 export const FriendRequestButton: React.FC<FriendButtonProps> = ({
   friend,
   children,
