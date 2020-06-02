@@ -16,10 +16,27 @@ import BookCard from "./BookCard";
 import List from "./List";
 import { SingleUserProvider } from "./UserListContext";
 import LibraryToolbar from "./LibraryToolbar";
+import { useToasts } from "./ToastProvider";
 
 const FriendLibraryPage: React.FC = () => {
   const { id } = useParams();
   const auth = useContext(AuthContext);
+  const thisUsersEmail = useMemo(async () => {
+    if (!auth.credential.userId) {
+      return "";
+    }
+    return fetch(
+      `http://paralibrary.digital/api/users/${auth.credential.userId}`,
+      {
+        credentials: "include",
+      }
+    )
+      .then((res: Response) => res.json())
+      .then((user: User) => user.email)
+      .catch(() => "");
+  }, [auth]);
+
+  const { addToast } = useToasts();
 
   const [error, setError] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -83,7 +100,16 @@ const FriendLibraryPage: React.FC = () => {
   }, [id, userStatus]);
 
   const handleRequest = useCallback(
-    (bookID: string) => {
+    async (bookID: string) => {
+      if (!(await thisUsersEmail)) {
+        addToast({
+          header: "Could not request book",
+          body:
+            "Must provide email address to request a book. Visit settings to add an email.",
+          type: "error",
+        });
+        return;
+      }
       fetch("http://paralibrary.digital/api/loans", {
         method: "POST",
         credentials: "include",
@@ -124,7 +150,7 @@ const FriendLibraryPage: React.FC = () => {
           console.log(error);
         });
     },
-    [auth, books, user]
+    [auth, books, user, addToast, thisUsersEmail]
   );
 
   const handleCancel = useCallback(async (loan: Loan) => {
