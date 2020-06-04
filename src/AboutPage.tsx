@@ -62,6 +62,14 @@ const AboutPage: React.FC = () => {
           favorite author is Carl Jung, despite the fact that he can barely
           understand anything Jung writes about.
         </Creator>
+        <Creator
+          image="https://media-exp1.licdn.com/dms/image/C5603AQGdOqm3anlbNw/profile-displayphoto-shrink_200_200/0?e=1596672000&v=beta&t=9F6Z4qTw-2HwMmcE7gc4b1NJ47nxAxAVMhjezZz6MIA"
+          name="Nathan Gatlin"
+        >
+          Is fond of the city of Seattle and the surrounding cities. Favorite
+          author is William Shakespeare because of his use of iambic pentameter
+          and how he uses and his implementation of upward inflection.
+        </Creator>
       </CreatorLayout>
     </PageLayout>
   );
