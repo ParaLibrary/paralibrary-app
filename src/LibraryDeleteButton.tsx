@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import { Book } from "./ourtypes";
+import { Dropdown } from "react-bootstrap";
 
 interface DeleteBookProps {
   rowitem?: Book;
@@ -12,13 +13,13 @@ const LibraryDeleteButton: React.FC<DeleteBookProps> = ({
   onDelete,
 }) => {
   return (
-    <Button
+    <Dropdown.Item
       onClick={() => {
         onDelete(rowitem);
       }}
     >
       Delete
-    </Button>
+    </Dropdown.Item>
   );
 };
 export default LibraryDeleteButton;

@@ -5,7 +5,7 @@ import React, {
   useCallback,
   useContext,
 } from "react";
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, Dropdown } from "react-bootstrap";
 import Select from "react-select";
 
 import PageLayout from "./PageLayout";
@@ -18,6 +18,8 @@ import { AuthContext } from "./AuthContextProvider";
 import BookEditButton from "./libraryEditButton";
 import LibraryDeleteButton from "./LibraryDeleteButton";
 import { useToasts } from "./ToastProvider";
+import { SplitButton } from "react-bootstrap";
+import { ButtonGroup } from "react-bootstrap";
 
 const LibraryPage: React.FC = () => {
   const user_idGet = useContext(AuthContext);
@@ -42,7 +44,6 @@ const LibraryPage: React.FC = () => {
   const [catSelected, setCatSelected] = useState<Option>();
   const [selectedBook, setSelectedBook] = useState<Book>(emptyBook);
   const { addToast } = useToasts();
-  const [deleteLibraryBook, setDelete] = useState<Book[]>();
 
   const categories = useMemo(
     () => Array.from(new Set(books.flatMap((book: Book) => book.categories))),
@@ -120,7 +121,6 @@ const LibraryPage: React.FC = () => {
   );
   const deleteBook = useCallback(
     (book: Book) => {
-      let BookString = JSON.stringify(book);
       fetch(`http://paralibrary.digital/api/books/${book.id}`, {
         method: "DELETE",
         credentials: "include",
@@ -146,7 +146,7 @@ const LibraryPage: React.FC = () => {
           });
         });
     },
-    [books, setDelete, addToast]
+    [books, addToast]
   );
 
   const editBookDatabase = useCallback(
@@ -201,6 +201,7 @@ const LibraryPage: React.FC = () => {
           />
         </Modal.Body>
       </Modal>
+
       <Button
         onClick={() => {
           setSelectedBook(emptyBook);
@@ -224,22 +225,6 @@ const LibraryPage: React.FC = () => {
         <TableColumn col="title">Title</TableColumn>
         <TableColumn col="author">Author</TableColumn>
         <TableColumn col="summary">Summary</TableColumn>
-        <BookEditButton
-          onEdit={(b) => {
-            setIsNewBook(false);
-            setModalOpen(true);
-            if (b) {
-              setSelectedBook(b);
-            }
-          }}
-        ></BookEditButton>
-        <LibraryDeleteButton
-          onDelete={(b) => {
-            if (b) {
-              deleteBook(b);
-            }
-          }}
-        ></LibraryDeleteButton>
       </AutoTable>
     </PageLayout>
   );
