@@ -5,16 +5,17 @@ import React, {
   useCallback,
   useContext,
 } from "react";
-import Modal from "react-bootstrap/Modal";
+import { Modal } from "react-bootstrap";
 
 import PageLayout from "./PageLayout";
 import BookFormik from "./BookForm";
 import { Book } from "./ourtypes";
 import { toLibrary } from "./mappers";
 import { AuthContext } from "./AuthContextProvider";
+import { useToasts } from "./ToastProvider";
+import LibraryToolbar from "./LibraryToolbar";
 import List from "./List";
 import BookCard from "./BookCard";
-import LibraryToolbar from "./LibraryToolbar";
 
 const LibraryPage: React.FC = () => {
   const user_idGet = useContext(AuthContext);
@@ -37,6 +38,7 @@ const LibraryPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>();
   const [selectedBook, setSelectedBook] = useState<Book>(emptyBook);
+  const { addToast } = useToasts();
 
   const categories = useMemo(
     () =>
@@ -106,6 +108,35 @@ const LibraryPage: React.FC = () => {
     },
     [books]
   );
+  const deleteBook = useCallback(
+    (book: Book) => {
+      fetch(`http://paralibrary.digital/api/books/${book.id}`, {
+        method: "DELETE",
+        credentials: "include",
+      })
+        .then((res) => {
+          if (res.ok) {
+            setBooks(books.filter((books) => books.id !== book.id));
+            addToast({
+              header: "Book Deleted",
+              body: "Book successfully deleted.",
+              type: "success",
+            });
+          } else {
+            throw Error();
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          addToast({
+            header: "Could not delete loan",
+            body: "Something went wrong. Please try again in a few moments",
+            type: "error",
+          });
+        });
+    },
+    [books, addToast]
+  );
 
   const editBookDatabase = useCallback(
     (book: Book) => {
@@ -160,6 +191,7 @@ const LibraryPage: React.FC = () => {
             setSelectedBook(book);
           }
         }}
+        onDelete={deleteBook}
         userRole="owner"
         placeholder={
           books.length ? (

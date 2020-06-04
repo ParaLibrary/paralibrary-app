@@ -12,6 +12,7 @@ interface Extras {
   onEdit: (book: Book | undefined) => void;
   onRequest: (bookID: string) => void;
   onCancel: (loan: Loan) => void;
+  onDelete: (book: Book | undefined) => void;
 }
 
 const BookCard: React.FC<Book & Role & Extras> = (bookAndRole) => {
@@ -24,6 +25,7 @@ const BookCard: React.FC<Book & Role & Extras> = (bookAndRole) => {
     onEdit: handleEdit,
     onRequest: handleRequest,
     onCancel: handleCancel,
+    onDelete: handleDelete,
     friendStatus,
   } = bookAndRole;
   return (
@@ -36,7 +38,11 @@ const BookCard: React.FC<Book & Role & Extras> = (bookAndRole) => {
         {userRole === "owner" ? (
           <ActionPanel>
             <LoanStatus />
-            <EditBookButton onEdit={handleEdit} rowitem={bookAndRole} />
+            <EditBookButton
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              rowitem={bookAndRole}
+            />
           </ActionPanel>
         ) : (
           <ActionPanel hideActionsOnSmall={friendStatus !== "friends"}>
