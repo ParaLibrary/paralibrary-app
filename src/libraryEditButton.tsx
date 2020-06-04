@@ -5,6 +5,10 @@ import styled from "styled-components";
 
 const DangerDropdownItem = styled(Dropdown.Item)`
   background-color: red;
+  color: white;
+  :hover {
+    color: red;
+  }
 `;
 interface EditBookProps {
   rowitem: Book;
@@ -23,10 +27,14 @@ const BookEditButton: React.FC<EditBookProps> = ({
         Edit
       </Button>
 
-      <Dropdown.Toggle split id="dropdown-split-basic" />
+      <Dropdown.Toggle
+        split
+        className="super-colors"
+        id="dropdown-split-basic"
+      />
 
-      <Dropdown.Menu>
-        <DangerDropdownItem variant="danger" onClick={() => onDelete(rowitem)}>
+      <Dropdown.Menu className="super-colors">
+        <DangerDropdownItem onClick={() => onDelete(rowitem)}>
           Delete
         </DangerDropdownItem>
       </Dropdown.Menu>
