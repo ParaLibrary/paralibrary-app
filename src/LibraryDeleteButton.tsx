@@ -8,14 +8,15 @@ interface DeleteBookProps {
   onDelete: (book: Book | undefined) => void;
 }
 
-const LibraryDeleteButton: React.FC<DeleteBookProps> = ({
-  rowitem,
-  onDelete,
-}) => {
+const LibraryDeleteButton: React.FC<DeleteBookProps> = ({ onDelete }) => {
   return (
     <Dropdown.Item
       onClick={() => {
-        onDelete(rowitem);
+        (rowitem: Book | undefined) => {
+          if (rowitem) {
+            onDelete(rowitem);
+          }
+        };
       }}
     >
       Delete

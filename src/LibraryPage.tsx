@@ -5,19 +5,17 @@ import React, {
   useCallback,
   useContext,
 } from "react";
-import { Modal, Button, Dropdown } from "react-bootstrap";
-import Select from "react-select";
+import { Modal } from "react-bootstrap";
 
 import PageLayout from "./PageLayout";
 import BookFormik from "./BookForm";
 import { Book } from "./ourtypes";
 import { toLibrary } from "./mappers";
 import { AuthContext } from "./AuthContextProvider";
-import BookEditButton from "./libraryEditButton";
-import LibraryDeleteButton from "./LibraryDeleteButton";
 import { useToasts } from "./ToastProvider";
-import { SplitButton } from "react-bootstrap";
-import { ButtonGroup } from "react-bootstrap";
+import LibraryToolbar from "./LibraryToolbar";
+import List from "./List";
+import BookCard from "./BookCard";
 
 const LibraryPage: React.FC = () => {
   const user_idGet = useContext(AuthContext);
@@ -193,6 +191,7 @@ const LibraryPage: React.FC = () => {
             setSelectedBook(book);
           }
         }}
+        onDelete={deleteBook}
         userRole="owner"
         placeholder={
           books.length ? (
