@@ -29,7 +29,8 @@ const BookForm: React.FC<FormikProps<Book> & ExtraProps> = ({
   );
 
   const mapToCategories = useCallback(
-    (options: Option[]): string[] => options.map((opt) => opt.value),
+    (options: Option[] | null): string[] =>
+      !options ? [] : options.map((opt) => opt.value),
     []
   );
 
@@ -127,7 +128,7 @@ const BookForm: React.FC<FormikProps<Book> & ExtraProps> = ({
       </Form.Group>
       <Form.Group as={Form.Row} controlId="bookVis">
         <Form.Label column sm={2}>
-          Visibility
+          Visibility:
         </Form.Label>
         <Col sm={10}>
           <Form.Control

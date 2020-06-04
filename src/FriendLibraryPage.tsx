@@ -9,22 +9,49 @@ import { Redirect, useParams } from "react-router";
 
 import PageLayout from "./PageLayout";
 import { Book, Loan, User } from "./ourtypes";
-import AutoTable, { TableColumn } from "./AutoTable";
-import LoanRequestButton from "./LoanRequestButton";
 import { toLibrary } from "./mappers";
-import LibrarySearchBar from "./LibrarySearchBar";
-import FriendshipStatusButton from "./FriendshipStatusButton";
+import FriendshipStatusButton from "./FriendManagers";
 import { AuthContext } from "./AuthContextProvider";
+import BookCard from "./BookCard";
+import List from "./List";
+import { SingleUserProvider } from "./UserListContext";
+import LibraryToolbar from "./LibraryToolbar";
+import { useToasts } from "./ToastProvider";
 
 const FriendLibraryPage: React.FC = () => {
   const { id } = useParams();
   const auth = useContext(AuthContext);
+  const thisUsersEmail = useMemo(async () => {
+    if (!auth.credential.userId) {
+      return "";
+    }
+    return fetch(
+      `http://paralibrary.digital/api/users/${auth.credential.userId}`,
+      {
+        credentials: "include",
+      }
+    )
+      .then((res: Response) => res.json())
+      .then((user: User) => user.email)
+      .catch(() => "");
+  }, [auth]);
+
+  const { addToast } = useToasts();
 
   const [error, setError] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [books, setBooks] = useState<Book[]>([]);
   const [user, setUser] = useState<User>();
   const [searchTerm, setSearchTerm] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState<string>();
+
+  const categories = useMemo(
+    () =>
+      Array.from(
+        new Set(books.flatMap((book: Book) => book.categories))
+      ).sort(),
+    [books]
+  );
 
   function filterResults(searchTerm: string) {
     setSearchTerm(searchTerm);
@@ -32,13 +59,14 @@ const FriendLibraryPage: React.FC = () => {
 
   const filteredBooks: Book[] = useMemo(() => {
     const regExp = new RegExp(searchTerm.trim(), "gi");
-    if (searchTerm === "") {
-      return books;
-    }
     return books.filter(
-      (book: Book) => book.title.match(regExp) || book.author.match(regExp)
+      (book: Book) =>
+        (!searchTerm ||
+          book.title.match(regExp) ||
+          book.author.match(regExp)) &&
+        (!categoryFilter || book.categories.includes(categoryFilter))
     );
-  }, [searchTerm, books]);
+  }, [searchTerm, books, categoryFilter]);
 
   const userStatus = useMemo(() => {
     return user?.status;
@@ -72,7 +100,16 @@ const FriendLibraryPage: React.FC = () => {
   }, [id, userStatus]);
 
   const handleRequest = useCallback(
-    (bookID: string) => {
+    async (bookID: string) => {
+      if (!(await thisUsersEmail)) {
+        addToast({
+          header: "Could not request book",
+          body:
+            "Must provide email address to request a book. Visit settings to add an email.",
+          type: "error",
+        });
+        return;
+      }
       fetch("http://paralibrary.digital/api/loans", {
         method: "POST",
         credentials: "include",
@@ -113,7 +150,7 @@ const FriendLibraryPage: React.FC = () => {
           console.log(error);
         });
     },
-    [auth, books, user]
+    [auth, books, user, addToast, thisUsersEmail]
   );
 
   const handleCancel = useCallback(async (loan: Loan) => {
@@ -133,23 +170,39 @@ const FriendLibraryPage: React.FC = () => {
     return (
       <PageLayout
         header={
-          !user ? (
+          !isLoaded ? (
+            <h1>Loading...</h1>
+          ) : !user ? (
             <h1>User Not Found</h1>
           ) : (
-            <h1>{user && user.name}'s Library</h1>
+            <>
+              <h1>{user && user.name}'s Library</h1>
+            </>
           )
         }
         error={error}
         loaded={isLoaded}
       >
-        {user && <FriendshipStatusButton friend={user} onClick={setUser} />}
-        <LibrarySearchBar
+        {user && (
+          <SingleUserProvider user={user} setUser={setUser}>
+            <FriendshipStatusButton friend={user} />
+          </SingleUserProvider>
+        )}
+        <hr />
+        <LibraryToolbar
+          onCategoryChange={setCategoryFilter}
+          options={categories}
           onSearchChange={filterResults}
-          header="Search this Library"
         />
-        <AutoTable
-          data={filteredBooks}
+
+        <List
           title={<h3>Books</h3>}
+          items={filteredBooks}
+          component={BookCard}
+          userRole="requester"
+          onRequest={handleRequest}
+          onCancel={handleCancel}
+          friendStatus={userStatus}
           placeholder={
             books.length ? (
               <span>No search results found</span>
@@ -161,15 +214,7 @@ const FriendLibraryPage: React.FC = () => {
               </span>
             )
           }
-        >
-          <TableColumn col="title">Title</TableColumn>
-          <TableColumn col="author">Author</TableColumn>
-          <TableColumn col="summary">Description</TableColumn>
-          <LoanRequestButton
-            onRequest={handleRequest}
-            onCancel={handleCancel}
-          />
-        </AutoTable>
+        />
       </PageLayout>
     );
   }

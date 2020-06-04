@@ -7,18 +7,19 @@ export interface Theme {
   marginSmall: string;
 
   smallViewport: string;
+  mediumViewport: string;
+  largeViewport: string;
 }
 
-// Not sure why DefaultTheme is a namespace here...
-// didn't appear in any examples online so it might
-// be part of reason the theme isn't usable
 const theme: DefaultTheme = {
   marginHuge: "24px",
   marginLarge: "16px",
   marginMedium: "12px",
   marginSmall: "8px",
 
-  smallViewport: "480px",
+  smallViewport: "576px",
+  mediumViewport: "768px",
+  largeViewport: "992px",
 };
 
 export default theme;

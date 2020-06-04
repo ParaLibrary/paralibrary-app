@@ -1,19 +1,18 @@
 import React from "react";
-import styled from "styled-components";
 import Fade from "react-reveal";
-import TransitionGroup from "react-transition-group/TransitionGroup";
+import styled from "styled-components";
 
-const SegTransitionGroup = styled(TransitionGroup)`
+const Segementer = styled.div`
   > div {
     margin-bottom: 0.5rem;
   }
 `;
 
-interface ListProps<T, E> {
+interface ListProps<T> {
   items: T[];
   title?: React.ReactElement;
   placeholder?: React.ReactElement;
-  component: React.FC<T & Role & E>;
+  component: React.FC<T & Role & any>;
 }
 
 export interface Role {
@@ -25,7 +24,7 @@ interface ExtraProps {
 }
 
 function List<T extends { id: string }>(
-  props: ListProps<T, ExtraProps> & Role & ExtraProps
+  props: ListProps<T> & Role & ExtraProps
 ): JSX.Element | null {
   const {
     items,
@@ -46,13 +45,13 @@ function List<T extends { id: string }>(
     return (
       <>
         {title}
-        <SegTransitionGroup appear exit>
+        <Segementer>
           {items.map((item) => (
             <Fade key={item.id} collapse right>
               <Container {...item} userRole={userRole} {...otherProps} />
             </Fade>
           ))}
-        </SegTransitionGroup>
+        </Segementer>
       </>
     );
   }

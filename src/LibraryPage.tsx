@@ -10,9 +10,7 @@ import Select from "react-select";
 
 import PageLayout from "./PageLayout";
 import BookFormik from "./BookForm";
-import AutoTable, { TableColumn } from "./AutoTable";
-import { Book, User, Option } from "./ourtypes";
-import LibrarySearchBar from "./LibrarySearchBar";
+import { Book } from "./ourtypes";
 import { toLibrary } from "./mappers";
 import { AuthContext } from "./AuthContextProvider";
 import BookEditButton from "./libraryEditButton";
@@ -37,25 +35,19 @@ const LibraryPage: React.FC = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(false);
   const [books, setBooks] = useState<Book[]>([]);
-  const [user, setUser] = useState<User>();
   const [modalOpen, setModalOpen] = useState(false);
   const [isNewBook, setIsNewBook] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [catSelected, setCatSelected] = useState<Option>();
+  const [categoryFilter, setCategoryFilter] = useState<string>();
   const [selectedBook, setSelectedBook] = useState<Book>(emptyBook);
   const { addToast } = useToasts();
 
   const categories = useMemo(
-    () => Array.from(new Set(books.flatMap((book: Book) => book.categories))),
+    () =>
+      Array.from(
+        new Set(books.flatMap((book: Book) => book.categories))
+      ).sort(),
     [books]
-  );
-
-  const makeOptions = useCallback(
-    (options: string[]) =>
-      options.map((category) => {
-        return { value: category, label: category };
-      }),
-    []
   );
 
   function filterResults(searchTerm: string) {
@@ -69,9 +61,9 @@ const LibraryPage: React.FC = () => {
         (!searchTerm ||
           book.title.match(regExp) ||
           book.author.match(regExp)) &&
-        (!catSelected?.value || book.categories.includes(catSelected.value))
+        (!categoryFilter || book.categories.includes(categoryFilter))
     );
-  }, [searchTerm, books, catSelected]);
+  }, [searchTerm, books, categoryFilter]);
 
   useEffect(() => {
     fetch(`http://paralibrary.digital/api/libraries`, {
@@ -83,8 +75,7 @@ const LibraryPage: React.FC = () => {
       .then(
         (result) => {
           const lib = toLibrary(result);
-          setBooks(lib.books);
-          setUser(lib.user);
+          setBooks(lib.books.reverse());
         },
         (error) => {
           console.log(error);
@@ -113,7 +104,7 @@ const LibraryPage: React.FC = () => {
       })
         .then((res) => res.json())
         .then((res: { id: string }) => {
-          setBooks(books.concat({ ...book, id: res.id }));
+          setBooks([{ ...book, id: res.id }].concat(books));
         })
         .catch(() => false);
     },
@@ -176,18 +167,42 @@ const LibraryPage: React.FC = () => {
     [books]
   );
 
+  const openNewBook = useCallback(() => {
+    setSelectedBook(emptyBook);
+    setModalOpen(true);
+    setIsNewBook(true);
+  }, [emptyBook]);
+
   return (
     <PageLayout header={<h1>My Library</h1>} error={error} loaded={isLoaded}>
-      <LibrarySearchBar
+      <LibraryToolbar
+        onCategoryChange={setCategoryFilter}
+        options={categories}
         onSearchChange={filterResults}
-        header="Search Your Library"
+        onAddBook={openNewBook}
       />
-      <h6>Filter by Tags</h6>
-      <Select
-        options={makeOptions(categories)}
-        onChange={(option: any) => setCatSelected(option)}
-        isClearable
+
+      <List
+        title={<h3>Books</h3>}
+        items={filteredBooks}
+        component={BookCard}
+        onEdit={(book: Book) => {
+          setIsNewBook(false);
+          setModalOpen(true);
+          if (book) {
+            setSelectedBook(book);
+          }
+        }}
+        userRole="owner"
+        placeholder={
+          books.length ? (
+            <span>No search results found</span>
+          ) : (
+            <span>Press the Add Book button to get started!</span>
+          )
+        }
       />
+
       <Modal show={modalOpen} onHide={() => setModalOpen(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>{isNewBook ? "Add Book" : "Edit Book"}</Modal.Title>
@@ -201,31 +216,6 @@ const LibraryPage: React.FC = () => {
           />
         </Modal.Body>
       </Modal>
-
-      <Button
-        onClick={() => {
-          setSelectedBook(emptyBook);
-          setModalOpen(true);
-          setIsNewBook(true);
-        }}
-      >
-        New Book
-      </Button>
-
-      <AutoTable
-        data={filteredBooks}
-        placeholder={
-          books.length ? (
-            <span>No search results found</span>
-          ) : (
-            <span>Press the Add Book button to get started!</span>
-          )
-        }
-      >
-        <TableColumn col="title">Title</TableColumn>
-        <TableColumn col="author">Author</TableColumn>
-        <TableColumn col="summary">Summary</TableColumn>
-      </AutoTable>
     </PageLayout>
   );
 };

@@ -22,7 +22,7 @@ const LandingLayout = styled.div`
     ". title ."
     ". main . ";
 
-  @media screen and (min-width: 480px) {
+  @media screen and (min-width: ${({ theme }) => theme.smallViewport}) {
     place-items: center;
     grid-template-columns: 1fr 2fr 9fr 1fr;
     grid-template-rows: 600px auto;
@@ -54,7 +54,7 @@ const TitleText = styled.img`
   display: block;
   object-fit: contain;
 
-  @media screen and (min-width: 480px) {
+  @media screen and (min-width: ${({ theme }) => theme.smallViewport}) {
     grid-area: title;
     align-self: center;
     width: 100%;
