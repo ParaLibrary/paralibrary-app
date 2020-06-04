@@ -4,10 +4,14 @@ import { Book } from "./ourtypes";
 import styled from "styled-components";
 
 const DangerDropdownItem = styled(Dropdown.Item)`
-  background-color: red;
-  color: white;
+  background-color: white;
+  color: #dc3545;
+  border-radius: 3pt;
+  border-color: #dc3545;
+
   :hover {
-    color: red;
+    color: white;
+    background-color: #dc3545;
   }
 `;
 interface EditBookProps {
@@ -22,7 +26,7 @@ const BookEditButton: React.FC<EditBookProps> = ({
   onDelete,
 }) => {
   return (
-    <Dropdown as={ButtonGroup}>
+    <Dropdown size="sm" as={ButtonGroup}>
       <Button onClick={() => onEdit(rowitem)} block>
         Edit
       </Button>
