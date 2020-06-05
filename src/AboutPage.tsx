@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Image from "react-bootstrap/Image";
+import { Link } from "react-router-dom";
 
 import PageLayout from "./PageLayout";
 
@@ -36,6 +37,25 @@ const AboutPage: React.FC = () => {
         more oversite since you may want to share a book you love with someone
         else but still like to know where it is. It's also a great tool if you
         just want to keep track of all the books in your house!
+      </p>
+      <h3>Core Features</h3>
+      <ul>
+        <li>
+          Add books to your <Link to="/library">library</Link>
+        </li>
+        <li>
+          Search for <Link to="/friends">friends</Link> on the site
+        </li>
+        <li>Borrow books from your friends</li>
+        <li>
+          Keep track of what books you <Link to="/loans">borrow or loan</Link>
+        </li>
+      </ul>
+      <h3>More</h3>
+      <p>
+        Checkout the source code on{" "}
+        <a href="https://github.com/ParaLibrary">our GitHub repository</a>. The
+        ParaLibrary project is under the MIT licence.
       </p>
       <hr />
       <h3>Creators</h3>
