@@ -12,7 +12,6 @@ import AutoSuggest, {
 const FriendSearchBar = () => {
   const [value, setValue] = useState("");
   const [suggestions, setSuggestions] = useState(Array<User>());
-  const [loading, setLoading] = useState(false);
   const history = useHistory();
 
   const onSuggestionsFetchRequested: SuggestionsFetchRequested = ({
@@ -27,8 +26,6 @@ const FriendSearchBar = () => {
       return;
     }
 
-    setLoading(true);
-
     fetch(`http://paralibrary.digital/api/users/search/${searchTerm}`, {
       credentials: "include",
     })
@@ -38,8 +35,7 @@ const FriendSearchBar = () => {
       })
       .catch((error) => {
         console.error(error);
-      })
-      .finally(() => setLoading(false));
+      });
   }
 
   function onSuggestionsClearRequested() {
