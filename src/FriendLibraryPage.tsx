@@ -17,6 +17,7 @@ import List from "./List";
 import { SingleUserProvider } from "./UserListContext";
 import LibraryToolbar from "./LibraryToolbar";
 import { useToasts } from "./ToastProvider";
+import LibraryHeader from "./LibraryHeader";
 
 const FriendLibraryPage: React.FC = () => {
   const { id } = useParams();
@@ -82,7 +83,7 @@ const FriendLibraryPage: React.FC = () => {
       .then(
         (result) => {
           const lib = toLibrary(result);
-          setBooks(lib.books);
+          setBooks(lib.books.reverse());
           setUser(lib.user);
         },
         (e) => {
@@ -175,9 +176,7 @@ const FriendLibraryPage: React.FC = () => {
           ) : !user ? (
             <h1>User Not Found</h1>
           ) : (
-            <>
-              <h1>{user && user.name}'s Library</h1>
-            </>
+            <LibraryHeader name={user.name} picture={user.picture} />
           )
         }
         error={error}
