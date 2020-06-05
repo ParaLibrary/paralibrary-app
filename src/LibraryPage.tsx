@@ -9,13 +9,14 @@ import { Modal } from "react-bootstrap";
 
 import PageLayout from "./PageLayout";
 import BookFormik from "./BookForm";
-import { Book } from "./ourtypes";
+import { Book, User } from "./ourtypes";
 import { toLibrary } from "./mappers";
 import { AuthContext } from "./AuthContextProvider";
 import { useToasts } from "./ToastProvider";
 import LibraryToolbar from "./LibraryToolbar";
 import List from "./List";
 import BookCard from "./BookCard";
+import LibraryHeader from "./LibraryHeader";
 
 const LibraryPage: React.FC = () => {
   const user_idGet = useContext(AuthContext);
@@ -33,6 +34,7 @@ const LibraryPage: React.FC = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(false);
   const [books, setBooks] = useState<Book[]>([]);
+  const [user, setUser] = useState<User>();
   const [modalOpen, setModalOpen] = useState(false);
   const [isNewBook, setIsNewBook] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -73,6 +75,7 @@ const LibraryPage: React.FC = () => {
       .then(
         (result) => {
           const lib = toLibrary(result);
+          setUser(lib.user);
           setBooks(lib.books.reverse());
         },
         (error) => {
@@ -172,7 +175,11 @@ const LibraryPage: React.FC = () => {
   }, [emptyBook]);
 
   return (
-    <PageLayout header={<h1>My Library</h1>} error={error} loaded={isLoaded}>
+    <PageLayout
+      header={<LibraryHeader picture={user && user.picture} />}
+      error={error}
+      loaded={isLoaded}
+    >
       <LibraryToolbar
         onCategoryChange={setCategoryFilter}
         options={categories}

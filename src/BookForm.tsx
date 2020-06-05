@@ -95,7 +95,7 @@ const BookForm: React.FC<FormikProps<Book> & ExtraProps> = ({
         <Form.Label column sm={2}>
           ISBN:
         </Form.Label>
-        <Col sm={6}>
+        <Col>
           <Form.Control
             type="text"
             name="isbn"
@@ -106,9 +106,6 @@ const BookForm: React.FC<FormikProps<Book> & ExtraProps> = ({
           <Form.Control.Feedback type="invalid">
             {errors.isbn}
           </Form.Control.Feedback>
-        </Col>
-        <Col sm={4}>
-          <Button disabled>Import Data</Button>
         </Col>
       </Form.Group>
       <Form.Group as={Form.Row} controlId="bookSummary">
