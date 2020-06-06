@@ -5,7 +5,7 @@ import {
   FilterIcon,
   BookIcon,
   PlusIcon,
-} from "@primer/octicons-v2-react";
+} from "@primer/styled-octicons";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import styled from "styled-components";

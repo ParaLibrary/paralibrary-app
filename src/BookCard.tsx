@@ -6,6 +6,7 @@ import { Role } from "./List";
 import EditBookButton from "./libraryEditButton";
 import LoanStatus from "./LoanStatus";
 import LoanRequestButton from "./LoanRequestButton";
+import { EyeClosedIcon, ShieldLockIcon } from "@primer/styled-octicons";
 
 interface Extras {
   friendStatus: string | undefined;
@@ -22,6 +23,7 @@ const BookCard: React.FC<Book & Role & Extras> = (bookAndRole) => {
     categories,
     summary,
     userRole,
+    visibility,
     onEdit: handleEdit,
     onRequest: handleRequest,
     onCancel: handleCancel,
@@ -67,12 +69,22 @@ const BookCard: React.FC<Book & Role & Extras> = (bookAndRole) => {
           <p>{summary}</p>
         </>
       )}
-      {categories.length > 0 && (
+      {(categories.length > 0 || visibility !== "public") && (
         <>
           <div>
             <Line />
           </div>
           <TagList>
+            {visibility === "private" && (
+              <Tag highlight>
+                <EyeClosedIcon color="white" />
+              </Tag>
+            )}
+            {visibility === "friends" && (
+              <Tag highlight>
+                <ShieldLockIcon color="white" />
+              </Tag>
+            )}
             {categories.map((cat: string) => (
               <Tag key={cat}>{cat}</Tag>
             ))}
@@ -132,12 +144,14 @@ const TagList = styled.div`
   align-items: baseline;
 `;
 
-const Tag = styled.span`
-  background-color: hsl(0, 0%, 90%);
+const Tag = styled.span<{ highlight?: boolean }>`
+  background-color: ${({ highlight }) =>
+    !highlight ? "hsl(0, 0%, 90%)" : "#007bff"};
   border-radius: 2px;
   box-sizing: border-box;
   padding: 2px 8px 2px 8px;
   margin-right: 12px;
+  margin-bottom: 4px;
 `;
 
 const Line = styled.hr`
