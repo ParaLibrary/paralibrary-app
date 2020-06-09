@@ -59,7 +59,6 @@ const SettingsPage: React.FC = () => {
         body: JSON.stringify(values),
       })
         .then((res: Response) => {
-          console.log(values);
           if (res.ok) {
             setUser(values);
             addToast({

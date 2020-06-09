@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import styled from "styled-components";
 
 import { Loan, User, Book, LoanStatus } from "./ourtypes";
@@ -6,6 +6,7 @@ import { Role } from "./List";
 import { OwnerLoanManager, RequesterLoanManager } from "./LoanManagers";
 import UserDisplay from "./UserDisplay";
 import BookDisplay from "./BookDisplay";
+import useRefreshedTime from "./useRefreshedTime";
 
 const LoanDiv = styled.div<{ late?: boolean }>`
   background: white;
@@ -32,12 +33,34 @@ const LoanDiv = styled.div<{ late?: boolean }>`
 
 const LoanDisplay: React.FC<Loan & Role> = (loanAndRole) => {
   const { owner, requester, book, status, userRole: controller } = loanAndRole;
+  const relevantDate = useMemo(() => {
+    switch (status) {
+      case "pending":
+        return loanAndRole.request_date;
+      case "accepted":
+        return loanAndRole.accept_date;
+      case "loaned":
+        return loanAndRole.loan_start_date;
+      default:
+        return undefined;
+    }
+  }, [status, loanAndRole]);
   return (
     <LoanDiv>
       {controller === "owner" ? (
-        <OwnerStatusMessage subject={requester} object={book} status={status} />
+        <OwnerStatusMessage
+          subject={requester}
+          object={book}
+          status={status}
+          date={relevantDate}
+        />
       ) : (
-        <RequesterStatusMessage subject={owner} object={book} status={status} />
+        <RequesterStatusMessage
+          subject={owner}
+          object={book}
+          status={status}
+          date={relevantDate}
+        />
       )}
       {controller === "owner" ? (
         <OwnerLoanManager loan={loanAndRole} />
@@ -52,19 +75,23 @@ interface StatusMessageProps {
   subject: User;
   object?: Book;
   status: LoanStatus;
+  date?: Date;
 }
 
 const OwnerStatusMessage: React.FC<StatusMessageProps> = ({
   subject,
   object,
   status,
+  date,
 }) => {
+  const timeSince = useRefreshedTime();
   if (status === "pending") {
     return (
       <p>
         <UserDisplay data={subject} />
-        <span> wants to borrow </span>
+        <span> asked to borrow </span>
         <BookDisplay data={object} />
+        <span>{date && timeSince(date)}</span>
       </p>
     );
   } else if (status === "accepted") {
@@ -81,6 +108,7 @@ const OwnerStatusMessage: React.FC<StatusMessageProps> = ({
         <UserDisplay data={subject} />
         <span> borrowed </span>
         <BookDisplay data={object} />
+        <span>{date && timeSince(date)}</span>
       </p>
     );
   } else if (status === "returned") {
@@ -100,7 +128,9 @@ const RequesterStatusMessage: React.FC<StatusMessageProps> = ({
   subject,
   object,
   status,
+  date,
 }) => {
+  const timeSince = useRefreshedTime();
   if (status === "pending") {
     return (
       <p>
@@ -108,6 +138,7 @@ const RequesterStatusMessage: React.FC<StatusMessageProps> = ({
         <BookDisplay data={object} />
         <span> from </span>
         <UserDisplay data={subject} />
+        <span>{date && timeSince(date)}</span>
       </p>
     );
   } else if (status === "accepted") {
@@ -117,6 +148,7 @@ const RequesterStatusMessage: React.FC<StatusMessageProps> = ({
         <BookDisplay data={object} />
         <span> accepted by </span>
         <UserDisplay data={subject} />
+        <span>{date && timeSince(date)}</span>
       </p>
     );
   } else if (status === "loaned") {
@@ -126,6 +158,7 @@ const RequesterStatusMessage: React.FC<StatusMessageProps> = ({
         <BookDisplay data={object} />
         <span> from </span>
         <UserDisplay data={subject} />
+        <span>{date && timeSince(date)}</span>
       </p>
     );
   } else if (status === "returned") {
