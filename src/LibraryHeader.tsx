@@ -5,6 +5,7 @@ import Image from "react-bootstrap/Image";
 const HeaderContainer = styled.div`
   display: flex;
   max-width: 100%;
+  margin-bottom: 16px;
 `;
 
 const UserImage = styled(Image)`

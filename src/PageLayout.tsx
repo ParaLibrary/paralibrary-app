@@ -22,7 +22,7 @@ const Layout = styled.div`
   flex-flow: column nowrap;
   padding: 16px;
 
-  @media screen and (min-width: ${({ theme }) => theme.smallViewport}) {
+  @media screen and (min-width: ${({ theme }) => theme.largeViewport}) {
     flex: 1 0;
     display: grid;
     grid-template-columns: auto 30%;
@@ -38,7 +38,7 @@ const Layout = styled.div`
 
 const Main = styled.div`
   position: sticky;
-  @media screen and (min-width: ${({ theme }) => theme.smallViewport}) {
+  @media screen and (min-width: ${({ theme }) => theme.largeViewport}) {
     grid-area: main;
     position: static;
     top: auto;
