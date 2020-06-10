@@ -25,7 +25,7 @@ interface LHProps {
 const LibraryHeader: React.FC<LHProps> = ({ name, picture }) => {
   return (
     <HeaderContainer>
-      <UserImage src={picture || "./images/defaultAvatar.jpg"} rounded />
+      <UserImage src={picture || "../images/defaultAvatar.jpg"} rounded />
       <h2>{!name ? "My" : `${name}'s`} Library</h2>
     </HeaderContainer>
   );
