@@ -34,9 +34,9 @@ const AboutPage: React.FC = () => {
       <p>
         ParaLibrary took inspiration from programs such as Little Free Library
         that make books available to anyone. However, we wanted to give the user
-        more oversite since you may want to share a book you love with someone
+        more oversight since you may want to share a book you love with someone
         else but still like to know where it is. It's also a great tool if you
-        just want to keep track of all the books in your house!
+        just want to keep track of all the books you own!
       </p>
       <h3>Core Features</h3>
       <ul>
