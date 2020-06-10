@@ -3,26 +3,18 @@ import styled from "styled-components";
 import Image from "react-bootstrap/Image";
 
 const HeaderContainer = styled.div`
-  display: block;
-  margin-bottom: 16px;
+  display: flex;
   max-width: 100%;
-  @media screen and (min-width: ${({ theme }) => theme.smallViewport}) {
-    display: grid;
-    grid-template-columns: min-content auto;
-    grid-column-gap: 16px;
-    margin-bottom: 0px;
-  }
+  margin-bottom: 16px;
 `;
 
 const UserImage = styled(Image)`
-  display: none;
+  display: inline;
+  float: left;
   object-fit: contain;
-  height: 100%;
-  max-height: 96px;
-  max-width: 96px;
-  @media screen and (min-width: ${({ theme }) => theme.smallViewport}) {
-    display: block;
-  }
+  height: 48px;
+  width: auto;
+  margin-right: 16px;
 `;
 
 interface LHProps {
@@ -34,7 +26,7 @@ const LibraryHeader: React.FC<LHProps> = ({ name, picture }) => {
   return (
     <HeaderContainer>
       <UserImage src={picture || "./images/defaultAvatar.jpg"} rounded />
-      <h1>{!name ? "My" : `${name}'s`} Library</h1>
+      <h2>{!name ? "My" : `${name}'s`} Library</h2>
     </HeaderContainer>
   );
 };
