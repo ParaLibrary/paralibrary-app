@@ -116,7 +116,6 @@ const LoansPage: React.FC = () => {
     // May need to revise this once we loan management flow
     [loanedByMe]
   );
-  console.log(loanedOut);
 
   return (
     <PageLayout
