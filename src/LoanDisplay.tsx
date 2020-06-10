@@ -41,6 +41,8 @@ const LoanDisplay: React.FC<Loan & Role> = (loanAndRole) => {
         return loanAndRole.accept_date;
       case "loaned":
         return loanAndRole.loan_start_date;
+      case "returned":
+        return loanAndRole.loan_end_date;
       default:
         return undefined;
     }
@@ -91,7 +93,7 @@ const OwnerStatusMessage: React.FC<StatusMessageProps> = ({
         <UserDisplay data={subject} />
         <span> asked to borrow </span>
         <BookDisplay data={object} />
-        <span>{date && timeSince(date)}</span>
+        {date && <span>, {timeSince(date)}</span>}
       </p>
     );
   } else if (status === "accepted") {
@@ -108,7 +110,7 @@ const OwnerStatusMessage: React.FC<StatusMessageProps> = ({
         <UserDisplay data={subject} />
         <span> borrowed </span>
         <BookDisplay data={object} />
-        <span>{date && timeSince(date)}</span>
+        {date && <span>, {timeSince(date)}</span>}
       </p>
     );
   } else if (status === "returned") {
@@ -117,6 +119,7 @@ const OwnerStatusMessage: React.FC<StatusMessageProps> = ({
         <UserDisplay data={subject} />
         <span> returned </span>
         <BookDisplay data={object} />
+        {date && <span>, {timeSince(date)}</span>}
       </p>
     );
   } else {
@@ -138,7 +141,7 @@ const RequesterStatusMessage: React.FC<StatusMessageProps> = ({
         <BookDisplay data={object} />
         <span> from </span>
         <UserDisplay data={subject} />
-        <span>{date && timeSince(date)}</span>
+        {date && <span>{timeSince(date)}</span>}
       </p>
     );
   } else if (status === "accepted") {
@@ -148,7 +151,7 @@ const RequesterStatusMessage: React.FC<StatusMessageProps> = ({
         <BookDisplay data={object} />
         <span> accepted by </span>
         <UserDisplay data={subject} />
-        <span>{date && timeSince(date)}</span>
+        {date && <span>{timeSince(date)}</span>}
       </p>
     );
   } else if (status === "loaned") {
@@ -158,7 +161,7 @@ const RequesterStatusMessage: React.FC<StatusMessageProps> = ({
         <BookDisplay data={object} />
         <span> from </span>
         <UserDisplay data={subject} />
-        <span>{date && timeSince(date)}</span>
+        {date && <span>{timeSince(date)}</span>}
       </p>
     );
   } else if (status === "returned") {
@@ -168,6 +171,7 @@ const RequesterStatusMessage: React.FC<StatusMessageProps> = ({
         <BookDisplay data={object} />
         <span> to </span>
         <UserDisplay data={subject} />
+        {date && <span>{timeSince(date)}</span>}
       </p>
     );
   } else {
